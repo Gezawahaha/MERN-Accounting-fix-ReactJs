@@ -1,0 +1,17 @@
+.header {
+    background: #15171c;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+
+
+.Logo-Navbar {
+    display: flex;
+    align-items: center;
+    align-content: center;
+    height: 40px;
+}
+
