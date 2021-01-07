@@ -62,6 +62,7 @@ const SidebarWrap = styled.div`
 `;
 
 
+
 class Sidebar extends Component {
 
     onLogoutClick = e => {
@@ -73,9 +74,11 @@ class Sidebar extends Component {
 
     render() {
         const { user } = this.props.auth;
+
         
 
         return (
+            
 
             <div className="border-right h-100" id="sidebar-wrapper">
                 <div className="list-group list-group-flush">
@@ -104,7 +107,7 @@ class Sidebar extends Component {
 
                     <List >
                         <Link to="/users" className="list-group-item list-group-item-action"> <PermContactCalendarIcon className="icon-side"/>Kontak</Link>
-                        <Link to="/" className="list-group-item list-group-item-action"> <BallotIcon className="icon-side"/>Daftar Akun</Link>                     
+                        <Link to="/daftarakun" className="list-group-item list-group-item-action"> <BallotIcon className="icon-side"/>Daftar Akun</Link>                     
                     </List>
 
                     <Divider />

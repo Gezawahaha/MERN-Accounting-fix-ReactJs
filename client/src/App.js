@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Dashboard from "./components/pages/Dashboard";
 import React, { Component } from 'react';
 import Login from "./components/auth/Login";
 import NotFound from "./components/layout/NotFound";
@@ -18,7 +17,9 @@ import '../node_modules/font-awesome/css/font-awesome.css';
 import '../node_modules/jquery/dist/jquery.min';
 import '../node_modules/popper.js/dist/popper';
 
+import Dashboard from "./components/pages/Dashboard";
 import User from "./components/pages/Users";
+import DaftarAkun from "./components/pages/DaftarAkun";
 
 if (localStorage.jwtToken) {
     const token = localStorage.jwtToken;
@@ -45,6 +46,7 @@ class App extends Component {
                             <Switch>
                                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
                                 <PrivateRoute exact path="/users" component={User} />
+                                <PrivateRoute exact path="/daftarakun" component={DaftarAkun} />
                             </Switch>
                             <Route exact path="*" component={NotFound} />
                         </Switch>

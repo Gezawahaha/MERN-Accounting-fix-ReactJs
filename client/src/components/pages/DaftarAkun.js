@@ -8,13 +8,13 @@ import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import axios from "axios";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
-import UserAddModal from "../partials/UserAddModal";
+import AkunAddModal from "../partials/UserAddModal";
 import UserUpdateModal from "../partials/UserUpdateModal";
 import { toast, ToastContainer} from "react-toastify";
 
 import {Link} from "react-router-dom";
 
-class Users extends Component {
+class DaftarAkun extends Component {
 
     constructor(props) {
         super(props);
@@ -28,6 +28,13 @@ class Users extends Component {
                 sortable: true,
             },
             {
+                key: "coa_account_number",
+                text: "Account Number",
+                className: "name",
+                align: "left",
+                sortable: true,
+            },
+            {
                 key: "name",
                 text: "Name",
                 className: "name",
@@ -35,46 +42,60 @@ class Users extends Component {
                 sortable: true,
             },
             {
-                key: "email",
-                text: "Email",
+                key: "total_debit",
+                text: "debit",
                 className: "email",
                 align: "left",
                 sortable: true
             },
             {
-                key: "date",
-                text: "Date",
+                key: "total_kredit",
+                text: "kredit",
+                className: "email",
+                align: "left",
+                sortable: true
+            },
+            {
+                key: "updated_at",
+                text: "update Date",
                 className: "date",
                 align: "left",
                 sortable: true
             },
             {
-                key: "action",
-                text: "Action",
-                className: "action",
-                width: 100,
+                key: "created_at",
+                text: "created Date",
+                className: "date",
                 align: "left",
-                sortable: false,
-                cell: record => {
-                    return (
-                        <Fragment>
-                            <button
-                                data-toggle="modal"
-                                data-target="#update-user-modal"
-                                className="btn btn-primary btn-sm"
-                                onClick={() => this.editRecord(record)}
-                                style={{marginRight: '5px'}}>
-                                <i className="fa fa-edit"></i>
-                            </button>
-                            <button
-                                className="btn btn-danger btn-sm"
-                                onClick={() => this.deleteRecord(record)}>
-                                <i className="fa fa-trash"></i>
-                            </button>
-                        </Fragment>
-                    );
-                }
-            }
+                sortable: true
+            },
+            // {
+            //     key: "action",
+            //     text: "Action",
+            //     className: "action",
+            //     width: 100,
+            //     align: "left",
+            //     sortable: false,
+            //     cell: record => {
+            //         return (
+            //             <Fragment>
+            //                 <button
+            //                     data-toggle="modal"
+            //                     data-target="#update-user-modal"
+            //                     className="btn btn-primary btn-sm"
+            //                     onClick={() => this.editRecord(record)}
+            //                     style={{marginRight: '5px'}}>
+            //                     <i className="fa fa-edit"></i>
+            //                 </button>
+            //                 <button
+            //                     className="btn btn-danger btn-sm"
+            //                     onClick={() => this.deleteRecord(record)}>
+            //                     <i className="fa fa-trash"></i>
+            //                 </button>
+            //             </Fragment>
+            //         );
+            //     }
+            // }
         ];
 
         this.config = {
@@ -131,7 +152,7 @@ class Users extends Component {
 
     getData() {
         axios
-            .post("/api/user-data")
+            .post("/akun/CoA-data")
             .then(res => {
                 this.setState({ records: res.data})
             })
@@ -166,16 +187,13 @@ class Users extends Component {
                 <Navbar/>
                 <div className="d-flex" id="wrapper">
                     <Sidebar/>
-                    <UserAddModal />
+                    <AkunAddModal />
                     <UserUpdateModal record={this.state.currentRecord}/>
                     <div id="page-content-wrapper">
                         <div className="container-fluid">
                             <button className="btn btn-link mt-3" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
-                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-user-modal"><FontAwesomeIcon icon={faPlus}/> Add Customer</button>
-                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-user-modal"><FontAwesomeIcon icon={faPlus}/> Add Supplier</button>
-                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-user-modal"><FontAwesomeIcon icon={faPlus}/> Add karyawan</button>
-                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-user-modal"><FontAwesomeIcon icon={faPlus}/> Add User Account</button>
-                            <h1 className="mt-2 text-primary">Kontak</h1>
+                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-akun-modal"><FontAwesomeIcon icon={faPlus}/> Add Chart Akun</button>
+                            <h1 className="mt-2 text-primary">Daftar Akun</h1>
 
                             <div className="row px-2">
                                 <div className="col-sm-3 p-sm-2">
@@ -239,7 +257,7 @@ class Users extends Component {
 
 }
 
-Users.propTypes = {
+DaftarAkun.propTypes = {
     auth: PropTypes.object.isRequired,
 };
 
@@ -250,4 +268,4 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps
-)(Users);
+)(DaftarAkun);

@@ -37,3 +37,20 @@ export const updateUser = (userData) => dispatch => {
         })
     );
 };
+
+
+export const addAkun = (userData, history) => dispatch => {
+    axios
+        .post("/api/add-CoA", userData)
+        .then(res =>
+            dispatch({
+                type: USER_ADD,
+                payload: res,
+            })
+        ).catch(err =>
+        dispatch({
+            type: GET_ERRORS,
+            payload: err.response.data
+        })
+    );
+};

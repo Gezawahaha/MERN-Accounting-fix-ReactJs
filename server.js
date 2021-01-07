@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const users = require('./routes/api/users');
+const akun = require('./routes/api/chart_of_account');
 
 //require('./config/passport')(passport);
 
@@ -23,7 +24,7 @@ app.listen(9000);
 
 const db = require('./config/keys').mongoURI;
 
-mongoose.connect(db, { useNewUrlParser: true })
+mongoose.connect(db, { useNewUrlParser: true , useUnifiedTopology: true })
     .then(() =>
         console.log('MongoDB successfully connected.')
     ).catch(err => console.log(err));
@@ -31,6 +32,7 @@ mongoose.connect(db, { useNewUrlParser: true })
 app.use(passport.initialize());
 
 app.use('/api', users);
+app.use('/akun', akun);
 
 app.use(express.static(path.join(__dirname, 'client/build')));
 
