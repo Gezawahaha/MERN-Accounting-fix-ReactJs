@@ -6,9 +6,18 @@ const passport = require("passport");
 const users = require("./routes/api/users");
 const akun = require("./routes/api/chart_of_account");
 
+
+
+
 //require('./config/passport')(passport);
 
 const app = express();
+const cors = require("cors");
+const morgan =require("morgan");
+
+app.use(cors());
+app.use(morgan('dev'));
+
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -28,7 +37,7 @@ app.listen(9000);
 const db = require("./config/keys").mongoURI;
 
 mongoose
-  .connect(db, {useNewUrlParser: true, useUnifiedTopology: true})
+  .connect(db, {useNewUrlParser: true, useCreateIndex: true})
   .then(() => console.log("MongoDB successfully connected."))
   .catch((err) => console.log(err));
 

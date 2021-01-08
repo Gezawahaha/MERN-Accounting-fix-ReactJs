@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import axios from "axios";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
-import AkunAddModal from "../partials/UserAddModal";
+import AkunAddModal from "../partials/AkunAddModal";
 import UserUpdateModal from "../partials/UserUpdateModal";
 import { toast, ToastContainer} from "react-toastify";
 
@@ -20,13 +20,13 @@ class DaftarAkun extends Component {
         super(props);
 
         this.columns = [
-            {
-                key: "_id",
-                text: "Id",
-                className: "id",
-                align: "left",
-                sortable: true,
-            },
+            // {
+            //     key: "_id",
+            //     text: "Id",
+            //     className: "id",
+            //     align: "left",
+            //     sortable: true,
+            // },
             {
                 key: "coa_account_number",
                 text: "Account Number",
@@ -43,32 +43,33 @@ class DaftarAkun extends Component {
             },
             {
                 key: "total_debit",
-                text: "debit",
+                text: "Total Debit",
                 className: "email",
                 align: "left",
                 sortable: true
             },
             {
                 key: "total_kredit",
-                text: "kredit",
+                text: "Total Kredit",
                 className: "email",
                 align: "left",
                 sortable: true
             },
+            // {
+            //     key: "created_at",
+            //     text: "created Date",
+            //     className: "date",
+            //     align: "left",
+            //     sortable: true
+            // },
             {
                 key: "updated_at",
-                text: "update Date",
+                text: "Update",
                 className: "date",
                 align: "left",
                 sortable: true
-            },
-            {
-                key: "created_at",
-                text: "created Date",
-                className: "date",
-                align: "left",
-                sortable: true
-            },
+            }
+            
             // {
             //     key: "action",
             //     text: "Action",
@@ -101,8 +102,8 @@ class DaftarAkun extends Component {
         this.config = {
             page_size: 10,
             length_menu: [ 10, 20, 50 ],
-            filename: "Users",
-            no_data_text: 'No user found!',
+            filename: "coa_account_number",
+            no_data_text: 'No akun found!',
             button: {
                 excel: true,
                 print: true,
@@ -132,10 +133,12 @@ class DaftarAkun extends Component {
         this.state = {
             currentRecord: {
                 id: '',
+                coa_account_number: '',
                 name: '',
-                email: '',
-                password: '',
-                password2: '',
+                total_debit: '',
+                total_kredit: '',
+                created_at: '',
+                updated_at: ''
             }
         };
 
@@ -143,7 +146,8 @@ class DaftarAkun extends Component {
     }
 
     componentDidMount() {
-        this.getData()
+        this.getData();
+        console.log("halo");
     };
 
     componentWillReceiveProps(nextProps) {
@@ -151,8 +155,7 @@ class DaftarAkun extends Component {
     }
 
     getData() {
-        axios
-            .post("/akun/CoA-data")
+        axios.get('/coa/CoA-data')
             .then(res => {
                 this.setState({ records: res.data})
             })
@@ -199,7 +202,7 @@ class DaftarAkun extends Component {
                                 <div className="col-sm-3 p-sm-2">
                                     <div className="card bg-primary text-white shadow-lg">
                                         <div className="card-body">
-                                        <h5 className="Center">Users</h5>
+                                        <h5 className="Center"></h5>
                                             {/* <h5 className="card-title">Users</h5>
                                             <p className="card-text">With supporting text below as a natural lead-in to
                                                 additional content.</p>
@@ -240,7 +243,7 @@ class DaftarAkun extends Component {
                                     </div>
                                 </div>
                             </div>
-
+                            
                             <ReactDatatable
                                 config={this.config}
                                 records={this.state.records}

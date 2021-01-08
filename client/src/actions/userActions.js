@@ -2,6 +2,7 @@ import axios from "axios";
 import {
     GET_ERRORS,
     USER_ADD,
+    USER_LOADING,
     USER_UPDATE
 } from "./types";
 
@@ -41,16 +42,14 @@ export const updateUser = (userData) => dispatch => {
 
 export const addAkun = (userData, history) => dispatch => {
     axios
-        .post("/api/add-CoA", userData)
+        .post("/coa/add-CoA", userData)
         .then(res =>
             dispatch({
-                type: USER_ADD,
+                type: USER_LOADING,
                 payload: res,
             })
         ).catch(err =>
         dispatch({
-            type: GET_ERRORS,
-            payload: err.response.data
         })
-    );
+        );
 };

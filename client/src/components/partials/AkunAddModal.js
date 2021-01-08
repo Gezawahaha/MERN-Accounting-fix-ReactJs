@@ -26,12 +26,11 @@ class AkunAddModal extends React.Component {
             this.setState({
                 errors: nextProps.errors
             });
-        }
-        
-            $('#add-akun-modal').modal('hide');
-            toast(nextProps.auth.user.data.message, {
-                position: toast.POSITION.TOP_CENTER
-            });
+        } 
+        $('#add-akun-modal').modal('hide');
+        toast("Akun Berhasil Di Masukan", {
+            position: toast.POSITION.TOP_CENTER
+        });
 
     }
 
@@ -45,6 +44,7 @@ class AkunAddModal extends React.Component {
             coa_account_number: this.state.coa_account_number,
             name: this.state.name,
         };
+        console.log(newAkun);
         this.props.addAkun(newAkun, this.props.history);
     };
 
@@ -60,7 +60,7 @@ class AkunAddModal extends React.Component {
                                 <button type="button" className="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div className="modal-body">
-                                <form noValidate onSubmit={this.onAkunAdd} id="CoA-add">
+                                <form noValidate onSubmit={this.onAkunAdd} id="add-CoA">
                                     <div className="row mt-2">
                                         <div className="col-md-3">
                                             <label htmlFor="name">Name</label>
@@ -80,7 +80,7 @@ class AkunAddModal extends React.Component {
                                     </div>
                                     <div className="row mt-2">
                                         <div className="col-md-3">
-                                            <label htmlFor="email">Nomor Akun</label>
+                                            <label >Nomor Akun</label>
                                         </div>
                                         <div className="col-md-9">
                                             <input
@@ -101,7 +101,7 @@ class AkunAddModal extends React.Component {
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <button
-                                    form="add-akun"
+                                    form="add-CoA"
                                     type="submit"
                                     className="btn btn-primary">
                                     Add Akun
