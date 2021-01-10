@@ -27,6 +27,7 @@ class AkunAddModal extends React.Component {
                 errors: nextProps.errors
             });
         } 
+        //toast nya masih suka muncul haru di kasih propertise if 
         $('#add-akun-modal').modal('hide');
         toast("Akun Berhasil Di Masukan", {
             position: toast.POSITION.TOP_CENTER

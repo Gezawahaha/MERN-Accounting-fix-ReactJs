@@ -20,6 +20,8 @@ import '../node_modules/popper.js/dist/popper';
 import Dashboard from "./components/pages/Dashboard";
 import User from "./components/pages/Users";
 import DaftarAkun from "./components/pages/DaftarAkun";
+// import DaftarMain   Akun from "./components/pages/DaftarMainAkun";
+// import DaftarSubAkun from "./components/pages/DaftarSubAkun";
 
 if (localStorage.jwtToken) {
     const token = localStorage.jwtToken;
@@ -47,6 +49,8 @@ class App extends Component {
                                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
                                 <PrivateRoute exact path="/users" component={User} />
                                 <PrivateRoute exact path="/daftarakun" component={DaftarAkun} />
+                                {/* <PrivateRoute exact path="/daftarmainakun" component={DaftarMainAkun} />
+                                <PrivateRoute exact path="/daftarsubakun" component={DaftarSubAkun} /> */}
                             </Switch>
                             <Route exact path="*" component={NotFound} />
                         </Switch>

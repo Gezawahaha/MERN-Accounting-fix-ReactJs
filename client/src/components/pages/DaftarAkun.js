@@ -12,7 +12,9 @@ import AkunAddModal from "../partials/AkunAddModal";
 import UserUpdateModal from "../partials/UserUpdateModal";
 import { toast, ToastContainer} from "react-toastify";
 
-import {Link} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
+import { Button } from "@material-ui/core";
+import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
 
 class DaftarAkun extends Component {
 
@@ -197,28 +199,20 @@ class DaftarAkun extends Component {
                             <button className="btn btn-link mt-3" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
                             <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-akun-modal"><FontAwesomeIcon icon={faPlus}/> Add Chart Akun</button>
                             <h1 className="mt-2 text-primary">Daftar Akun</h1>
+                        
+
 
                             <div className="row px-2">
+                                
                                 <div className="col-sm-3 p-sm-2">
-                                    <div className="card bg-primary text-white shadow-lg">
-                                        <div className="card-body">
-                                        <h5 className="Center"></h5>
-                                            {/* <h5 className="card-title">Users</h5>
-                                            <p className="card-text">With supporting text below as a natural lead-in to
-                                                additional content.</p>
-                                            <Link to="/users" className="btn btn-light"> Go to Users</Link> */}
-
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-sm-3 p-sm-2">
+                                    
                                     <div className="card bg-secondary text-white shadow-lg">
                                         <div className="card-body">
                                             {/* <h5 className="card-title">Special title treatment</h5>
                                             <p className="card-text">With supporting text below as a natural lead-in to
                                                 additional content.</p>
                                             <a href="#" className="btn btn-light">Go somewhere</a> */}
+                                            <button></button>
                                         </div>
                                     </div>
                                 </div>

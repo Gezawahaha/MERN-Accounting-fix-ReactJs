@@ -27,6 +27,9 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
 
+import { SidebarData } from './SidebarData';
+import SubMenu from './SubMenu';
+
 const Nav = styled.div`
   background: #15171c;
   height: 80px;
@@ -57,8 +60,8 @@ const SidebarNav = styled.nav`
   z-index: 10;
 `;
 
-const SidebarWrap = styled.div`
-  width: 100%;
+const Background = styled.div`
+  background: #15171c;
 `;
 
 
@@ -78,51 +81,60 @@ class Sidebar extends Component {
         
 
         return (
-            
+            <Background >
 
-            <div className="border-right h-100" id="sidebar-wrapper">
-                <div className="list-group list-group-flush">
-                    <List >
-                        
-                        <Link to="/dashboard" className="list-group-item list-group-item-action"><HomeIcon className="icon-side"/><a >Dashboard</a></Link>
-                        <Link to="/" className="list-group-item list-group-item-action"> <AssignmentIcon className="icon-side"/>Laporan</Link>
-                        
-                    </List>
-                    <Divider />
-                    <Divider />
-                    <Divider />
-                    <List >
-                        
-                        <Link to="/" className="list-group-item list-group-item-action"><AccountBalanceIcon className="icon-side"/><a >Kas & Bank</a></Link>
-                        <Link to="/" className="list-group-item list-group-item-action"> <LoyaltyIcon className="icon-side"/>Penjualan</Link>
-                        <Link to="/" className="list-group-item list-group-item-action"> <ShoppingCartIcon className="icon-side"/>Pembelian</Link>
-                        <Link to="/" className="list-group-item list-group-item-action"> <ReceiptIcon className="icon-side"/>Biaya</Link>
-                        
-                        
-                    </List>
+                <div className="border-right h-100" id="sidebar-wrapper">
+                    <div className="list-group list-group-flush">
+                    
+                        {SidebarData.map((item, index) => {
+                            return <SubMenu item={item} key={index} />;
+                        })}
+                    
 
-                    <Divider />
-                    <Divider />
-                    <Divider />
+                        {/*             
+                        <List >
+                            
+                            <Link to="/dashboard" className="list-group-item list-group-item-action"><HomeIcon className="icon-side"/><a >Dashboard</a></Link>
+                            <Link to="/" className="list-group-item list-group-item-action"> <AssignmentIcon className="icon-side"/>Laporan</Link>
+                            
+                        </List>
+                        <Divider />
+                        <Divider />
+                        <Divider />
+                        <List >
+                            
+                            <Link to="/" className="list-group-item list-group-item-action"><AccountBalanceIcon className="icon-side"/><a >Kas & Bank</a></Link>
+                            <Link to="/" className="list-group-item list-group-item-action"> <LoyaltyIcon className="icon-side"/>Penjualan</Link>
+                            <Link to="/" className="list-group-item list-group-item-action"> <ShoppingCartIcon className="icon-side"/>Pembelian</Link>
+                            <Link to="/" className="list-group-item list-group-item-action"> <ReceiptIcon className="icon-side"/>Biaya</Link>
+                            
+                            
+                        </List>
 
-                    <List >
-                        <Link to="/users" className="list-group-item list-group-item-action"> <PermContactCalendarIcon className="icon-side"/>Kontak</Link>
-                        <Link to="/daftarakun" className="list-group-item list-group-item-action"> <BallotIcon className="icon-side"/>Daftar Akun</Link>                     
-                    </List>
+                        <Divider />
+                        <Divider />
+                        <Divider />
 
-                    <Divider />
-                    <Divider />
-                    <Divider />
+                        <List >
+                            <Link to="/users" className="list-group-item list-group-item-action"> <PermContactCalendarIcon className="icon-side"/>Kontak</Link>
+                            <Link to="/daftarakun" className="list-group-item list-group-item-action"> <BallotIcon className="icon-side"/>Daftar Akun</Link>                     
+                        </List>
 
-                    <List >
-                        <button className="list-group-item list-group-item-action" onClick={this.onLogoutClick}>Logout <a>{ user.name }</a> <FontAwesomeIcon icon={faSignOutAlt} /></button>
-                    </List>
+                        <Divider />
+                        <Divider />
+                        <Divider />
+
+                        <List >
+                            <button className="list-group-item list-group-item-action" onClick={this.onLogoutClick}>Logout <a>{ user.name }</a> <FontAwesomeIcon icon={faSignOutAlt} /></button>
+                        </List> 
+                        */}
 
 
 
-                </div> 
-                
-            </div>
+                    </div> 
+                    
+                </div>
+            </Background>
             
         );
     }
