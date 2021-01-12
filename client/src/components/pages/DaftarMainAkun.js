@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import axios from "axios";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
-import AkunAddModal from "../partials/AkunAddModal";
+import MainAkunAddModal from "../partials/MainAkunAddModal";
 import UserUpdateModal from "../partials/UserUpdateModal";
 import { toast, ToastContainer} from "react-toastify";
 
@@ -16,7 +16,7 @@ import {Link, NavLink} from "react-router-dom";
 import { Button } from "@material-ui/core";
 import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
 
-class DaftarAkun extends Component {
+class DaftarMainAkun extends Component {
 
     constructor(props) {
         super(props);
@@ -135,6 +135,7 @@ class DaftarAkun extends Component {
         this.state = {
             currentRecord: {
                 id: '',
+                main_account_number: '',
                 coa_account_number: '',
                 name: '',
                 total_debit: '',
@@ -157,7 +158,7 @@ class DaftarAkun extends Component {
     }
 
     getData() {
-        axios.get('/coa/CoA-data')
+        axios.get('/coa/main/')
             .then(res => {
                 this.setState({ records: res.data})
             })
@@ -192,13 +193,13 @@ class DaftarAkun extends Component {
                 <Navbar />
                 <div className="d-flex" id="wrapper">
                     <Sidebar/>
-                    <AkunAddModal />
+                    <MainAkunAddModal />
                     <UserUpdateModal record={this.state.currentRecord}/>
                     <div id="page-content-wrapper">
                         <div className="container-fluid">
                             <button className="btn btn-link mt-3" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
-                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-akun-modal"><FontAwesomeIcon icon={faPlus}/> Add Chart Akun</button>
-                            <h1 className="mt-2 text-primary">Daftar Akun</h1>
+                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-mainakun-modal"><FontAwesomeIcon icon={faPlus}/> Add Main Akun</button>
+                            <h1 className="mt-2 text-primary">Main Akun</h1>
                         
 
 
@@ -220,7 +221,7 @@ class DaftarAkun extends Component {
 
 }
 
-DaftarAkun.propTypes = {
+DaftarMainAkun.propTypes = {
     auth: PropTypes.object.isRequired,
 };
 
@@ -231,4 +232,4 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps
-)(DaftarAkun);
+)(DaftarMainAkun);

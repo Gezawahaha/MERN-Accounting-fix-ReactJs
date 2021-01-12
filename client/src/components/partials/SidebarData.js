@@ -4,8 +4,54 @@ import * as AiIcons from 'react-icons/ai';
 import * as IoIcons from 'react-icons/io';
 import * as RiIcons from 'react-icons/ri';
 
+import PermContactCalendarIcon from '@material-ui/icons/PermContactCalendar';
+import HomeIcon from '@material-ui/icons/Home';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import LoyaltyIcon from '@material-ui/icons/Loyalty';
+import ReceiptIcon from '@material-ui/icons/Receipt';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import BallotIcon from '@material-ui/icons/Ballot';
+import HorizontalSplitIcon from '@material-ui/icons/HorizontalSplit';
+
+import Divider from '@material-ui/core/Divider';
 
 export const SidebarData = [
+    {
+      
+        title: 'Dashboard',
+        path: '/dashboard',
+        icon: <AiIcons.AiFillHome />
+      
+    },
+    {
+      
+      title: 'Kas & Bank',
+      path: '/dashboard',
+      icon: <AccountBalanceIcon />
+    
+    },
+    {
+        
+      title: 'Penjualan',
+      path: '/dashboard',
+      icon: <LoyaltyIcon />
+    
+    },
+    {
+          
+      title: 'Pembelian',
+      path: '/dashboard',
+      icon: <ShoppingCartIcon />
+
+    },
+    {
+          
+      title: 'Biaya',
+      path: '/dashboard',
+      icon: <ReceiptIcon />
+
+    },
     {
         title: 'Overview',
         path: '/dashboard',
@@ -35,20 +81,14 @@ export const SidebarData = [
     
         subNav: [
           {
-            title: 'Chart of Account',
-            path: '/reports/reports1',
-            icon: <IoIcons.IoIosPaper />,
-            cName: 'sub-nav'
-          },
-          {
             title: 'Main Account',
-            path: '/reports/reports2',
+            path: '/daftarakun/daftarmainakun',
             icon: <IoIcons.IoIosPaper />,
             cName: 'sub-nav'
           },
           {
             title: 'Sub Account',
-            path: '/reports/reports3',
+            path: '/daftarakun/SubAkun',
             icon: <IoIcons.IoIosPaper />
           }
         ]

@@ -5,7 +5,7 @@ const Sub = require("../../models/sub_account");
 const moment = require("moment");
 
 //SUBMIT A POST
-router.post("/", async (req, res) => {
+router.post("/MoA-add", async (req, res) => {
   const post = new Post({
     main_account_number: req.body.main_account_number,
     name: req.body.name,

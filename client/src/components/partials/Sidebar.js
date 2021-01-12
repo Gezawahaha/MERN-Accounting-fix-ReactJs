@@ -30,6 +30,12 @@ import Divider from '@material-ui/core/Divider';
 import { SidebarData } from './SidebarData';
 import SubMenu from './SubMenu';
 
+import ListItemText from '@material-ui/core/ListItemText';
+
+import MetisMenu from "metismenujs";
+
+import SimpleBar from "simplebar-react";
+
 const Nav = styled.div`
   background: #15171c;
   height: 80px;
@@ -61,7 +67,7 @@ const SidebarNav = styled.nav`
 `;
 
 const Background = styled.div`
-  background: #15171c;
+    background: #15171c;
 `;
 
 
@@ -83,15 +89,18 @@ class Sidebar extends Component {
         return (
             <Background >
 
-                <div className="border-right h-100" id="sidebar-wrapper">
+
+             <div className="border-right h-100" id="sidebar-wrapper">
                     <div className="list-group list-group-flush">
                     
-                        {SidebarData.map((item, index) => {
-                            return <SubMenu item={item} key={index} />;
-                        })}
-                    
-
-                        {/*             
+                        
+                            {SidebarData.map((item, index) => {
+                                
+                                return <SubMenu item={item} key={index} />;
+                            })}
+                       
+                        
+{/*                             
                         <List >
                             
                             <Link to="/dashboard" className="list-group-item list-group-item-action"><HomeIcon className="icon-side"/><a >Dashboard</a></Link>
@@ -127,13 +136,16 @@ class Sidebar extends Component {
                         <List >
                             <button className="list-group-item list-group-item-action" onClick={this.onLogoutClick}>Logout <a>{ user.name }</a> <FontAwesomeIcon icon={faSignOutAlt} /></button>
                         </List> 
-                        */}
-
-
-
+                         */}
+                        
+                         <List >
+                            <button className="list-group-item list-group-item-action" onClick={this.onLogoutClick}>Logout <a>{ user.name }</a> <FontAwesomeIcon icon={faSignOutAlt} /></button>
+                        </List>
                     </div> 
                     
                 </div>
+
+                
             </Background>
             
         );
