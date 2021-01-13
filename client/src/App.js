@@ -21,7 +21,7 @@ import Dashboard from "./components/pages/Dashboard";
 import User from "./components/pages/Users";
 import DaftarAkun from "./components/pages/DaftarAkun";
 import DaftarMainAkun from "./components/pages/DaftarMainAkun";
-// import DaftarSubAkun from "./components/pages/DaftarSubAkun";
+import DaftarSubAkun from "./components/pages/DaftarSubAkun";
 
 if (localStorage.jwtToken) {
     const token = localStorage.jwtToken;
@@ -50,7 +50,7 @@ class App extends Component {
                                 <PrivateRoute exact path="/users" component={User} />
                                 <PrivateRoute exact path="/daftarakun" component={DaftarAkun} />
                                 <PrivateRoute exact path="/daftarakun/daftarmainakun" component={DaftarMainAkun} />
-                                {/* <PrivateRoute exact path="/daftarsubakun" component={DaftarSubAkun} /> */}
+                                <PrivateRoute exact path="/daftarakun/daftarsubakun" component={DaftarSubAkun} />
                             </Switch>
                             <Route exact path="*" component={NotFound} />
                         </Switch>

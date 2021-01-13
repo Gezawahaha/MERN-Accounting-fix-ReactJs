@@ -88,7 +88,7 @@ export const SidebarData = [
           },
           {
             title: 'Sub Account',
-            path: '/daftarakun/SubAkun',
+            path: '/daftarakun/daftarsubakun',
             icon: <IoIcons.IoIosPaper />
           }
         ]

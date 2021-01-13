@@ -14,7 +14,7 @@ const moment = require("moment");
 // });
 
 //SUBMIT A POST
-router.post("/", async (req, res) => {
+router.post("/SoA-add", async (req, res) => {
   const post = new Post({
     sub_account_number: req.body.sub_account_number,
     name: req.body.name,

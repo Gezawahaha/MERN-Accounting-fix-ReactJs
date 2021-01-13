@@ -53,3 +53,31 @@ export const addAkun = (userData, history) => dispatch => {
         })
         );
 };
+
+export const addMainAkun = (userData, history) => dispatch => {
+    axios
+        .post("/coa/main/MoA-add", userData)
+        .then(res =>
+            dispatch({
+                type: USER_LOADING,
+                payload: res,
+            })
+        ).catch(err =>
+        dispatch({
+        })
+        );
+};
+
+export const addSubAkun = (userData, history) => dispatch => {
+    axios
+        .post("/coa/main/sub/SoA-add", userData)
+        .then(res =>
+            dispatch({
+                type: USER_LOADING,
+                payload: res,
+            })
+        ).catch(err =>
+        dispatch({
+        })
+        );
+};

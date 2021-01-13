@@ -2,7 +2,7 @@ import React from 'react'
 import classnames from "classnames";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { addMainAkun } from "../../actions/userActions";
+import { addSubAkun } from "../../actions/userActions";
 import { withRouter } from "react-router-dom";
 import { toast } from 'react-toastify';
 import $ from 'jquery';
@@ -10,12 +10,12 @@ import axios from "axios";
 import 'react-toastify/dist/ReactToastify.css';
 import Select from "react-select";
 
-class MainAkunAddModal extends React.Component {
+class SubAkunAddModal extends React.Component {
 
     constructor() {
         super();
         this.state = {
-            main_account_number: "",
+            sub_account_number: "",
             coa_account_number: "",
             name: "",
             CoAs: [],
@@ -43,13 +43,13 @@ class MainAkunAddModal extends React.Component {
 
     onAkunAdd = e => {
         e.preventDefault();
-        const newMainAkun = {
+        const newSubAkun = {
+            sub_account_number: this.state.sub_account_number,
             main_account_number: this.state.main_account_number,
-            coa_account_number: this.state.coa_account_number,
             name: this.state.name,
         };
-        console.log(newMainAkun);
-        this.props.addMainAkun(newMainAkun, this.props.history);
+        console.log(newSubAkun);
+        this.props.addSubAkun(newSubAkun, this.props.history);
         $('#add-mainakun-modal').modal('hide');
             toast("Waiting For Load Data", {
                 position: toast.POSITION.TOP_CENTER
@@ -63,12 +63,12 @@ class MainAkunAddModal extends React.Component {
     }
 
     getData() {
-        axios.get('/coa/CoA-data')
+        axios.get('')
         .then(response => {
             if (response.data.length > 0) {
               this.setState({
                 //items: response.json(),
-                items: response.data.map(item => item.coa_account_number)
+                //items: response.data.map(item => item.coa_account_number)
                 //CoAs: response.data.map(CoA => CoA.coa_account_number)
               })
               
@@ -91,14 +91,14 @@ class MainAkunAddModal extends React.Component {
                     <div className="modal-dialog modal-lg">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h4 className="modal-title">Add Main Akun</h4>
+                                <h4 className="modal-title">Add Sub Akun</h4>
                                 <button type="button" className="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div className="modal-body">
                                 <form noValidate onSubmit={this.onAkunAdd} id="add-CoA">
                                     <div className="row mt-2">
                                         <div className="col-md-3">
-                                            <label >Account</label>
+                                            <label >Main Account</label>
                                         </div>
                                         <div className="col-md-9">
                                         
@@ -128,17 +128,17 @@ class MainAkunAddModal extends React.Component {
 
                                             <input
                                                 onChange={this.onChange}
-                                                value={this.state.coa_account_number}
-                                                error={errors.coa_account_number}
-                                                id="coa_account_number"
+                                                value={this.state.main_account_number}
+                                                error={errors.main_account_number}
+                                                id="main_account_number"
                                                 type="number"
                                                 className={classnames("form-control", {
-                                                    invalid: errors.coa_account_number
+                                                    invalid: errors.main_account_number
                                                 })}
                                             >
                                                 
                                             </input>
-                                            <span className="text-danger">{errors.coa_account_number}</span>
+                                            <span className="text-danger">{errors.main_account_number}</span>
                                         </div>
                                     </div>
                                     <div className="row mt-2">
@@ -165,15 +165,15 @@ class MainAkunAddModal extends React.Component {
                                         <div className="col-md-9">
                                             <input
                                                 onChange={this.onChange}
-                                                value={this.state.main_account_number}
-                                                error={errors.main_account_number}
-                                                id="main_account_number"
-                                                type="number"
+                                                value={this.state.sub_account_number}
+                                                error={errors.sub_account_number}
+                                                id="sub_account_number"
+                                                type="text"
                                                 className={classnames("form-control", {
-                                                    invalid: errors.main_account_number
+                                                    invalid: errors.sub_account_number
                                                 })}
                                             />
-                                            <span className="text-danger">{errors.main_account_number}</span>
+                                            <span className="text-danger">{errors.sub_account_number}</span>
                                         </div>
                                     </div>
                                 </form>
@@ -195,8 +195,8 @@ class MainAkunAddModal extends React.Component {
     }
 }
 
-MainAkunAddModal.propTypes = {
-    addMainAkun: PropTypes.func.isRequired,
+SubAkunAddModal.propTypes = {
+    addSubAkun: PropTypes.func.isRequired,
     errors: PropTypes.object.isRequired
 };
 
@@ -207,5 +207,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { addMainAkun }
-)(withRouter(MainAkunAddModal));
+    { addSubAkun }
+)(withRouter(SubAkunAddModal));
