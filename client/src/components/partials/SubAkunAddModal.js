@@ -19,7 +19,7 @@ class SubAkunAddModal extends React.Component {
             coa_account_number: "",
             name: "",
             CoAs: [],
-            nameAkuns: [],
+            length: 0,
             items: [],
             errors: {},
         };
@@ -38,7 +38,7 @@ class SubAkunAddModal extends React.Component {
 
     onChange = e => {
         this.setState({ [e.target.id]: e.target.value });
-        console.log(e);
+        //console.log(e);
     };
 
     onAkunAdd = e => {
@@ -63,25 +63,46 @@ class SubAkunAddModal extends React.Component {
     }
 
     getData() {
-        axios.get('')
+        axios.get('/coa/main/test/MoA-data')
         .then(response => {
             if (response.data.length > 0) {
               this.setState({
-                //items: response.json(),
-                //items: response.data.map(item => item.coa_account_number)
-                //CoAs: response.data.map(CoA => CoA.coa_account_number)
+                items: response.data,
+                length: response.data.length
               })
               
             }
-            console.log(this.state.items);
+            //console.log("length",this.state.length);
         })
     }
 
-    onChangeAkun(e) {
+    onChangeAkun = e => {
         this.setState({
-          name: e.target.value
+            main_account_number: e.main_account_number,
+            sub_account_number: `${e.main_account_number}-`
+
         })
+        console.log("test akun",e.coa_account_number);
     }
+
+    // onChangeAkun = e => {
+    //     if(this.state.length < 10) {
+    //       this.setState({
+    //         main_account_number: e.main_account_number,
+    //         sub_account_number: `${e.main_account_number}.00${this.state.length}`
+      
+    //     })
+    //     }
+    //     if(this.state.length >= 10) {
+    //       this.setState({
+    //         main_account_number: e.main_account_number,
+    //         sub_account_number: `${e.main_account_number}.0${this.state.length}`
+      
+    //     })
+    //     }
+        
+    //     //console.log("test akun",e.coa_account_number);
+    //   }
 
     render() {
         const { errors } = this.state;
@@ -102,31 +123,24 @@ class SubAkunAddModal extends React.Component {
                                         </div>
                                         <div className="col-md-9">
                                         
-                                        
-                                            {/* <select 
+                                            <Select 
                                                 
-                                                id="coa_account_number"
-                                                type="number"
-                                                className={classnames("form-control", {
-                                                    invalid: errors.coa_account_number
-                                                })}
-                                                onChange={this.onChange}  
-                                                value={this.state.coa_account_number} 
-
                                                 
-                                            >
-                                                 {   
-                                                    this.state.items.map(function(item) {
-                                                    return <option 
-                                                        key={item}
-                                                        value={item}>{item}
-                                                        </option>;
-                                                    })
-                                                } 
-                                            </select> */}
+                                                 type="number"
+                                                 className={classnames("", {
+                                                     invalid: errors.sub_account_number
+                                                 })}
+                                                 onChange={this.onChangeAkun}
+                                                 getOptionValue={option => option.main_account_number}
+                                                 getOptionLabel={option => option.name}
+                                                 options={this.state.items}
+ 
+                                                 
+                                             />
+                                            
                                            
 
-                                            <input
+                                            {/* <input
                                                 onChange={this.onChange}
                                                 value={this.state.main_account_number}
                                                 error={errors.main_account_number}
@@ -135,10 +149,10 @@ class SubAkunAddModal extends React.Component {
                                                 className={classnames("form-control", {
                                                     invalid: errors.main_account_number
                                                 })}
-                                            >
+                                            /> */}
                                                 
-                                            </input>
-                                            <span className="text-danger">{errors.main_account_number}</span>
+                                            
+                                            <span className="text-danger">{errors.sub_account_number}</span>
                                         </div>
                                     </div>
                                     <div className="row mt-2">

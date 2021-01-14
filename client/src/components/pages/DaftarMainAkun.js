@@ -11,10 +11,12 @@ import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import MainAkunAddModal from "../partials/MainAkunAddModal";
 import UserUpdateModal from "../partials/UserUpdateModal";
 import { toast, ToastContainer} from "react-toastify";
+import CurrencyFormat from 'react-currency-format';
 
 import {Link, NavLink} from "react-router-dom";
 import { Button } from "@material-ui/core";
 import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import { data } from "jquery";
 
 class DaftarMainAkun extends Component {
 
@@ -30,7 +32,7 @@ class DaftarMainAkun extends Component {
             //     sortable: true,
             // },
             {
-                key: "coa_account_number",
+                key: "main_account_number",
                 text: "Account Number",
                 className: "name",
                 align: "left",
@@ -46,9 +48,10 @@ class DaftarMainAkun extends Component {
             {
                 key: "total_debit",
                 text: "Total Debit",
-                className: "email",
+                className: "currency",
                 align: "left",
-                sortable: true
+                sortable: true,
+                //cell: data => <React.Fragment>{this.toCurrency(data.value)}</React.Fragment>
             },
             {
                 key: "total_kredit",
@@ -148,19 +151,30 @@ class DaftarMainAkun extends Component {
         this.getData = this.getData.bind(this);
     }
 
+    toCurrency(numberString) {
+    console.log("number" ,numberString);
+    let number = parseFloat(numberString);
+    return (<CurrencyFormat value={number} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} />);
+    }   
+
+
     componentDidMount() {
         this.getData();
-        console.log("halo");
+        //console.log("halo", this.state.records);
     };
 
     componentWillReceiveProps(nextProps) {
-        this.getData()
+        this.getData();
+        
     }
 
     getData() {
-        axios.get('/coa/main/')
+        axios.get('/coa/main/test/MoA-data')
             .then(res => {
-                this.setState({ records: res.data})
+                this.setState({ 
+                    records: res.data,
+                })
+                //console.log("DK", this.state.records);
             })
             .catch()
     }

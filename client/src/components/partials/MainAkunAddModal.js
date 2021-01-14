@@ -19,7 +19,7 @@ class MainAkunAddModal extends React.Component {
             coa_account_number: "",
             name: "",
             CoAs: [],
-            nameAkuns: [],
+            length: 0,
             items: [],
             errors: {},
         };
@@ -60,6 +60,8 @@ class MainAkunAddModal extends React.Component {
 
     componentDidMount() {
         this.getData();
+        console.log("length",this.state.items);
+        //this.getDataMain();
     }
 
     getData() {
@@ -67,21 +69,54 @@ class MainAkunAddModal extends React.Component {
         .then(response => {
             if (response.data.length > 0) {
               this.setState({
-                //items: response.json(),
-                items: response.data.map(item => item.coa_account_number)
-                //CoAs: response.data.map(CoA => CoA.coa_account_number)
+                items: response.data
               })
               
             }
-            console.log(this.state.items);
+            console.log("length",this.state.length);
         })
     }
 
-    onChangeAkun(e) {
-        this.setState({
-          name: e.target.value
+    getDataMain() {
+        axios.get('/coa/main/test/MoA-data')
+        .then(response => {
+            if (response.data.length > 0) {
+              this.setState({
+                length: response.data.length
+              })
+              
+            }
+            console.log("length",this.state.length);
         })
     }
+
+    onChangeAkun = e => {
+        this.setState({
+            coa_account_number: e.coa_account_number,
+            main_account_number: `${e.coa_account_number}-`
+
+        })
+        //console.log("test akun",e.coa_account_number);
+    }
+
+    // onChangeAkun = e => {
+    //     if(this.state.length < 10) {
+    //       this.setState({
+    //         coa_account_number: e.coa_account_number,
+    //         main_account_number: `${e.coa_account_number}-0${this.state.length}`
+      
+    //     })
+    //     }
+    //     if(this.state.length >= 10) {
+    //       this.setState({
+    //         coa_account_number: e.coa_account_number,
+    //         main_account_number: `${e.coa_account_number}-${this.state.length}`
+      
+    //     })
+    //     }
+        
+    //     console.log("test akun",e.coa_account_number);
+    //   }
 
     render() {
         const { errors } = this.state;
@@ -103,30 +138,25 @@ class MainAkunAddModal extends React.Component {
                                         <div className="col-md-9">
                                         
                                         
-                                            {/* <select 
+                                            <Select 
                                                 
-                                                id="coa_account_number"
+                                               
                                                 type="number"
-                                                className={classnames("form-control", {
+                                                className={classnames("", {
                                                     invalid: errors.coa_account_number
                                                 })}
-                                                onChange={this.onChange}  
-                                                value={this.state.coa_account_number} 
+                                                onChange={this.onChangeAkun}
+                                                getOptionValue={option => option.coa_account_number}
+                                                getOptionLabel={option => option.name}
+                                                options={this.state.items}
 
                                                 
-                                            >
-                                                 {   
-                                                    this.state.items.map(function(item) {
-                                                    return <option 
-                                                        key={item}
-                                                        value={item}>{item}
-                                                        </option>;
-                                                    })
-                                                } 
-                                            </select> */}
+                                            />
+                                                
+                                            
                                            
 
-                                            <input
+                                            {/* <input
                                                 onChange={this.onChange}
                                                 value={this.state.coa_account_number}
                                                 error={errors.coa_account_number}
@@ -135,9 +165,9 @@ class MainAkunAddModal extends React.Component {
                                                 className={classnames("form-control", {
                                                     invalid: errors.coa_account_number
                                                 })}
-                                            >
+                                            /> */}
                                                 
-                                            </input>
+                                            
                                             <span className="text-danger">{errors.coa_account_number}</span>
                                         </div>
                                     </div>
@@ -159,6 +189,7 @@ class MainAkunAddModal extends React.Component {
                                         </div>
                                     </div>
                                     <div className="row mt-2">
+
                                         <div className="col-md-3">
                                             <label >Nomor Akun</label>
                                         </div>
@@ -168,13 +199,14 @@ class MainAkunAddModal extends React.Component {
                                                 value={this.state.main_account_number}
                                                 error={errors.main_account_number}
                                                 id="main_account_number"
-                                                type="number"
+                                                type="text"
                                                 className={classnames("form-control", {
                                                     invalid: errors.main_account_number
                                                 })}
                                             />
                                             <span className="text-danger">{errors.main_account_number}</span>
                                         </div>
+
                                     </div>
                                 </form>
                             </div>

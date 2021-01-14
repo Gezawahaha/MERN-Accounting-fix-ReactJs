@@ -48,7 +48,7 @@ export const SidebarData = [
     {
           
       title: 'Biaya',
-      path: '/dashboard',
+      path: '/biaya',
       icon: <ReceiptIcon />
 
     },

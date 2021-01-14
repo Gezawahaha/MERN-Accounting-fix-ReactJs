@@ -104,8 +104,8 @@ class DaftarSubAkun extends Component {
         this.config = {
             page_size: 10,
             length_menu: [ 10, 20, 50 ],
-            filename: "coa_account_number",
-            no_data_text: 'No akun found!',
+            filename: "sub_account_number",
+            no_data_text: 'No sub akun found!',
             button: {
                 excel: true,
                 print: true,
@@ -146,19 +146,21 @@ class DaftarSubAkun extends Component {
         };
 
         this.getData = this.getData.bind(this);
+
     }
 
     componentDidMount() {
         this.getData();
-        console.log("halo");
+        //console.log("test",this.state.records)
     };
 
     componentWillReceiveProps(nextProps) {
         this.getData()
+        
     }
 
     getData() {
-        axios.get('')
+        axios.get('/coa/main/sub/Sub-data')
             .then(res => {
                 this.setState({ records: res.data})
             })
