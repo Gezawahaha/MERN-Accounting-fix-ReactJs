@@ -6,18 +6,14 @@ const passport = require("passport");
 const users = require("./routes/api/users");
 const akun = require("./routes/api/chart_of_account");
 
-
-
-
 //require('./config/passport')(passport);
 
 const app = express();
 const cors = require("cors");
-const morgan =require("morgan");
+const morgan = require("morgan");
 
 app.use(cors());
-app.use(morgan('dev'));
-
+app.use(morgan("dev"));
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -52,6 +48,8 @@ app.use(express.json());
 const ChartOfAccountRoute = require("./routes/api/chart_of_account");
 const MainAccountRoute = require("./routes/api/main_account");
 const SubAccountRoute = require("./routes/api/sub_account");
+const ExpensesRoute = require("./routes/api/expenses");
+const ExpensesDetailsRoute = require("./routes/api/expenses_detail");
 // const CustomerRoute = require("./routes/api/customer");
 // const EmployeeRoute = require("./routes/api/employee");
 // const InvoiceRoute = require("./routes/api/invoice");
@@ -61,6 +59,8 @@ const SubAccountRoute = require("./routes/api/sub_account");
 app.use("/coa", ChartOfAccountRoute);
 app.use("/coa/main", MainAccountRoute);
 app.use("/coa/main/sub", SubAccountRoute);
+app.use("/expense", ExpensesRoute);
+app.use("/expense/details", ExpensesDetailsRoute);
 // app.use("/customer", CustomerRoute);
 // app.use("/employee", EmployeeRoute);
 // app.use("/invoice", InvoiceRoute);
