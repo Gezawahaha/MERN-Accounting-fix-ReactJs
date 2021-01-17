@@ -159,7 +159,9 @@ class DaftarSubAkun extends Component {
 
     componentDidMount() {
         this.getData();
-        //console.log("test",this.state.records)
+        //console.log("testad", this.state.records);
+        
+        
     };
 
     componentWillReceiveProps(nextProps) {
@@ -171,8 +173,10 @@ class DaftarSubAkun extends Component {
         axios.get('/coa/main/sub/Sub-data')
             .then(res => {
                 this.setState({ records: res.data})
+                //console.log("DK", this.state.records);
             })
             .catch()
+            
     }
 
     editRecord(record) {
@@ -216,6 +220,7 @@ class DaftarSubAkun extends Component {
                             
                             
                             <ReactDatatable
+                                
                                 config={this.config}
                                 records={this.state.records}
                                 columns={this.columns}

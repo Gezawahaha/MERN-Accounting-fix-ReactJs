@@ -139,6 +139,14 @@ class Biaya extends Component {
         };
 
         this.state = {
+            kaskecil: []
+        };
+
+        this.state = {
+            kasbesar: []
+        };
+
+        this.state = {
             currentRecord: {
                 id: '',
                 coa_account_number: '',
@@ -153,10 +161,21 @@ class Biaya extends Component {
         this.getData = this.getData.bind(this);
     }
 
+    componentDidMount() {
+        this.getData();
+        //console.log("test",this.state.records);
+    };
+
+
     getData() {
-        axios.get('/coa/CoA-data')
+        axios.get('/coa/main/sub/Sub-data')
             .then(res => {
-                this.setState({ records: res.data})
+                this.setState({ 
+                    records: res.data,
+                    kaskecil: res.data[1].total_debit,
+                    kasbesar: res.data[0].total_debit
+                })
+                console.log("DK", this.state.kasbesar);
             })
             .catch()
     }
@@ -185,7 +204,7 @@ class Biaya extends Component {
                                         <div className="card-body">
                                             <h5 className="card-title">Saldo Kas Kecil</h5>
                                             <small>TOTAL</small>
-                                            <h2 className="card-text"><CurrencyFormat value={500000000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
+                                            <h2 className="card-text"><CurrencyFormat value={ this.state.kaskecil } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
                                         </div>
                                     </div>
                                 </div>
@@ -194,7 +213,7 @@ class Biaya extends Component {
                                         <div className="card-body">
                                         <h5 className="card-title">Saldo Kas Besar</h5>
                                             <small>TOTAL</small>
-                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={1000000000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
+                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={ this.state.kasbesar } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
                                         </div>
                                     </div>
                                 </div>
