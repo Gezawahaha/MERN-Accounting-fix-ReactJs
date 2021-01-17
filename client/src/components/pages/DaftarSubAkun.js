@@ -11,6 +11,7 @@ import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import SubAkunAddModal from "../partials/SubAkunAddModal";
 import UserUpdateModal from "../partials/UserUpdateModal";
 import { toast, ToastContainer} from "react-toastify";
+import CurrencyFormat from 'react-currency-format';
 
 import {Link, NavLink} from "react-router-dom";
 import { Button } from "@material-ui/core";
@@ -46,16 +47,18 @@ class DaftarSubAkun extends Component {
             {
                 key: "total_debit",
                 text: "Total Debit",
-                className: "email",
+                className: "currency",
                 align: "left",
-                sortable: true
+                sortable: true,
+                cell: record => <Fragment>{this.toCurrency(record.total_debit)}</Fragment>
             },
             {
                 key: "total_kredit",
                 text: "Total Kredit",
                 className: "email",
                 align: "left",
-                sortable: true
+                sortable: true,
+                cell: record => <Fragment>{this.toCurrency(record.total_kredit)}</Fragment>
             },
             // {
             //     key: "created_at",
@@ -148,6 +151,11 @@ class DaftarSubAkun extends Component {
         this.getData = this.getData.bind(this);
 
     }
+    toCurrency(numberString) {
+        //console.log("number" ,numberString);
+        let number = parseFloat(numberString);
+        return (<CurrencyFormat value={number} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} />);
+    }   
 
     componentDidMount() {
         this.getData();

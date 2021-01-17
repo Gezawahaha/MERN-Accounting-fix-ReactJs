@@ -73,7 +73,7 @@ class MainAkunAddModal extends React.Component {
               })
               
             }
-            console.log("length",this.state.length);
+            //console.log("length",this.state.length);
         })
     }
 
@@ -86,7 +86,7 @@ class MainAkunAddModal extends React.Component {
               })
               
             }
-            console.log("length",this.state.length);
+            //console.log("length",this.state.length);
         })
     }
 
