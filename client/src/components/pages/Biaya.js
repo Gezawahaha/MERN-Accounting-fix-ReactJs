@@ -10,13 +10,13 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faList} from "@fortawesome/free-solid-svg-icons/faList";
 import {Link} from "react-router-dom";
 import {faUserAlt} from "@fortawesome/free-solid-svg-icons/faUserAlt";
-
+import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import ReactDatatable from '@ashvin27/react-datatable';
 
 
 import Grid from "@material-ui/core/Grid";
-import { Card, CardBody } from 'reactstrap';
+import { Card, CardBody , Table} from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import CurrencyFormat from 'react-currency-format';
 
@@ -163,7 +163,7 @@ class Biaya extends Component {
 
     componentDidMount() {
         this.getData();
-        //console.log("test",this.state.records);
+        //console.log("test",this.state.records.value);
     };
 
 
@@ -172,10 +172,10 @@ class Biaya extends Component {
             .then(res => {
                 this.setState({ 
                     records: res.data,
-                    kaskecil: res.data[1].total_debit,
-                    kasbesar: res.data[0].total_debit
+                    //kaskecil: res.data[1].total_debit,
+                    //kasbesar: res.data[0].total_debit
                 })
-                console.log("DK", this.state.kasbesar);
+                console.log("DK", this.state.records);
             })
             .catch()
     }
@@ -196,6 +196,7 @@ class Biaya extends Component {
                     <div id="page-content-wrapper">
                         <div className="container-fluid">
                             <button className="btn btn-link mt-2" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
+                            <button className="btn btn-outline-primary float-right mt-3 mr-2" onClick><FontAwesomeIcon icon={faPlus}/> Tambah Transaksi</button>
                             <h1 className="mt-2 text-primary">Biaya</h1>
 
                             <div className="row px-2">
@@ -204,7 +205,7 @@ class Biaya extends Component {
                                         <div className="card-body">
                                             <h5 className="card-title">Saldo Kas Kecil</h5>
                                             <small>TOTAL</small>
-                                            <h2 className="card-text"><CurrencyFormat value={ this.state.kaskecil } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
+                                            <h2 className="card-text"><CurrencyFormat value={ 10000000 } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
                                         </div>
                                     </div>
                                 </div>
@@ -213,7 +214,7 @@ class Biaya extends Component {
                                         <div className="card-body">
                                         <h5 className="card-title">Saldo Kas Besar</h5>
                                             <small>TOTAL</small>
-                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={ this.state.kasbesar } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
+                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={ 140000000 } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
                                         </div>
                                     </div>
                                 </div>
@@ -236,7 +237,8 @@ class Biaya extends Component {
                                     </div>
                                 </div>
                             </div>
-
+                            
+                            
                             <ReactDatatable
                                 config={this.config}
                                 records={this.state.records}
