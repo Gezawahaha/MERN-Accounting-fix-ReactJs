@@ -4,7 +4,6 @@ const MainAccountSchema = mongoose.Schema({
   main_account_number: {
     type: Number,
     required: true,
-    unique: true,
   },
   name: {
     type: String,

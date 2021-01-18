@@ -38,6 +38,16 @@ class DaftarMainAkun extends Component {
                 className: "name",
                 align: "left",
                 sortable: true,
+                cell: record => <Fragment>{record.coa_account_number}
+                
+                    {record.main_account_number < 10 && (
+                        `-0${record.main_account_number}`
+                    )}
+                    {record.main_account_number >= 10 && (
+                        `-${record.main_account_number}`
+                    )}                      
+                
+                </Fragment>
             },
             {
                 key: "name",
@@ -176,7 +186,7 @@ class DaftarMainAkun extends Component {
                 this.setState({ 
                     records: res.data,
                 })
-                //console.log("DK", this.state.records);
+                //console.log("Cek Data", this.state.records);
             })
             .catch()
     }

@@ -152,14 +152,14 @@ class DaftarAkun extends Component {
     }
 
     toCurrency(numberString) {
-        console.log("number" ,numberString);
+        //console.log("number" ,numberString);
         let number = parseFloat(numberString);
         return (<CurrencyFormat value={number} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} />);
     }   
 
     componentDidMount() {
         this.getData();
-        console.log("halo");
+        //console.log("halo");
     };
 
     componentWillReceiveProps(nextProps) {

@@ -60,7 +60,7 @@ class MainAkunAddModal extends React.Component {
 
     componentDidMount() {
         this.getData();
-        console.log("length",this.state.items);
+        //console.log("length",this.state.items);
         //this.getDataMain();
     }
 
@@ -78,7 +78,7 @@ class MainAkunAddModal extends React.Component {
     }
 
     getDataMain() {
-        axios.get('/coa/main/test/MoA-data')
+        axios.get(`/coa/main/${this.state.coa_account_number}`)
         .then(response => {
             if (response.data.length > 0) {
               this.setState({
@@ -91,11 +91,34 @@ class MainAkunAddModal extends React.Component {
     }
 
     onChangeAkun = e => {
-        this.setState({
-            coa_account_number: e.coa_account_number,
-            main_account_number: `${e.coa_account_number}-`
+        //Get Main Acoount Lenght
+        axios.get(`/coa/main/${e.coa_account_number}`)
+        .then(response => {
+            if (response.data.length > 0) {
+              this.setState({
+                  
+                length: response.data.length,
+                coa_account_number: e.coa_account_number,
+                main_account_number: `${response.data.length + 1}`
 
+              })
+              
+            }else {
+                this.setState({
+                    length: 0,
+                    coa_account_number: e.coa_account_number,
+                    main_account_number: 1
+                })
+            }
+            //console.log("data",this.state.main_account_number);
         })
+    
+
+        // this.setState({
+        //     coa_account_number: e.coa_account_number,
+        //     main_account_number: `${e.coa_account_number}-`
+
+        // })
         //console.log("test akun",e.coa_account_number);
     }
 
@@ -196,7 +219,7 @@ class MainAkunAddModal extends React.Component {
                                         <div className="col-md-9">
                                             <input
                                                 onChange={this.onChange}
-                                                value={this.state.main_account_number}
+                                                value={ this.state.length + 1 }
                                                 error={errors.main_account_number}
                                                 id="main_account_number"
                                                 type="text"

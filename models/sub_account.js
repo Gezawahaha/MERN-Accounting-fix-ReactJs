@@ -4,7 +4,6 @@ const SubAccountSchema = mongoose.Schema({
   sub_account_number: {
     type: String,
     required: true,
-    unique: true,
   },
   name: {
     type: String,
