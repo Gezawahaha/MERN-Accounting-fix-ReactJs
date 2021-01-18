@@ -73,7 +73,7 @@ const Background = styled.div`
 
 
 class Sidebar extends Component {
-
+    
     onLogoutClick = e => {
         e.preventDefault();
         this.props.logoutUser();

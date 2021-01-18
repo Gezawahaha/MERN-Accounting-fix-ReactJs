@@ -4,6 +4,7 @@ import Sidebar from "../partials/Sidebar";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faList} from "@fortawesome/free-solid-svg-icons/faList";
 import ReactDatatable from '@ashvin27/react-datatable';
+//import ReactDatatable from 'react-table';
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import axios from "axios";
@@ -51,14 +52,15 @@ class DaftarMainAkun extends Component {
                 className: "currency",
                 align: "left",
                 sortable: true,
-                //cell: data => <React.Fragment>{this.toCurrency(data.value)}</React.Fragment>
+                cell: record => <Fragment>{this.toCurrency(record.total_debit)}</Fragment>
             },
             {
                 key: "total_kredit",
                 text: "Total Kredit",
                 className: "email",
                 align: "left",
-                sortable: true
+                sortable: true,
+                cell: record => <Fragment>{this.toCurrency(record.total_kredit)}</Fragment>
             },
             // {
             //     key: "created_at",
@@ -152,9 +154,9 @@ class DaftarMainAkun extends Component {
     }
 
     toCurrency(numberString) {
-    console.log("number" ,numberString);
-    let number = parseFloat(numberString);
-    return (<CurrencyFormat value={number} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} />);
+        //console.log("number" ,numberString);
+        let number = parseFloat(numberString);
+        return (<CurrencyFormat value={number} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} />);
     }   
 
 
