@@ -8,20 +8,17 @@ import Navbar from "../partials/Navbar";
 import Sidebar from "../partials/Sidebar";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faList} from "@fortawesome/free-solid-svg-icons/faList";
-import {Link} from "react-router-dom";
-import {faUserAlt} from "@fortawesome/free-solid-svg-icons/faUserAlt";
-import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import ReactDatatable from '@ashvin27/react-datatable';
 
-
-import Grid from "@material-ui/core/Grid";
-import { Card, CardBody , Table} from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import CurrencyFormat from 'react-currency-format';
 
+//smantic
+import { Grid, Segment } from 'semantic-ui-react'
 
-class Biaya extends Component {
+
+class BiayaForm extends Component {
 
     constructor(props) {
         super(props);
@@ -162,13 +159,13 @@ class Biaya extends Component {
     }
 
     componentDidMount() {
-        this.getData();
+        //this.getData();
         //console.log("test",this.state.records.value);
     };
 
 
     getData() {
-        axios.get('/coa/main/sub/Sub-data')
+        axios.get('')
             .then(res => {
                 this.setState({ 
                     records: res.data,
@@ -185,68 +182,55 @@ class Biaya extends Component {
         this.props.logoutUser();
     };
 
-   
-
     render() {
         const { user } = this.props.auth;
         return (
             <div>
             
-            <Navbar />
+                <Navbar />
                 <div className="d-flex" id="wrapper">
                 <Sidebar/>
                     <div id="page-content-wrapper">
                         <div className="container-fluid">
                             <button className="btn btn-link mt-2" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
-                            <NavLink className="btn btn-outline-primary float-right mt-3 mr-2" to="/biayaform"><FontAwesomeIcon icon={faPlus}/> Tambah Transaksi</NavLink>
-                            <h1 className="mt-2 text-primary">Biaya</h1>
+                            
+                            <Grid columns='equal'>
+                                <Grid.Row>
+                                <Grid.Column>
+                                    <Segment>1</Segment>
+                                </Grid.Column>
+                                <Grid.Column>
+                                    <Segment>2</Segment>
+                                </Grid.Column>
+                                <Grid.Column>
+                                    <Segment>3</Segment>
+                                </Grid.Column>
+                                <Grid.Column>
+                                    <Segment>4</Segment>
+                                </Grid.Column>
+                                </Grid.Row>
+                                <Grid.Row>
+                                <Grid.Column>
+                                    <Segment>1</Segment>
+                                </Grid.Column>
+                                <Grid.Column>
+                                    <Segment>2</Segment>
+                                </Grid.Column>
+                                <Grid.Column>
+                                    <Segment>3</Segment>
+                                </Grid.Column>
+                                </Grid.Row>
+                                <Grid.Row>
+                                <Grid.Column>
+                                    <Segment>1</Segment>
+                                </Grid.Column>
+                                <Grid.Column>
+                                    <Segment>2</Segment>
+                                </Grid.Column>
+                                </Grid.Row>
+                            </Grid>
 
-                            <div className="row px-2">
-                                <div className="col-sm-3 p-sm-2">
-                                    <div className="card bg-info text-white shadow-lg">
-                                        <div className="card-body">
-                                            <h5 className="card-title">Saldo Kas Kecil</h5>
-                                            <small>TOTAL</small>
-                                            <h2 className="card-text"><CurrencyFormat value={ 10000000 } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-sm-3 p-sm-2">
-                                    <div className="card bg-info text-white shadow-lg">
-                                        <div className="card-body">
-                                        <h5 className="card-title">Saldo Kas Besar</h5>
-                                            <small>TOTAL</small>
-                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={ 140000000 } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-sm-3 p-sm-2">
-                                    <div className="card bg-info text-white shadow-lg">
-                                        <div className="card-body">
-                                        <h5 className="card-title">Biaya Dalam Bulan Ini</h5>
-                                            <small>TOTAL</small>
-                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={15000000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-sm-3 p-sm-2">
-                                    <div className="card bg-info text-white shadow-lg">
-                                        <div className="card-body">
-                                        <h5 className="card-title">Biaya Dalam Tahun Ini</h5>
-                                            <small>TOTAL</small>
-                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={20500000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             
-                            
-                            <ReactDatatable
-                                config={this.config}
-                                records={this.state.records}
-                                columns={this.columns}
-                                //onPageChange={this.pageChange.bind(this)}
-                            />
 
 
                         </div>
@@ -257,7 +241,7 @@ class Biaya extends Component {
     }
 }
 
-Biaya.propTypes = {
+BiayaForm.propTypes = {
     logoutUser: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired
 };
@@ -269,4 +253,4 @@ const mapStateToProps = state => ({
 export default connect(
     mapStateToProps,
     { logoutUser }
-)(Biaya);
+)(BiayaForm);

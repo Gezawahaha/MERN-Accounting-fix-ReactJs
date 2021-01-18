@@ -36,6 +36,8 @@
     "reactstrap": "^8.8.1",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^2.0.2",
     "simplebar-react": "^2.3.0",
     "styled-components": "^5.2.1"
   },
