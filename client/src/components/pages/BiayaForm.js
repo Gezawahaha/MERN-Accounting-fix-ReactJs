@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
 import Navbar from "../partials/Navbar";
 import Sidebar from "../partials/Sidebar";
+import FormBiaya from "../partials/FormInputBiaya";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faList} from "@fortawesome/free-solid-svg-icons/faList";
 import axios from "axios";
@@ -14,9 +15,30 @@ import ReactDatatable from '@ashvin27/react-datatable';
 import { NavLink } from 'react-router-dom';
 import CurrencyFormat from 'react-currency-format';
 
-//smantic
-import { Grid, Segment } from 'semantic-ui-react'
 
+
+//smantic
+import { Grid, Segment , Form } from 'semantic-ui-react'
+
+const FormExampleWidthField = () => (
+    <Form>
+      <Form.Group>
+        <Form.Input label='First name' placeholder='First Name' width={6} />
+        <Form.Input label='Middle Name' placeholder='Middle Name' width={4} />
+        <Form.Input label='Last Name' placeholder='Last Name' width={6} />
+      </Form.Group>
+      <Form.Group>
+        <Form.Input placeholder='2 Wide' width={2} />
+        <Form.Input placeholder='12 Wide' width={12} />
+        <Form.Input placeholder='2 Wide' width={2} />
+      </Form.Group>
+      <Form.Group>
+        <Form.Input placeholder='8 Wide' width={8} />
+        <Form.Input placeholder='6 Wide' width={6} />
+        <Form.Input placeholder='2 Wide' width={2} />
+      </Form.Group>
+    </Form>
+  )
 
 class BiayaForm extends Component {
 
@@ -191,45 +213,13 @@ class BiayaForm extends Component {
                 <div className="d-flex" id="wrapper">
                 <Sidebar/>
                     <div id="page-content-wrapper">
+
+                    
                         <div className="container-fluid">
                             <button className="btn btn-link mt-2" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
                             
-                            <Grid columns='equal'>
-                                <Grid.Row>
-                                <Grid.Column>
-                                    <Segment>1</Segment>
-                                </Grid.Column>
-                                <Grid.Column>
-                                    <Segment>2</Segment>
-                                </Grid.Column>
-                                <Grid.Column>
-                                    <Segment>3</Segment>
-                                </Grid.Column>
-                                <Grid.Column>
-                                    <Segment>4</Segment>
-                                </Grid.Column>
-                                </Grid.Row>
-                                <Grid.Row>
-                                <Grid.Column>
-                                    <Segment>1</Segment>
-                                </Grid.Column>
-                                <Grid.Column>
-                                    <Segment>2</Segment>
-                                </Grid.Column>
-                                <Grid.Column>
-                                    <Segment>3</Segment>
-                                </Grid.Column>
-                                </Grid.Row>
-                                <Grid.Row>
-                                <Grid.Column>
-                                    <Segment>1</Segment>
-                                </Grid.Column>
-                                <Grid.Column>
-                                    <Segment>2</Segment>
-                                </Grid.Column>
-                                </Grid.Row>
-                            </Grid>
-
+                            
+                            <FormExampleWidthField />
                             
 
 
@@ -237,6 +227,7 @@ class BiayaForm extends Component {
                     </div>
                 </div>
             </div>
+            
         );
     }
 }
