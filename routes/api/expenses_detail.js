@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const ExpensesDetail = require("../../models/expenses_detail");
+const Post = require("../../models/sub_account");
+const Main = require("../../models/main_account");
 const moment = require("moment");
 
 //GET ALL THE POST
@@ -24,9 +26,40 @@ router.post("/", async (req, res) => {
     updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
     link_id: req.body.link_id,
   });
+  const sub_post = new Post({
+    sub_account_number: req.body.expenses_account,
+    name: req.body.name,
+    total_debit: 0,
+    total_kredit: req.body.expenses_amount + req.body.tax,
+    created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+    updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+    main_account_number: req.body.main_account_number,
+  });
 
   try {
-    const savedPost = await post.save();
+    const savedPost = await sub_post.save();
+    try {
+      const specific_main_account = await Main.findOne({
+        main_account_number: req.body.main_account_number,
+      });
+      let debit = specific_main_account.total_debit;
+      let kredit = specific_main_account.total_kredit;
+      const updatedpost = await Main.updateOne(
+        {main_account_number: req.body.main_account_number},
+        {
+          $set: {
+            name: req.body.name,
+            total_debit: debit + 0,
+            total_kredit: kredit + req.body.expenses_amount + req.body.tax,
+            updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+          },
+        }
+      );
+      const savedPost = await post.save();
+      res.json(savedPost);
+    } catch (err) {
+      res.json({message: err});
+    }
     res.json(savedPost);
   } catch (err) {
     res.json({message: err});
@@ -44,35 +77,33 @@ router.get("/:postId", async (req, res) => {
   }
 });
 
-// //UPDATE POST
-// router.patch("/:postId", async (req, res) => {
-//   try {
-//     const updatedpost = await Post.updateOne(
-//       {_id: req.params.postId},
-//       {
-//         $set: {
-//           CompanyName: req.body.CompanyName,
-//           Address1: req.body.Address1,
-//           Address2: req.body.Address2,
-//           Country: req.body.Country,
-//           City: req.body.City,
-//           StateProvince: req.body.StateProvince,
-//           ZipPostalCode: req.body.ZipPostalCode,
-//           Email: req.body.Email,
-//           Phone: req.body.Phone,
-//           Fax: req.body.Fax,
-//         },
-//       }
-//     );
-//     res.json(updatedpost);
-//   } catch (err) {
-//     res.json({message: err});
-//   }
-// });
-
 //DELETE POST
 router.delete("/:postId", async (req, res) => {
   try {
+    const post = await ExpensesDetail.findById(req.params.postId);
+    let sub_post = {
+      sub_account_number: post.expenses_account,
+      name: post.name,
+      total_debit: post.total_debit,
+      total_kredit: post.total_kredit,
+      main_account_number: post.main_account_number,
+    };
+    const specific_main_account = await Main.findOne({
+      main_account_number: sub_post.main_account_number,
+    });
+    let debit = specific_main_account.total_debit;
+    let kredit = specific_main_account.total_kredit;
+    const updatedpost = await Main.updateOne(
+      {main_account_number: sub_post.main_account_number},
+      {
+        $set: {
+          name: sub_post.name,
+          total_debit: debit - sub_post.total_debit,
+          total_kredit: kredit - sub_post.total_kredit,
+          updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+        },
+      }
+    );
     const removedpost = await ExpensesDetail.remove({
       _id: req.params.postId,
     });
