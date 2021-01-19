@@ -90,28 +90,36 @@ class MainAkunAddModal extends React.Component {
         })
     }
 
-    onChangeAkun = e => {
+    onChangeAkun = async e => {
         //Get Main Acoount Lenght
-        axios.get(`/coa/main/${e.coa_account_number}`)
-        .then(response => {
+        try {
+            let response = await axios.get(`/coa/main/${e.coa_account_number}`);
+          
             if (response.data.length > 0) {
-              this.setState({
-                  
+              this.setState({ 
                 length: response.data.length,
                 coa_account_number: e.coa_account_number,
                 main_account_number: `${response.data.length + 1}`
-
+          
               })
-              
-            }else {
+              console.log("1");
+            }
+            else {
                 this.setState({
                     length: 0,
                     coa_account_number: e.coa_account_number,
                     main_account_number: 1
                 })
+                console.log("2");
             }
-            //console.log("data",this.state.main_account_number);
-        })
+          } catch (err) {
+            this.setState({
+                length: 0,
+                coa_account_number: e.coa_account_number,
+                main_account_number: 1
+            })
+          console.log("3");
+          }
     
 
         // this.setState({
