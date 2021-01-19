@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import $ from "jquery";
+import 'semantic-ui-css/semantic.min.css';
 window.jQuery = $;
 window.$ = $;
 global.jQuery = $;
