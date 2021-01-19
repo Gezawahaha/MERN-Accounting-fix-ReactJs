@@ -3,6 +3,7 @@ const router = express.Router();
 const Post = require("../../models/main_account");
 const Sub = require("../../models/sub_account");
 const moment = require("moment");
+const isEmpty = require("is-empty");
 
 //SUBMIT A POST
 router.post("/MoA-add", async (req, res) => {
@@ -30,38 +31,42 @@ router.get("/:postId", async (req, res) => {
     // const post = await Post.findById({account_number: req.params.postId});
     const posts = await Post.find({coa_account_number: req.params.postId});
     const datacount = posts.length;
-    let count = 0;
-    Object.keys(posts).map(async (item) => {
-      let temporary = await Sub.find({
-        main_account_number: posts[item].main_account_number,
-      });
-      let total_debit = 0;
-      let total_kredit = 0;
-      Object.keys(temporary).map((temporaryitem) => {
-        // Create a new array based on current state:
-        total_debit = total_debit + temporary[temporaryitem].total_debit;
-        total_kredit = total_kredit + temporary[temporaryitem].total_kredit;
-      });
-      const updatedpost = await Post.updateOne(
-        {main_account_number: posts[item].main_account_number},
-        {
-          $set: {
-            name: posts[item].name,
-            total_debit: total_debit,
-            total_kredit: total_kredit,
-            updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-          },
-        }
-      );
-      count = count + 1;
-
-      if (datacount == count) {
-        const anotherone = await Post.find({
-          coa_account_number: req.params.postId,
+    if (datacount === 0) {
+      res.json(posts);
+    } else {
+      let count = 0;
+      Object.keys(posts).map(async (item) => {
+        let temporary = await Sub.find({
+          main_account_number: posts[item].main_account_number,
         });
-        res.json(anotherone);
-      }
-    });
+        let total_debit = 0;
+        let total_kredit = 0;
+        Object.keys(temporary).map((temporaryitem) => {
+          // Create a new array based on current state:
+          total_debit = total_debit + temporary[temporaryitem].total_debit;
+          total_kredit = total_kredit + temporary[temporaryitem].total_kredit;
+        });
+        const updatedpost = await Post.updateOne(
+          {main_account_number: posts[item].main_account_number},
+          {
+            $set: {
+              name: posts[item].name,
+              total_debit: total_debit,
+              total_kredit: total_kredit,
+              updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+            },
+          }
+        );
+        count = count + 1;
+
+        if (datacount == count) {
+          const anotherone = await Post.find({
+            coa_account_number: req.params.postId,
+          });
+          res.json(anotherone);
+        }
+      });
+    }
   } catch (err) {
     res.json({message: err});
   }

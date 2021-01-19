@@ -13,59 +13,62 @@ router.get("/CoA-data", async (req, res) => {
     const posts = await Post.find();
     const datacount = posts.length;
     let count = 0;
+    if (datacount === 0) {
+      res.json(posts);
+    } else {
+      Object.keys(posts).map(async (item) => {
+        let temporary = await Main.find({
+          coa_account_number: posts[item].coa_account_number,
+        });
+        let temporary_totaldebit = posts[item].total_debit;
+        let temporary_totalkredit = posts[item].total_kredit;
+        let total_debit = 0;
+        let total_kredit = 0;
 
-    Object.keys(posts).map(async (item) => {
-      let temporary = await Main.find({
-        coa_account_number: posts[item].coa_account_number,
+        // main_account_number
+        // Object.keys().map((item) => {});
+
+        Object.keys(temporary).map((temporaryitem) => {
+          // Create a new array based on current state:
+          total_debit = total_debit + temporary[temporaryitem].total_debit;
+          total_kredit = total_kredit + temporary[temporaryitem].total_kredit;
+        });
+
+        if (
+          temporary_totaldebit == total_debit &&
+          temporary_totalkredit == total_kredit
+        ) {
+          const updatedpost = await Post.updateOne(
+            {coa_account_number: posts[item].coa_account_number},
+            {
+              $set: {
+                name: posts[item].name,
+                total_debit: total_debit,
+                total_kredit: total_kredit,
+              },
+            }
+          );
+        } else {
+          const updatedpost = await Post.updateOne(
+            {coa_account_number: posts[item].coa_account_number},
+            {
+              $set: {
+                name: posts[item].name,
+                total_debit: total_debit,
+                total_kredit: total_kredit,
+                updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+              },
+            }
+          );
+        }
+
+        count = count + 1;
+        if (datacount == count) {
+          const anotherone = await Post.find();
+          res.json(anotherone);
+        }
       });
-      let temporary_totaldebit = posts[item].total_debit;
-      let temporary_totalkredit = posts[item].total_kredit;
-      let total_debit = 0;
-      let total_kredit = 0;
-
-      // main_account_number
-      // Object.keys().map((item) => {});
-
-      Object.keys(temporary).map((temporaryitem) => {
-        // Create a new array based on current state:
-        total_debit = total_debit + temporary[temporaryitem].total_debit;
-        total_kredit = total_kredit + temporary[temporaryitem].total_kredit;
-      });
-
-      if (
-        temporary_totaldebit == total_debit &&
-        temporary_totalkredit == total_kredit
-      ) {
-        const updatedpost = await Post.updateOne(
-          {coa_account_number: posts[item].coa_account_number},
-          {
-            $set: {
-              name: posts[item].name,
-              total_debit: total_debit,
-              total_kredit: total_kredit,
-            },
-          }
-        );
-      } else {
-        const updatedpost = await Post.updateOne(
-          {coa_account_number: posts[item].coa_account_number},
-          {
-            $set: {
-              name: posts[item].name,
-              total_debit: total_debit,
-              total_kredit: total_kredit,
-              updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-            },
-          }
-        );
-      }
-
-      count = count + 1;
-      if (datacount == count) {
-        const anotherone = await Post.find();
-        res.json(anotherone);
-      }
-    });
+    }
   } catch (err) {
     res.json({message: err});
   }
