@@ -24,6 +24,7 @@ router.post("/SoA-add", async (req, res) => {
     created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
     updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
     main_account_number: req.body.main_account_number,
+    coa_account_number: req.body.coa_account_number,
   });
 
   try {

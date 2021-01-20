@@ -25,6 +25,10 @@ const SubAccountSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+  coa_account_number: {
+    type: Number,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("SubAccount", SubAccountSchema);
