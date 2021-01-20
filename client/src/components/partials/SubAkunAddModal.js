@@ -46,6 +46,8 @@ class SubAkunAddModal extends React.Component {
         const newSubAkun = {
             sub_account_number: this.state.sub_account_number,
             main_account_number: this.state.main_account_number,
+            total_debit: 0,
+            total_kredit: 0,
             name: this.state.name,
         };
         console.log(newSubAkun);
@@ -76,13 +78,36 @@ class SubAkunAddModal extends React.Component {
         })
     }
 
-    onChangeAkun = e => {
-        this.setState({
-            main_account_number: e.main_account_number,
-            sub_account_number: `${e.main_account_number}-`
-
-        })
-        console.log("test akun",e.coa_account_number);
+    onChangeAkun = async e => {
+        //Get Main Acoount Lenght
+        try {
+            let response = await axios.get(`/coa/main/sub/${e.main_account_number}`);
+          
+            if (response.data.length > 0) {
+              this.setState({ 
+                length: response.data.length,
+                main_account_number: e.main_account_number,
+                sub_account_number: `${response.data.length + 1}`
+          
+              })
+              console.log("1");
+            }
+            else {
+                this.setState({
+                    length: 0,
+                    main_account_number: e.main_account_number,
+                    sub_account_number: 1
+                })
+                console.log("2");
+            }
+          } catch (err) {
+            this.setState({
+                length: 0,
+                main_account_number: e.main_account_number,
+                sub_account_number: 1
+            })
+          console.log("3");
+          }
     }
 
     // onChangeAkun = e => {
@@ -174,7 +199,7 @@ class SubAkunAddModal extends React.Component {
                                     </div>
                                     <div className="row mt-2">
                                         <div className="col-md-3">
-                                            <label >Nomor Akun</label>
+                                            <label >Nomor Sub Akun</label>
                                         </div>
                                         <div className="col-md-9">
                                             <input

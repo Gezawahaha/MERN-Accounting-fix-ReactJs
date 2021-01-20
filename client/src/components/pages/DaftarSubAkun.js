@@ -152,7 +152,7 @@ class DaftarSubAkun extends Component {
 
     }
     toCurrency(numberString) {
-        //console.log("number" ,numberString);
+        console.log("number" ,numberString);
         let number = parseFloat(numberString);
         return (<CurrencyFormat value={number} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} />);
     }   
@@ -173,7 +173,7 @@ class DaftarSubAkun extends Component {
         axios.get('/coa/main/sub/Sub-data')
             .then(res => {
                 this.setState({ records: res.data})
-                //console.log("DK", this.state.records);
+                console.log("DK", this.state.records);
             })
             .catch()
             

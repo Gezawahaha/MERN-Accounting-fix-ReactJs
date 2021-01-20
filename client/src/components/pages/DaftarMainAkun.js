@@ -32,12 +32,16 @@ class DaftarMainAkun extends Component {
             //     align: "left",
             //     sortable: true,
             // },
+            // {
+            //     key: "coa_account_number",
+            //     sortable: true,
+            // },
             {
                 key: "main_account_number",
                 text: "Account Number",
                 className: "name",
                 align: "left",
-                sortable: true,
+                sortable: false,
                 cell: record => <Fragment>{record.coa_account_number}
                 
                     {record.main_account_number < 10 && (
@@ -117,10 +121,12 @@ class DaftarMainAkun extends Component {
         ];
 
         this.config = {
-            page_size: 10,
-            length_menu: [ 10, 20, 50 ],
+            page_size: 20,
+            length_menu: [ 20, 50 ],
             filename: "coa_account_number",
             no_data_text: 'No akun found!',
+            sort: { column: "coa_account_number", order: "dsc" },
+            
             button: {
                 excel: true,
                 print: true,
