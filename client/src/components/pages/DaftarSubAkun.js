@@ -35,7 +35,28 @@ class DaftarSubAkun extends Component {
                 text: "Account Number",
                 className: "name",
                 align: "left",
-                sortable: true,
+                sortable: false,
+                cell: record => <Fragment>{record.coa_account_number}
+                
+                    {record.main_account_number < 10 && (
+                        `-0${record.main_account_number}`
+                    )}
+                    
+                    {record.main_account_number >= 10 && (
+                        `-${record.main_account_number}`
+                    )}
+
+                    {record.sub_account_number < 10 && (
+                        `-0${record.sub_account_number}`
+                    )}
+                    
+                    {record.sub_account_number >= 10 && (
+                        `-${record.sub_account_number}`
+                    )}
+                  
+                                        
+                
+                </Fragment>
             },
             {
                 key: "name",
@@ -109,6 +130,7 @@ class DaftarSubAkun extends Component {
             length_menu: [ 10, 20, 50 ],
             filename: "sub_account_number",
             no_data_text: 'No sub akun found!',
+            sort: { column: "coa_account_number", order: "dsc" },
             button: {
                 excel: true,
                 print: true,

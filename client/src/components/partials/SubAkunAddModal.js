@@ -16,6 +16,7 @@ class SubAkunAddModal extends React.Component {
         super();
         this.state = {
             sub_account_number: "",
+            main_account_number: "",
             coa_account_number: "",
             name: "",
             CoAs: [],
@@ -44,6 +45,7 @@ class SubAkunAddModal extends React.Component {
     onAkunAdd = e => {
         e.preventDefault();
         const newSubAkun = {
+            coa_account_number: this.state.coa_account_number,
             sub_account_number: this.state.sub_account_number,
             main_account_number: this.state.main_account_number,
             total_debit: 0,
@@ -61,14 +63,30 @@ class SubAkunAddModal extends React.Component {
     
 
     componentDidMount() {
-        this.getData();
+        this.getDataCoa();
+        //this.getDataMain();
     }
 
-    getData() {
-        axios.get('/coa/main/test/MoA-data')
+    getDataCoa() {
+        axios.get('/coa/CoA-data')
         .then(response => {
             if (response.data.length > 0) {
               this.setState({
+                CoAs: response.data,
+                //length: response.data.length
+              })
+              
+            }
+            //console.log("length",this.state.length);
+        })
+    }
+
+    onCoaAkun = async e => {
+        axios.get(`/coa/main/${e.coa_account_number}`)
+        .then(response => {
+            if (response.data.length > 0) {
+              this.setState({
+                coa_account_number: e.coa_account_number,
                 items: response.data,
                 length: response.data.length
               })
@@ -81,7 +99,7 @@ class SubAkunAddModal extends React.Component {
     onChangeAkun = async e => {
         //Get Main Acoount Lenght
         try {
-            let response = await axios.get(`/coa/main/sub/${e.main_account_number}`);
+            let response = await axios.get(`/coa/main/sub/${this.state.coa_account_number}/${e.main_account_number}`);
           
             if (response.data.length > 0) {
               this.setState({ 
@@ -142,6 +160,28 @@ class SubAkunAddModal extends React.Component {
                             </div>
                             <div className="modal-body">
                                 <form noValidate onSubmit={this.onAkunAdd} id="add-CoA">
+                                <div className="row mt-2">
+                                        <div className="col-md-3">
+                                            <label >Account</label>
+                                        </div>
+                                        <div className="col-md-9">
+                                            <Select 
+                                                
+                                               
+                                                type="number"
+                                                className={classnames("", {
+                                                    invalid: errors.coa_account_number
+                                                })}
+                                                onChange={this.onCoaAkun}
+                                                getOptionValue={option => option.coa_account_number}
+                                                getOptionLabel={option => option.name}
+                                                options={this.state.CoAs}
+
+                                                
+                                            />
+                                            <span className="text-danger">{errors.coa_account_number}</span>
+                                        </div>
+                                    </div>
                                     <div className="row mt-2">
                                         <div className="col-md-3">
                                             <label >Main Account</label>
@@ -199,7 +239,7 @@ class SubAkunAddModal extends React.Component {
                                     </div>
                                     <div className="row mt-2">
                                         <div className="col-md-3">
-                                            <label >Nomor Sub Akun</label>
+                                            <label >Sub Akun</label>
                                         </div>
                                         <div className="col-md-9">
                                             <input
