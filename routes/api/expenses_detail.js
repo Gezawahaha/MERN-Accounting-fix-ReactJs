@@ -34,6 +34,7 @@ router.post("/", async (req, res) => {
     created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
     updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
     main_account_number: req.body.main_account_number,
+    coa_account_number: req.body.coa_account_number,
   });
 
   try {
@@ -48,7 +49,6 @@ router.post("/", async (req, res) => {
         {main_account_number: req.body.main_account_number},
         {
           $set: {
-            name: req.body.name,
             total_debit: debit + 0,
             total_kredit: kredit + req.body.expenses_amount + req.body.tax,
             updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -108,6 +108,23 @@ router.delete("/:postId", async (req, res) => {
       _id: req.params.postId,
     });
     res.json(removedpost);
+  } catch (err) {
+    res.json({message: err});
+  }
+});
+
+//1 MONTH
+router.get("/this/month", async (req, res) => {
+  let month = moment(new Date().getMonth()).format("MM");
+  console.log("month", month);
+  try {
+    const posts = await ExpensesDetail.find();
+    Object.keys(posts).map(async (item) => {
+      // if(posts[item].created_at)
+      console.log("test", posts[item].created_at);
+      console.log("test1", moment(posts[item].created_at).format("MM"));
+    });
+    res.json(posts);
   } catch (err) {
     res.json({message: err});
   }
