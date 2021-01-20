@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const SubAccountSchema = mongoose.Schema({
   sub_account_number: {
-    type: String,
+    type: Number,
     required: true,
   },
   name: {
