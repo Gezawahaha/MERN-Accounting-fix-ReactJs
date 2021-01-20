@@ -55,10 +55,13 @@ router.post("/SoA-add", async (req, res) => {
 });
 
 //GET LIST SUB ACCOUNT BY MAIN ACCOUNT NUMBER
-router.get("/:postId", async (req, res) => {
+router.get("/:coa/:postId", async (req, res) => {
   try {
     // const post = await Post.findById({account_number: req.params.postId});
-    const post = await Post.find({main_account_number: req.params.postId});
+    const post = await Post.find({
+      main_account_number: req.params.postId,
+      coa_account_number: req.params.coa,
+    });
     res.json(post);
   } catch (err) {
     res.json({message: err});
