@@ -15,155 +15,50 @@ import ReactDatatable from '@ashvin27/react-datatable';
 import { NavLink } from 'react-router-dom';
 import CurrencyFormat from 'react-currency-format';
 
+import ReactSelect from "react-select";
+import styled from 'styled-components';
 
-
+import '../style/FormBiaya.css';
 //smantic
-import { Grid, Segment , Form } from 'semantic-ui-react'
+import { Grid, Segment , Form , Card, HeaderContent , Table ,Button} from 'semantic-ui-react';
+import { FormGroup , TextField } from "@material-ui/core";
+
+
+const options=[
+    { key: "m", name: "Male", value: "male" },
+    { key: "f", name: "Female", value: "female" }
+  ]
 
 const FormExampleWidthField = () => (
-    <Form>
-      <Form.Group>
-        <Form.Input label='First name' placeholder='First Name' width={6} />
-        <Form.Input label='Middle Name' placeholder='Middle Name' width={4} />
-        <Form.Input label='Last Name' placeholder='Last Name' width={6} />
-      </Form.Group>
-      <Form.Group>
-        <Form.Input placeholder='2 Wide' width={2} />
-        <Form.Input placeholder='12 Wide' width={12} />
-        <Form.Input placeholder='2 Wide' width={2} />
-      </Form.Group>
-      <Form.Group>
-        <Form.Input placeholder='8 Wide' width={8} />
-        <Form.Input placeholder='6 Wide' width={6} />
-        <Form.Input placeholder='2 Wide' width={2} />
-      </Form.Group>
-    </Form>
+
+        <Form>
+        
+        <Form.Group>
+            <Form.Input label='Bayar Dari' width={6}>
+               
+            </Form.Input>
+        </Form.Group>
+        <Form.Group>
+            <Form.Input placeholder='2 Wide' width={2} />
+            <Form.Input placeholder='12 Wide' width={12} />
+            <Form.Input placeholder='2 Wide' width={2} />
+        </Form.Group>
+        <Form.Group>
+            <Form.Input placeholder='8 Wide' width={8} />
+            <Form.Input placeholder='6 Wide' width={6} />
+            <Form.Input placeholder='2 Wide' width={2} />
+        </Form.Group>
+        </Form>
+    
   )
+
+
 
 class BiayaForm extends Component {
 
     constructor(props) {
         super(props);
 
-        this.columns = [
-            // {
-            //     key: "_id",
-            //     text: "Id",
-            //     className: "id",
-            //     align: "left",
-            //     sortable: true,
-            // },
-            {
-                key: "date",
-                text: "Tanggal",
-                className: "date",
-                align: "left",
-                sortable: true,
-            },
-            {
-                key: "Nomor_Akun",
-                text: "Nomor",
-                className: "name",
-                align: "left",
-                sortable: true,
-            },
-            {
-                key: "Penerima",
-                text: "Penerima",
-                className: "name",
-                align: "left",
-                sortable: true,
-            },
-            {
-                key: "status",
-                text: "Status",
-                className: "name",
-                align: "left",
-                sortable: true,
-            },
-            {
-                key: "total_biaya",
-                text: "Total",
-                className: "number",
-                align: "left",
-                sortable: true
-            },
-            // {
-            //     key: "created_at",
-            //     text: "created Date",
-            //     className: "date",
-            //     align: "left",
-            //     sortable: true
-            // },
-        
-            
-            // {
-            //     key: "action",
-            //     text: "Action",
-            //     className: "action",
-            //     width: 100,
-            //     align: "left",
-            //     sortable: false,
-            //     cell: record => {
-            //         return (
-            //             <Fragment>
-            //                 <button
-            //                     data-toggle="modal"
-            //                     data-target="#update-user-modal"
-            //                     className="btn btn-primary btn-sm"
-            //                     onClick={() => this.editRecord(record)}
-            //                     style={{marginRight: '5px'}}>
-            //                     <i className="fa fa-edit"></i>
-            //                 </button>
-            //                 <button
-            //                     className="btn btn-danger btn-sm"
-            //                     onClick={() => this.deleteRecord(record)}>
-            //                     <i className="fa fa-trash"></i>
-            //                 </button>
-            //             </Fragment>
-            //         );
-            //     }
-            // }
-        ];
-
-        this.config = {
-            page_size: 10,
-            length_menu: [ 10, 10, 30 ],
-            filename: "coa_account_number",
-            no_data_text: 'Anda belum memiliki transaksi.',
-            button: {
-                excel: true,
-                print: true,
-                csv: true
-            },
-            language: {
-                length_menu: "Show _MENU_ result per page",
-                filter: "Filter in records...",
-                info: "Showing _START_ to _END_ of _TOTAL_ records",
-                pagination: {
-                    first: "First",
-                    previous: "Previous",
-                    next: "Next",
-                    last: "Last"
-                }
-            },
-            show_length_menu: true,
-            show_filter: true,
-            show_pagination: true,
-            show_info: true,
-        };
-
-        this.state = {
-            records: []
-        };
-
-        this.state = {
-            kaskecil: []
-        };
-
-        this.state = {
-            kasbesar: []
-        };
 
         this.state = {
             currentRecord: {
@@ -175,6 +70,11 @@ class BiayaForm extends Component {
                 created_at: '',
                 updated_at: ''
             }
+        };
+
+        this.state ={
+            RecordAkunBiaya: [],
+            RecordAkunAktiva: []
         };
 
         this.getData = this.getData.bind(this);
@@ -191,8 +91,7 @@ class BiayaForm extends Component {
             .then(res => {
                 this.setState({ 
                     records: res.data,
-                    //kaskecil: res.data[1].total_debit,
-                    //kasbesar: res.data[0].total_debit
+                    
                 })
                 console.log("DK", this.state.records);
             })
@@ -204,6 +103,11 @@ class BiayaForm extends Component {
         this.props.logoutUser();
     };
 
+    onChange = e => {
+        this.setState({ [e.target.id]: e.target.value });
+        console.log(e);
+    };
+
     render() {
         const { user } = this.props.auth;
         return (
@@ -213,13 +117,113 @@ class BiayaForm extends Component {
                 <div className="d-flex" id="wrapper">
                 <Sidebar/>
                     <div id="page-content-wrapper">
-
-                    
                         <div className="container-fluid">
                             <button className="btn btn-link mt-2" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
+                            <h1 className="mt-2 text-primary">Buat Biaya</h1>
+                            <Card.Group>
+                                <Card fluid color='red' header='B' background="light" >
+                                   <div className="card-in">
+                                        <Form>
+                                               
+                                            <Form.Group>
+                                                <Form.Input width={4} label='Bayar Dari'>
+                                                    <ReactSelect
+                                                        className="col-md-12 size-select"
+                                                        getOptionValue={option => option.value}
+                                                        getOptionLabel={option => option.name}
+                                                        options={options}
+                                                    />        
+                                                </Form.Input>
+                                            </Form.Group>
+                                        
+                                            <Form.Group>
+                                                <Form.Input placeholder='2 Wide' width={4} label='Penerima'>
+                                                    <ReactSelect
+                                                        className="col-md-12 size-select"
+                                                        getOptionValue={option => option.value}
+                                                        getOptionLabel={option => option.name}
+                                                        options={options}
+                                                    />        
+                                                </Form.Input>
+                                                <Form.Input placeholder='12 Wide' width={4} label='Tgl Transaksi' type="date"/>
+                                                <Form.Input placeholder='2 Wide' width={4} label='Cara Bayar'/>
+                                                <Form.Input placeholder='2 Wide' width={4} label='No Biaya'/>
+                                            </Form.Group>
+                                            <Form.Group >
+                                                <Form.TextArea width={6} label='Alamat Penagihan'/>
+                                            </Form.Group>
+                                            
+                                            <br/>
+                                            <br/>
+                                            <br/>
+
+                                            <Table compact>
+                                                <Table.Header>
+                                                    <Table.Row>
+                                                        <Table.HeaderCell>Akun Biaya</Table.HeaderCell>
+                                                        <Table.HeaderCell>Deskripsi</Table.HeaderCell>
+                                                        <Table.HeaderCell>Pajak</Table.HeaderCell>
+                                                        <Table.HeaderCell>Jumlah</Table.HeaderCell>
+                                                    </Table.Row>
+                                                </Table.Header>
+                                                <Table.Body>
+                                                    <Table.Row>
+                                                        <Table.Cell>
+                                                            <ReactSelect/>
+                                                        </Table.Cell>
+                                                        <Table.Cell>
+                                                            <Form.Input type="text"/>
+                                                        </Table.Cell>
+                                                        <Table.Cell>
+                                                            <ReactSelect />
+                                                        </Table.Cell>
+                                                        <Table.Cell>
+                                                            <Form.Input type="text"/>
+                                                        </Table.Cell>
+                                                    </Table.Row>
+                                                </Table.Body>
+                                            </Table>
+
+                                            <br/>
+                                            <br/>
+                                            <br/>
+
+                                            <div className="row">
+                                                <div className="col-lg-6 col-lg-pull-6">
+                                                    <Form.TextArea width={12} label='Memo'/>
+
+                                                </div>
+                                                <div className="col-lg-6 col-lg-push-6">
+                                                    <div className="row">
+                                                        <div className="col-md-3">
+                                                            <h2>Sub Total</h2>
+                                                            <h1>Total</h1>
+                                                        </div>
+                                                        <div className="col-md-4">
+                                                            <a><CurrencyFormat value={10000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></a>
+                                                            <h1><CurrencyFormat value={10000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h1>
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                    <br/>
+                                                    <div className="row">
+                                                        <Form>
+                                                        <Button color='red'>Batal</Button>
+                                                        <Button color='green' >Buat Biaya Baru</Button>
+                                                        </Form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                                
+                                            
+                                        </Form>
+                                    </div>
+                                </Card>
+                                <Card fluid color='orange' header='Option 2' />
+                                <Card fluid color='yellow' header='Option 3' />
+                            </Card.Group>
                             
                             
-                            <FormExampleWidthField />
                             
 
 

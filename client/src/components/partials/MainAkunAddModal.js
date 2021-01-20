@@ -52,8 +52,10 @@ class MainAkunAddModal extends React.Component {
         this.props.addMainAkun(newMainAkun, this.props.history);
         $('#add-mainakun-modal').modal('hide');
             toast("Waiting For Load Data", {
-                position: toast.POSITION.TOP_CENTER
-            });
+                position: toast.POSITION.TOP_CENTER,
+                
+            });     
+            //window.location = '/daftarakun/daftarmainakun'    
     };
 
     
