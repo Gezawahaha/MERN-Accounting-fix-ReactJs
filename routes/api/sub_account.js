@@ -69,10 +69,13 @@ router.get("/:coa/:postId", async (req, res) => {
 });
 
 //EDIT PENGELUARAN
-router.patch("/:postId", async (req, res) => {
+router.patch("/:main/:postId", async (req, res) => {
   try {
     const updatedpost = await Post.updateOne(
-      {sub_account_number: req.params.postId},
+      {
+        sub_account_number: req.params.postId,
+        main_account_number: req.params.main,
+      },
       {
         $set: {
           name: req.body.name,
