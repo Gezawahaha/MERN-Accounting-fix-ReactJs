@@ -38,7 +38,6 @@ router.post("/SoA-add", async (req, res) => {
         {main_account_number: req.body.main_account_number},
         {
           $set: {
-            name: req.body.name,
             total_debit: debit + req.body.total_debit,
             total_kredit: kredit + req.body.total_kredit,
             updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -84,50 +83,54 @@ router.patch("/:postId", async (req, res) => {
       const posts = await Main.find();
       const datacount = posts.length;
       let count = 0;
-      Object.keys(posts).map(async (item) => {
-        let temporary = await Post.find({
-          main_account_number: posts[item].main_account_number,
+      if (datacount === 0) {
+        res.json(posts);
+      } else {
+        Object.keys(posts).map(async (item) => {
+          let temporary = await Post.find({
+            main_account_number: posts[item].main_account_number,
+          });
+
+          let temporary_totaldebit = posts[item].total_debit;
+          let temporary_totalkredit = posts[item].total_kredit;
+          let total_debit = 0;
+          let total_kredit = 0;
+
+          Object.keys(temporary).map((temporaryitem) => {
+            // Create a new array based on current state:
+            total_debit = total_debit + temporary[temporaryitem].total_debit;
+            total_kredit = total_kredit + temporary[temporaryitem].total_kredit;
+          });
+
+          if (
+            temporary_totaldebit == total_debit &&
+            temporary_totalkredit == total_kredit
+          ) {
+            const updatedpost = await Main.updateOne(
+              {main_account_number: posts[item].main_account_number},
+              {
+                $set: {
+                  name: posts[item].name,
+                  total_debit: total_debit,
+                  total_kredit: total_kredit,
+                },
+              }
+            );
+          } else {
+            const updatedpost = await Main.updateOne(
+              {main_account_number: posts[item].main_account_number},
+              {
+                $set: {
+                  name: posts[item].name,
+                  total_debit: total_debit,
+                  total_kredit: total_kredit,
+                  updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+                },
+              }
+            );
+          }
         });
-
-        let temporary_totaldebit = posts[item].total_debit;
-        let temporary_totalkredit = posts[item].total_kredit;
-        let total_debit = 0;
-        let total_kredit = 0;
-
-        Object.keys(temporary).map((temporaryitem) => {
-          // Create a new array based on current state:
-          total_debit = total_debit + temporary[temporaryitem].total_debit;
-          total_kredit = total_kredit + temporary[temporaryitem].total_kredit;
-        });
-
-        if (
-          temporary_totaldebit == total_debit &&
-          temporary_totalkredit == total_kredit
-        ) {
-          const updatedpost = await Main.updateOne(
-            {main_account_number: posts[item].main_account_number},
-            {
-              $set: {
-                name: posts[item].name,
-                total_debit: total_debit,
-                total_kredit: total_kredit,
-              },
-            }
-          );
-        } else {
-          const updatedpost = await Main.updateOne(
-            {main_account_number: posts[item].main_account_number},
-            {
-              $set: {
-                name: posts[item].name,
-                total_debit: total_debit,
-                total_kredit: total_kredit,
-                updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-              },
-            }
-          );
-        }
-      });
+      }
     } catch (err) {
       res.json({message: err});
     }
