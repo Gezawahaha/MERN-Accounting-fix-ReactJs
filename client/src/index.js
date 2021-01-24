@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import $ from "jquery";
 import 'semantic-ui-css/semantic.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 window.jQuery = $;
 window.$ = $;
 global.jQuery = $;

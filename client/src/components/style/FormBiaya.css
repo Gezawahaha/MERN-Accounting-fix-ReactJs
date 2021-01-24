@@ -2,7 +2,76 @@
     margin: 10px;
     padding: 5px;
 }
+.card-Header {
+    background-color: #2d353c;
+    border-radius: 4px;
+    padding: 5px;
+    margin: 4px;
+    color: blanchedalmond;
+}
 
-.SizeSelect__control {
-    height: 70px;
+.SizeSelect {
+    height: 1px;
+
+}
+
+.CurencySelect {
+  padding: 8px 15px;
+  border: 0,1px ;
+  border-radius: 4px;
+  color: black;
+  border-color: rgba(73, 73, 73, 0);
+}
+
+.invoice-price {
+    background: #f0f3f4;
+    display: table;
+    width: 100%
+}
+
+.invoice-price .invoice-price-left,
+.invoice-price .invoice-price-right {
+    display: table-cell;
+    padding: 20px;
+    font-size: 20px;
+    font-weight: 600;
+    width: 75%;
+    position: relative;
+    vertical-align: middle
+}
+
+.invoice-price .invoice-price-left .sub-price {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 0 20px
+}
+
+.invoice-price small {
+    font-size: 12px;
+    font-weight: 400;
+    display: block
+}
+
+.invoice-price .invoice-price-row {
+    display: table;
+    float: left
+}
+
+.invoice-price .invoice-price-right {
+    width: 25%;
+    background: #2d353c;
+    color: #fff;
+    font-size: 28px;
+    text-align: right;
+    vertical-align: bottom;
+    font-weight: 300
+}
+
+.invoice-price .invoice-price-right small {
+    display: block;
+    opacity: .6;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 12px
 }

@@ -14,18 +14,32 @@ import ReactDatatable from '@ashvin27/react-datatable';
 
 import { NavLink } from 'react-router-dom';
 import CurrencyFormat from 'react-currency-format';
+//import CurrencyInput from '../partials/CurencyInput';
+import Currency from 'react-currency-input-field';
 
 import ReactSelect from "react-select";
 import styled from 'styled-components';
+import MaskedInput from 'react-text-mask'
+
 
 import '../style/FormBiaya.css';
 //smantic
-import { Grid, Segment , Form , Card, HeaderContent , Table ,Button} from 'semantic-ui-react';
-import { FormGroup , TextField } from "@material-ui/core";
+//import { Grid, Segment , Form , Card, HeaderContent , Table ,Button} from 'semantic-ui-react';
+//import { FormGroup , TextField } from "@material-ui/core";
 
+
+//Bootsrap
+import Form from 'react-bootstrap/Form';
+import Container from 'react-bootstrap/Container';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import Table from 'react-bootstrap/Table';
+import InputGroup from 'react-bootstrap/InputGroup'
 
 const options=[
-    {  name: "Tatang", alamat: "Jln Pusaka raya blok c 3 depan rumah surya insomnia" },
+    {  name: "Tatang", alamat: "Jln Pusaka raya blok c 3 depan rumah surya insomnia" ,  Rek: "BCA 1231232564" },
     {  name: "David", value: "Gg. Dolly tempat prostitusi paling terkenal sejagad raya", Rek: "BCA 0841122564" }
   ]
 
@@ -46,7 +60,13 @@ class BiayaForm extends Component {
             tags: '',
             billing_address: '',
             created_at: '',
-            updated_at: ''
+            updated_at: '',
+
+            //Simpan
+            BayarDari: [],
+            AkunBiaya:[],
+            items: [],
+            errors: {}
         };
 
         this.state = {
@@ -63,17 +83,6 @@ class BiayaForm extends Component {
             }
         };
 
-        this.state ={
-            RecordAkunBiaya: [],
-            RecordAkunAktiva: []
-        };
-
-        this.state = {
-            BayarDari: [],
-            AkunBiaya:[],
-            items: [],
-            errors: {}
-        };
 
         
     }
@@ -89,9 +98,14 @@ class BiayaForm extends Component {
     onChangeBayarDari = e => {  
         //this.setState({ [e.target.id]: e.target.value });
         this.setState({
-            pay_from_account_number: e._id,
+            pay_from_account_number: e.name,
         })
         console.log("Bayar Dari",this.state.pay_from_account_number);
+    };
+
+    onChangeJumlah = e => {  
+        
+        console.log("MASOKKKK",e);
     };
 
     componentDidMount() {
@@ -136,6 +150,8 @@ class BiayaForm extends Component {
         console.log(e);
     };
 
+
+
     render() {
         const { user } = this.props.auth;
         return (
@@ -148,120 +164,150 @@ class BiayaForm extends Component {
                         <div className="container-fluid">
                             <button className="btn btn-link mt-2" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
                             <h1 className="mt-2 text-primary">Buat Biaya</h1>
-                            <Card.Group>
-                                <Card fluid color='red' header='B' background="light" className="col-lg-10 center">
-                                   <div className="card-in">
-                                        <Form noValidate onSubmit={this.onBiayaAdd} >
-                                               
-                                            <Form.Group>
-                                                <Form.Input width={4} label='Bayar Dari'>
+                            <Card body>
+                                <Form noValidate onSubmit={this.onBiayaAdd}>
+                                    <Form.Row>
+                                        <Form.Group as={Col} >
+                                            <Form.Label>Bayar Dari</Form.Label>
+                                            <ReactSelect
+                                                onChange={this.onChangeBayarDari} 
+                                                className="SizeSelect"
+                                                getOptionValue={option => option._id}
+                                                getOptionLabel={option => option.name}
+                                                options={this.state.BayarDari}
+                                                />
+                                        </Form.Group>
+
+                                        <Form.Group as={Col} >
+                                            <Form.Label>Penerima</Form.Label>
+                                            <ReactSelect 
+                                                getOptionValue={option => option.name}
+                                                getOptionLabel={option => option.name}
+                                                options={options}
+                                            />
+                                        </Form.Group>
+                                        <Form.Group as={Col} >
+                                            <Form.Label>Tgl Transaksi</Form.Label>
+                                            <Form.Control type="date"/>
+                                        </Form.Group>
+                                        <Form.Group as={Col} >
+                                            <Form.Label>Cara Bayar</Form.Label>
+                                            <ReactSelect
+                                                className="col-md-12 size-select"
+                                                getOptionValue={option => option.name}
+                                                getOptionLabel={option => option.Rek}
+                                                options={options}
+                                            />
+                                        </Form.Group>
+                                        <Form.Group as={Col}  >
+                                            <Form.Label>No Biaya</Form.Label>
+                                            <Form.Control placeholder="XXX/XXX/XXX"/>
+                                        </Form.Group>
+                                    </Form.Row>
+
+                                    <Form.Group as={Col} xs={6}>
+                                        <Form.Label>Address</Form.Label>
+                                        <Form.Control as="textarea" />
+                                    </Form.Group>
+
+                                    <br/>
+                                    <br/>
+
+                                    <Table responsive="sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Akun Biaya</th>
+                                                <th>Deskripsi</th>
+                                                <th>Pajak</th>
+                                                <th>Jumlah</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
                                                     <ReactSelect
-                                                        onChange={this.onChangeBayarDari}
-                                                        className="col-md-12 size-select"
-                                                        getOptionValue={option => option}
-                                                        getOptionLabel={option => option.name}
-                                                        options={this.state.BayarDari}
-                                                    />        
-                                                </Form.Input>
-                                            </Form.Group>
-                                        
-                                            <Form.Group>
-                                                <Form.Input placeholder='2 Wide' width={4} label='Penerima'>
-                                                    <ReactSelect
-                                                        className="col-md-12 size-select"
                                                         getOptionValue={option => option.name}
-                                                        getOptionLabel={option => option.name}
-                                                        options={options}
-                                                    />        
-                                                </Form.Input>
-                                                <Form.Input placeholder='12 Wide' width={4} label='Tgl Transaksi' type="date"/>
-                                                <Form.Input placeholder='2 Wide' width={4} label='Cara Bayar'>
-                                                <ReactSelect
-                                                        className="col-md-12 size-select"
-                                                        getOptionValue={option => option.name}
-                                                        getOptionLabel={option => option.name}
+                                                        getOptionLabel={option => option.Rek}
                                                         options={options}
                                                     />
-                                                </Form.Input>
-                                                <Form.Input placeholder='' width={4} label='No Biaya'/>
-                                            </Form.Group>
-                                            <Form.Group >
-                                                <Form.TextArea width={6} label='Alamat Penagihan'/>
-                                            </Form.Group>
-                                            
-                                            <br/>
-                                            <br/>
-                                            <br/>
-
-                                            <Table compact>
-                                                <Table.Header>
-                                                    <Table.Row>
-                                                        <Table.HeaderCell>Akun Biaya</Table.HeaderCell>
-                                                        <Table.HeaderCell>Deskripsi</Table.HeaderCell>
-                                                        <Table.HeaderCell>Pajak</Table.HeaderCell>
-                                                        <Table.HeaderCell>Jumlah</Table.HeaderCell>
-                                                    </Table.Row>
-                                                </Table.Header>
-                                                <Table.Body>
-                                                    <Table.Row>
-                                                        <Table.Cell>
-                                                            <ReactSelect/>
-                                                        </Table.Cell>
-                                                        <Table.Cell>
-                                                            <Form.Input type="text"/>
-                                                        </Table.Cell>
-                                                        <Table.Cell>
-                                                            <ReactSelect />
-                                                        </Table.Cell>
-                                                        <Table.Cell>
-                                                            <Form.Input type="text"/>
-                                                        </Table.Cell>
-                                                    </Table.Row>
-                                                </Table.Body>
-                                            </Table>
-
-                                            <br/>
-                                            <br/>
-                                            <br/>
-
-                                            <div className="row">
-                                                <div className="col-lg-6 col-lg-pull-6">
-                                                    <Form.TextArea width={12} label='Memo'/>
-
-                                                </div>
-                                                <div className="col-lg-6 col-lg-push-6">
-                                                    <div className="row">
-                                                        <div className="col-md-3">
-                                                            <h2>Sub Total</h2>
-                                                            <h1>Total</h1>
-                                                        </div>
-                                                        <div className="col-md-4">
-                                                            <a><CurrencyFormat value={10000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></a>
-                                                            <h1><CurrencyFormat value={10000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h1>
-                                                        </div>
-                                                    </div>
-                                                    <br/>
-                                                    <br/>
-                                                    <div className="row">
+                                                </td>
+                                                <td><Form.Control type="text" /></td>
+                                                <td><Form.Control type="text" /></td>
+                                                <td>
+                                                    <InputGroup className="mb-3">
+                                                        <InputGroup.Prepend>
+                                                            <InputGroup.Text>Rp. </InputGroup.Text>
+                                                        </InputGroup.Prepend>
                                                         
-                                                        <Button color='red'>Batal</Button>
-                                                        <Button color='green' type="submit" >Buat Biaya Baru</Button>
-                                                        
-                                                    </div>
-                                                </div>
-                                            </div>
-                                                
-                                            
-                                        </Form>
+                                                            <Currency className="form-control CurencySelect" onChange={this.onChangeJumlah}
+                                                            />
+
+                                                        <InputGroup.Append>
+                                                            <InputGroup.Text>.00</InputGroup.Text>
+                                                        </InputGroup.Append>
+                                                    </InputGroup>
+                                                </td>
+                                                {/* <td><Form.Control type="text" onChange={ this.onChangeJumlah }/></td> */}
+                                            </tr>
+                                        </tbody>
+            
+                                    </Table>
+
+                                    <Form.Group as={Col} xs={5}>
+                                        <Form.Label>Memo</Form.Label>
+                                        <Form.Control as="textarea" />
+                                    </Form.Group>
+
+                                    <div>
+                                        <br/>
+                                        <br/>
                                     </div>
-                                </Card>
-                                <Card fluid color='orange' header='Option 2' />
-                                <Card fluid color='yellow' header='Option 3' />
-                            </Card.Group>
-                            
-                            
-                            
+                                    
+                                    <div className="invoice-price">
+                                        <div className="invoice-price-left">
+                                            <div className="invoice-price-row">
+                                                <div className="sub-price">
+                                                    <small>SUBTOTAL</small>
+                                                    <span class="text-inverse"><CurrencyFormat value={10000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></span>
+                                                </div>
 
+                                                {/* Jika ada pajak otomatis akan ada dan + pajak 
+                                                <div class="sub-price">
+                                                    <i class="fa fa-plus text-muted"></i>
+                                                </div>
+                                                <div class="sub-price">
+                                                    <small>PPN</small>
+                                                    <span class="text-inverse"><CurrencyFormat value={1000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></span>
+                                                </div>
+                                                 */}
+                                            </div>
+                                        </div>
+                                        <div className="invoice-price-right">
+                                            <small>TOTAL</small> <span class="f-w-600"><CurrencyFormat value={11000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></span>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <br/>
+                                        <br/>
+                                    </div>
+                                    <Row>
+                                        <Col></Col>
+                                        <Col md="auto">
+                                            <Button variant="primary" type="submit">
+                                                Submit
+                                            </Button>
+                                        </Col>
+                                        <Col xs lg="2">
+                                            <Button variant="danger" type="close">
+                                                Cancel
+                                            </Button>
+                                        </Col>
+                                    </Row>
+                                </Form>
+
+                            </Card>
+                            <Card.Footer><small>this form made by iosys</small></Card.Footer>
 
                         </div>
                     </div>

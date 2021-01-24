@@ -25,7 +25,11 @@
     "react": "^16.8.6",
     "react-admin": "^2.9.3",
     "react-bootstrap": "^1.4.3",
+    "react-bootstrap-date-picker": "^5.1.0",
     "react-currency-format": "^1.0.0",
+    "react-currency-input-field": "^3.0.4",
+    "react-date-picker": "^8.0.6",
+    "react-datepicker": "^3.4.1",
     "react-dom": "^16.8.6",
     "react-icons": "^4.1.0",
     "react-redux": "^7.1.0",
@@ -33,6 +37,7 @@
     "react-scripts": "3.0.1",
     "react-select": "^3.1.1",
     "react-table": "^7.6.3",
+    "react-text-mask": "^5.4.3",
     "react-toastify": "^5.3.1",
     "reactstrap": "^8.8.1",
     "redux": "^4.0.1",
@@ -40,7 +45,8 @@
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.2",
     "simplebar-react": "^2.3.0",
-    "styled-components": "^5.2.1"
+    "styled-components": "^5.2.1",
+    "text-mask-addons": "^3.8.0"
   },
   "scripts": {
     "start": "react-scripts start",
