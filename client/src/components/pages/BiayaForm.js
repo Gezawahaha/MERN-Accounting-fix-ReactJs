@@ -25,32 +25,10 @@ import { FormGroup , TextField } from "@material-ui/core";
 
 
 const options=[
-    { key: "m", name: "Male", value: "male" },
-    { key: "f", name: "Female", value: "female" }
+    {  name: "Tatang", alamat: "Jln Pusaka raya blok c 3 depan rumah surya insomnia" },
+    {  name: "David", value: "Gg. Dolly tempat prostitusi paling terkenal sejagad raya", Rek: "BCA 0841122564" }
   ]
 
-const FormExampleWidthField = () => (
-
-        <Form>
-        
-        <Form.Group>
-            <Form.Input label='Bayar Dari' width={6}>
-               
-            </Form.Input>
-        </Form.Group>
-        <Form.Group>
-            <Form.Input placeholder='2 Wide' width={2} />
-            <Form.Input placeholder='12 Wide' width={12} />
-            <Form.Input placeholder='2 Wide' width={2} />
-        </Form.Group>
-        <Form.Group>
-            <Form.Input placeholder='8 Wide' width={8} />
-            <Form.Input placeholder='6 Wide' width={6} />
-            <Form.Input placeholder='2 Wide' width={2} />
-        </Form.Group>
-        </Form>
-    
-  )
 
 
 
@@ -59,14 +37,27 @@ class BiayaForm extends Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            pay_from_account_number: "",
+            beneficiary: "",
+            transaction_date: "",
+            payment_method: '',
+            expense_no: '',
+            tags: '',
+            billing_address: '',
+            created_at: '',
+            updated_at: ''
+        };
 
         this.state = {
             currentRecord: {
-                id: '',
-                coa_account_number: '',
-                name: '',
-                total_debit: '',
-                total_kredit: '',
+                pay_from_account_number: "",
+                beneficiary: '',
+                transaction_date: '',
+                payment_method: '',
+                expense_no: '',
+                tags: '',
+                billing_address: '',
                 created_at: '',
                 updated_at: ''
             }
@@ -77,25 +68,62 @@ class BiayaForm extends Component {
             RecordAkunAktiva: []
         };
 
-        this.getData = this.getData.bind(this);
+        this.state = {
+            BayarDari: [],
+            AkunBiaya:[],
+            items: [],
+            errors: {}
+        };
+
+        
     }
 
+    onBiayaAdd = e => {
+        e.preventDefault();
+        const newBiaya = {
+            
+        };
+        console.log("submit",newBiaya);
+    };
+
+    onChangeBayarDari = e => {  
+        //this.setState({ [e.target.id]: e.target.value });
+        this.setState({
+            pay_from_account_number: e._id,
+        })
+        console.log("Bayar Dari",this.state.pay_from_account_number);
+    };
+
     componentDidMount() {
-        //this.getData();
+        this.getDataBayardari();
+        this.getDataAkunBiaya();
         //console.log("test",this.state.records.value);
     };
 
-
-    getData() {
-        axios.get('')
+    getDataAkunBiaya() {
+        axios.get('/coa/main/sub/Sub-data')
             .then(res => {
                 this.setState({ 
-                    records: res.data,
+                    AkunBiaya: res.data,
                     
                 })
-                console.log("DK", this.state.records);
+                console.log("Akun Biaya", this.state.AkunBiaya);
             })
             .catch()
+            this.getDataAkunBiaya = this.getDataAkunBiaya.bind(this);
+    }
+
+    getDataBayardari() {
+        axios.get('/coa/main/sub/1/1')
+            .then(res => {
+                this.setState({ 
+                    BayarDari: res.data,
+                    
+                })
+                //console.log("Bayar Dari Data", this.state.BayarDari);
+            })
+            .catch()
+            this.getDataBayardari = this.getDataBayardari.bind(this);
     }
    
     onLogoutClick = e => {
@@ -121,17 +149,18 @@ class BiayaForm extends Component {
                             <button className="btn btn-link mt-2" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
                             <h1 className="mt-2 text-primary">Buat Biaya</h1>
                             <Card.Group>
-                                <Card fluid color='red' header='B' background="light" >
+                                <Card fluid color='red' header='B' background="light" className="col-lg-10 center">
                                    <div className="card-in">
-                                        <Form>
+                                        <Form noValidate onSubmit={this.onBiayaAdd} >
                                                
                                             <Form.Group>
                                                 <Form.Input width={4} label='Bayar Dari'>
                                                     <ReactSelect
+                                                        onChange={this.onChangeBayarDari}
                                                         className="col-md-12 size-select"
-                                                        getOptionValue={option => option.value}
+                                                        getOptionValue={option => option}
                                                         getOptionLabel={option => option.name}
-                                                        options={options}
+                                                        options={this.state.BayarDari}
                                                     />        
                                                 </Form.Input>
                                             </Form.Group>
@@ -140,14 +169,21 @@ class BiayaForm extends Component {
                                                 <Form.Input placeholder='2 Wide' width={4} label='Penerima'>
                                                     <ReactSelect
                                                         className="col-md-12 size-select"
-                                                        getOptionValue={option => option.value}
+                                                        getOptionValue={option => option.name}
                                                         getOptionLabel={option => option.name}
                                                         options={options}
                                                     />        
                                                 </Form.Input>
                                                 <Form.Input placeholder='12 Wide' width={4} label='Tgl Transaksi' type="date"/>
-                                                <Form.Input placeholder='2 Wide' width={4} label='Cara Bayar'/>
-                                                <Form.Input placeholder='2 Wide' width={4} label='No Biaya'/>
+                                                <Form.Input placeholder='2 Wide' width={4} label='Cara Bayar'>
+                                                <ReactSelect
+                                                        className="col-md-12 size-select"
+                                                        getOptionValue={option => option.name}
+                                                        getOptionLabel={option => option.name}
+                                                        options={options}
+                                                    />
+                                                </Form.Input>
+                                                <Form.Input placeholder='' width={4} label='No Biaya'/>
                                             </Form.Group>
                                             <Form.Group >
                                                 <Form.TextArea width={6} label='Alamat Penagihan'/>
@@ -207,10 +243,10 @@ class BiayaForm extends Component {
                                                     <br/>
                                                     <br/>
                                                     <div className="row">
-                                                        <Form>
+                                                        
                                                         <Button color='red'>Batal</Button>
-                                                        <Button color='green' >Buat Biaya Baru</Button>
-                                                        </Form>
+                                                        <Button color='green' type="submit" >Buat Biaya Baru</Button>
+                                                        
                                                     </div>
                                                 </div>
                                             </div>
