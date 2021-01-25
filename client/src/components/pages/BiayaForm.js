@@ -43,6 +43,12 @@ const options=[
     {  name: "David", value: "Gg. Dolly tempat prostitusi paling terkenal sejagad raya", Rek: "BCA 0841122564" }
   ]
 
+  
+const carabayar=[
+    {  name: "TRansfer",  Rek: "BCA 1231232564" },
+    {  name: "Cash",  Rek: "BCA 0841122564" }
+  ]
+
 
 
 
@@ -101,6 +107,19 @@ class BiayaForm extends Component {
             pay_from_account_number: e.name,
         })
         console.log("Bayar Dari",this.state.pay_from_account_number);
+    };
+    onChangeDate = e => {  
+        this.setState({
+            transaction_date: e.target.value,
+        })
+        console.log("Date",this.state.transaction_date);
+    };
+
+    onChangePenerima= e => {  
+        this.setState({
+            beneficiary: e.name,
+        })
+        console.log("Penerima",this.state.beneficiary);
     };
 
     onChangeJumlah = e => {  
@@ -180,7 +199,8 @@ class BiayaForm extends Component {
 
                                         <Form.Group as={Col} >
                                             <Form.Label>Penerima</Form.Label>
-                                            <ReactSelect 
+                                            <ReactSelect
+                                                onChange={this.onChangePenerima} 
                                                 getOptionValue={option => option.name}
                                                 getOptionLabel={option => option.name}
                                                 options={options}
@@ -188,15 +208,15 @@ class BiayaForm extends Component {
                                         </Form.Group>
                                         <Form.Group as={Col} >
                                             <Form.Label>Tgl Transaksi</Form.Label>
-                                            <Form.Control type="date"/>
+                                            <Form.Control type="date" onChange={this.onChangeDate}/>
                                         </Form.Group>
                                         <Form.Group as={Col} >
                                             <Form.Label>Cara Bayar</Form.Label>
                                             <ReactSelect
                                                 className="col-md-12 size-select"
                                                 getOptionValue={option => option.name}
-                                                getOptionLabel={option => option.Rek}
-                                                options={options}
+                                                getOptionLabel={option => option.name}
+                                                options={carabayar}
                                             />
                                         </Form.Group>
                                         <Form.Group as={Col}  >
