@@ -160,4 +160,16 @@ router.delete("/:postId", async (req, res) => {
   }
 });
 
+router.get("/:coa", async (req, res) => {
+  try {
+    // const post = await Post.findById({account_number: req.params.postId});
+    const post = await Post.find({
+      coa_account_number: req.params.coa,
+    });
+    res.json(post);
+  } catch (err) {
+    res.json({message: err});
+  }
+});
+
 module.exports = router;
