@@ -11,15 +11,15 @@ import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import UserUpdateModal from "../partials/UserUpdateModal";
 import { toast, ToastContainer} from "react-toastify";
 
-import {Link} from "react-router-dom";
-
 import UserAddModal from "../partials/UserAddModal";
 import EmployeAddModal from "../partials/EmployeAddModal";
+
+import {Link} from "react-router-dom";
 
 //botstrap
 import Nav from 'react-bootstrap/Nav';
 
-class Users extends Component {
+class employee extends Component {
 
     constructor(props) {
         super(props);
@@ -85,8 +85,8 @@ class Users extends Component {
         this.config = {
             page_size: 10,
             length_menu: [ 10, 20, 50 ],
-            filename: "Users",
-            no_data_text: 'No user found!',
+            filename: "employee",
+            no_data_text: 'No Employee found!',
             button: {
                 excel: true,
                 print: true,
@@ -136,7 +136,7 @@ class Users extends Component {
 
     getData() {
         axios
-            .post("/api/user-data")
+            .post("/employee/Emp-data")
             .then(res => {
                 this.setState({ records: res.data})
             })
@@ -173,18 +173,19 @@ class Users extends Component {
                     <Sidebar/>
                     <UserAddModal />
                     <UserUpdateModal record={this.state.currentRecord}/>
-                    
+
                     <EmployeAddModal />
+
                     
                     <div id="page-content-wrapper">
                         <div className="container-fluid">
                             <button className="btn btn-link mt-3" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
                             <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-user-modal"><FontAwesomeIcon icon={faPlus}/> Add Customer</button>
                             <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-user-modal"><FontAwesomeIcon icon={faPlus}/> Add Supplier</button>
-                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-employee-modal"><FontAwesomeIcon icon={faPlus}/> Add karyawan</button>
+                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-user-modal"><FontAwesomeIcon icon={faPlus}/> Add karyawan</button>
                             <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-user-modal"><FontAwesomeIcon icon={faPlus}/> Add User Account</button>
                             <h1 className="mt-2 text-primary">Kontak</h1>
-                            <Nav justify variant="tabs" defaultActiveKey="/users">
+                            <Nav justify variant="tabs" defaultActiveKey="/karyawan">
                                 <Nav.Item>
                                     <Nav.Link href="/users">User Account</Nav.Link>
                                 </Nav.Item>
@@ -219,7 +220,7 @@ class Users extends Component {
 
 }
 
-Users.propTypes = {
+employee.propTypes = {
     auth: PropTypes.object.isRequired,
 };
 
@@ -230,4 +231,4 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps
-)(Users);
+)(employee);

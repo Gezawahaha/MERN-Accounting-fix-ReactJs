@@ -3,7 +3,7 @@ const router = express.Router();
 const Post = require("../../models/employee");
 
 //GET ALL THE POST
-router.get("/", async (req, res) => {
+router.get("/Emp-data", async (req, res) => {
   try {
     const posts = await Post.find();
     res.json(posts);
@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
 });
 
 //SUBMIT A POST
-router.post("/", async (req, res) => {
+router.post("/Emp-add", async (req, res) => {
   const post = new Post({
     EmployeeID: req.body.EmployeeID,
     FirstName: req.body.FirstName,

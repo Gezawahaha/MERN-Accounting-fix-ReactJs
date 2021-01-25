@@ -39,6 +39,20 @@ export const updateUser = (userData) => dispatch => {
     );
 };
 
+export const addEmployee = (userData, history) => dispatch => {
+    axios
+        .post("/employee/Emp-add", userData)
+        .then(res =>
+            dispatch({
+                type: USER_LOADING,
+                payload: res,
+            })
+        ).catch(err =>
+        dispatch({
+        })
+        );
+};
+
 
 export const addAkun = (userData, history) => dispatch => {
     axios

@@ -20,11 +20,12 @@ import '../node_modules/popper.js/dist/popper';
 
 import Dashboard from "./components/pages/Dashboard";
 import User from "./components/pages/Users";
+import Employee from './components/pages/employee';
 import DaftarAkun from "./components/pages/DaftarAkun";
 import DaftarMainAkun from "./components/pages/DaftarMainAkun";
 import DaftarSubAkun from "./components/pages/DaftarSubAkun";
-import Biaya from './components/pages/Biaya'
-import BiayaForm from './components/pages/BiayaForm'
+import Biaya from './components/pages/Biaya';
+import BiayaForm from './components/pages/BiayaForm';
 
 if (localStorage.jwtToken) {
     const token = localStorage.jwtToken;
@@ -51,6 +52,7 @@ class App extends Component {
                             <Switch>
                                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
                                 <PrivateRoute exact path="/users" component={User} />
+                                <PrivateRoute exact path="/karyawan" component={Employee} />
                                 <PrivateRoute exact path="/biaya" component={Biaya} />
                                 <PrivateRoute exact path="/biayaForm" component={BiayaForm} />
                                 <PrivateRoute exact path="/daftarakun" component={DaftarAkun} />

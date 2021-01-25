@@ -58,9 +58,10 @@ class BiayaForm extends Component {
         super(props);
 
         this.state = {
-            pay_from_account_number: "",
-            beneficiary: "",
-            transaction_date: "",
+            //expense
+            pay_from_account_number: '',
+            beneficiary: '',
+            transaction_date: '',
             payment_method: '',
             expense_no: '',
             tags: '',
@@ -68,7 +69,16 @@ class BiayaForm extends Component {
             created_at: '',
             updated_at: '',
 
-            //Simpan
+            //expense Detail
+            expenses_account: '',
+            description: '',
+            tax: '',
+            expenses_amount: '',
+            created_at: '',
+            link_id: '',
+
+
+            //Simpanan
             BayarDari: [],
             AkunBiaya:[],
             items: [],
@@ -122,9 +132,19 @@ class BiayaForm extends Component {
         console.log("Penerima",this.state.beneficiary);
     };
 
+    onChangeDeskripsi = e => {  
+        this.setState({
+            description: e.target.value,
+        })
+        console.log("Desc",this.state.description);
+    };
+
+
     onChangeJumlah = e => {  
-        
-        console.log("MASOKKKK",e);
+        this.setState({
+            expenses_amount: e.target.value,
+        })
+        console.log("Amount",this.state.expenses_amount);
     };
 
     componentDidMount() {
@@ -134,7 +154,7 @@ class BiayaForm extends Component {
     };
 
     getDataAkunBiaya() {
-        axios.get('/coa/main/sub/Sub-data')
+        axios.get('/coa/main/sub/6')
             .then(res => {
                 this.setState({ 
                     AkunBiaya: res.data,
@@ -247,11 +267,11 @@ class BiayaForm extends Component {
                                                 <td>
                                                     <ReactSelect
                                                         getOptionValue={option => option.name}
-                                                        getOptionLabel={option => option.Rek}
-                                                        options={options}
+                                                        getOptionLabel={option => option.name}
+                                                        options={this.state.AkunBiaya}
                                                     />
                                                 </td>
-                                                <td><Form.Control type="text" /></td>
+                                                <td><Form.Control type="text" onChange={this.onChangeDeskripsi} /></td>
                                                 <td><Form.Control type="text" /></td>
                                                 <td>
                                                     <InputGroup className="mb-3">
@@ -288,7 +308,7 @@ class BiayaForm extends Component {
                                             <div className="invoice-price-row">
                                                 <div className="sub-price">
                                                     <small>SUBTOTAL</small>
-                                                    <span class="text-inverse"><CurrencyFormat value={10000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></span>
+                                                    <span class="text-inverse"><CurrencyFormat value={ this.state.expenses_amount } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></span>
                                                 </div>
 
                                                 {/* Jika ada pajak otomatis akan ada dan + pajak 
@@ -303,7 +323,7 @@ class BiayaForm extends Component {
                                             </div>
                                         </div>
                                         <div className="invoice-price-right">
-                                            <small>TOTAL</small> <span class="f-w-600"><CurrencyFormat value={11000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></span>
+                                            <small>TOTAL</small> <span class="f-w-600"><CurrencyFormat value={ this.state.expenses_amount } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></span>
                                         </div>
                                     </div>
 
@@ -319,7 +339,7 @@ class BiayaForm extends Component {
                                             </Button>
                                         </Col>
                                         <Col xs lg="2">
-                                            <Button variant="danger" type="close">
+                                            <Button variant="danger" type="reset" >
                                                 Cancel
                                             </Button>
                                         </Col>
