@@ -45,7 +45,7 @@ router.post("/", async (req, res) => {
         {buku_id: req.body.link_id},
         {
           $set: {
-            total_saldo: saldo + req.body.saldo,
+            total_saldo: saldo - req.body.saldo,
             total_debit: debit + req.body.debit,
             total_kredit: kredit + req.body.kredit,
             updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),

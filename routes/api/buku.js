@@ -63,32 +63,22 @@ router.get("/:postId", async (req, res) => {
   }
 });
 
-// //UPDATE POST
-// router.patch("/:postId", async (req, res) => {
-//   try {
-//     const updatedpost = await Buku.updateOne(
-//   {buku_id: req.params.postId},
-//   {
-//     $set: {
-//       SalesID: req.body.SalesID,
-//       CompanyName: req.body.CompanyName,
-//       Address1: req.body.Address1,
-//       Address2: req.body.Address2,
-//       Country: req.body.Country,
-//       City: req.body.City,
-//       StateProvince: req.body.StateProvince,
-//       ZipPostalCode: req.body.ZipPostalCode,
-//       Email: req.body.Email,
-//       Phone: req.body.Phone,
-//       Fax: req.body.Fax,
-//     },
-//   }
-// );
-// res.json(updatedpost);
-//   } catch (err) {
-//     res.json({message: err});
-//   }
-// });
+//UPDATE SALDO
+router.patch("/:postId", async (req, res) => {
+  try {
+    const updatedpost = await Buku.updateOne(
+      {buku_id: req.params.postId},
+      {
+        $set: {
+          total_saldo: req.body.total_saldo,
+        },
+      }
+    );
+    res.json(updatedpost);
+  } catch (err) {
+    res.json({message: err});
+  }
+});
 
 //DELETE POST
 router.delete("/:postId", async (req, res) => {
