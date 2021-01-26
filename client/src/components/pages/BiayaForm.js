@@ -10,16 +10,16 @@ import FormBiaya from "../partials/FormInputBiaya";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faList} from "@fortawesome/free-solid-svg-icons/faList";
 import axios from "axios";
-import ReactDatatable from '@ashvin27/react-datatable';
 
 import { NavLink } from 'react-router-dom';
 import CurrencyFormat from 'react-currency-format';
-//import CurrencyInput from '../partials/CurencyInput';
-import Currency from 'react-currency-input-field';
 
+import { toast } from 'react-toastify';
 import ReactSelect from "react-select";
 import styled from 'styled-components';
 import MaskedInput from 'react-text-mask'
+
+import { addBiaya } from "../../actions/userActions";
 
 
 import '../style/FormBiaya.css';
@@ -36,7 +36,8 @@ import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table';
-import InputGroup from 'react-bootstrap/InputGroup'
+import InputGroup from 'react-bootstrap/InputGroup';
+import moment from 'moment';
 
 const options=[
     {  name: "Tatang", alamat: "Jln Pusaka raya blok c 3 depan rumah surya insomnia" ,  Rek: "BCA 1231232564" },
@@ -45,8 +46,8 @@ const options=[
 
   
 const carabayar=[
-    {  name: "TRansfer",  Rek: "BCA 1231232564" },
-    {  name: "Cash",  Rek: "BCA 0841122564" }
+    {  name: "Transfer"},
+    {  name: "Cash"}
   ]
 
   const TaxOpt=[
@@ -77,6 +78,8 @@ class BiayaForm extends Component {
 
             //expense Detail
             expenses_account: '',
+            main_account_number: '',
+            sub_account_number: '',
             description: '',
             tax: '',
             expenses_amount: '',
@@ -121,35 +124,78 @@ class BiayaForm extends Component {
     onBiayaAdd = e => {
         e.preventDefault();
         const newBiaya = {
+            pay_from_account_number: this.state.pay_from_account_number,
             beneficiary: this.state.beneficiary,
             transaction_date: this.state.transaction_date,
-
-
+            payment_method: this.state.payment_method,
+            expense_no: this.state.expense_no,
+            tags: this.state.tags,
+            billing_address: this.state.billing_address,
+            expenses_detail:[{
+                expenses_account: this.state.expenses_account,
+                description: this.state.description,
+                tax: this.state.AmountTax,
+                expenses_amount: this.calcGrandTotal(),
+                main_account_number: this.state.main_account_number,
+                coa_account_number: this.state.coa_account_number
+            }]
         };
         console.log("submit",newBiaya);
+        this.props.addBiaya(newBiaya , this.props.history);
+        toast("Waiting For Load Data", {
+            position: toast.POSITION.TOP_CENTER
+        });
     };
 
     onChangeBayarDari = e => {  
         //this.setState({ [e.target.id]: e.target.value });
-        this.setState({
-            pay_from_account_number: e.name,
-        })
+        if ( e.main_account_number < 10 && e.sub_account_number < 10 ){
+            this.setState({
+                pay_from_account_number: `${e.coa_account_number}-0${e.main_account_number}-0${e.sub_account_number}`
+            })
+        }else if ( e.main_account_number < 10 && e.sub_account_number >= 10){
+            this.setState({
+                pay_from_account_number: `${e.coa_account_number}-0${e.main_account_number}-${e.sub_account_number}`
+            })
+        }else if ( e.main_account_number >= 10 && e.sub_account_number < 10){
+            this.setState({
+                pay_from_account_number: `${e.coa_account_number}-${e.main_account_number}-0${e.sub_account_number}`
+            })
+        }else if ( e.main_account_number >= 10 && e.sub_account_number >= 10){
+            this.setState({
+                pay_from_account_number: `${e.coa_account_number}-${e.main_account_number}-${e.sub_account_number}`
+            })
+        }
         console.log("Bayar Dari",this.state.pay_from_account_number);
     };
+
     onChangeDate = e => {  
         this.setState({
-            transaction_date: e.target.value,
+            transaction_date: moment( e.target.value ).format("YYYY-MM-DD HH:mm:ss"),
         })
         console.log("Date",this.state.transaction_date);
     };
 
     onChangePenerima= e => {  
         this.setState({
-            beneficiary: e.name,
+            beneficiary: e.FirstName,
+            billing_address: e.Address
         })
         //console.log("Penerima",this.state.beneficiary);
         //console.log("Isi dari tax",this.state.expenses_amount);
         console.log("Masok",this.state.expenses_amount);
+    };
+
+    onChangePayMethod= e => {
+        this.setState({
+            payment_method: e
+        })
+    };
+
+    onChangeExpenseNO= e => {
+        this.setState({
+            expense_no: 1
+        })
     };
 
     onChangeDeskripsi = e => {  
@@ -159,6 +205,13 @@ class BiayaForm extends Component {
         //console.log("Desc",this.state.description);
     };
 
+    onChangeAkunBiaya = e => {
+        this.setState({
+            expenses_account: e.sub_account_number,
+            main_account_number: e.main_account_number,
+            coa_account_number: e.coa_account_number
+        })
+    };
 
     onChangeTax = e => {  
         this.setState({
@@ -172,20 +225,7 @@ class BiayaForm extends Component {
         
     };
 
-    onChangeJumlah = e => {  
-        // this.setState({
-        //     expenses_amount: this.state.expenses + this.state.AmountTax
-        // })
-        // console.log("Masok",this.state.expenses_amount);
-        // if (this.state.TaxB == 1){
-        //     this.setState({
-        //         AmountTax: this.state.expenses_amount * this.state.TaxRate
-        //     })
-        //     //console.log("Masok",this.state.expenses_amount);
-        // }        
-        
-    };
-
+    
 
     calcTaxTotal = () => { 
         if (this.state.expenses > 0){
@@ -298,34 +338,27 @@ class BiayaForm extends Component {
                             <Card body className="card-form">
                                 <Form noValidate onSubmit={this.onBiayaAdd}>
                                     <Form.Row>
-                                        {/* <Form.Group as={Col} >
-                                            <Form.Label>Bayar Dari</Form.Label>
-                                            <ReactSelect
-                                                onChange={this.onChangeBayarDari} 
-                                                className="SizeSelect"
-                                                getOptionValue={option => option._id}
-                                                getOptionLabel={option => option.name}
-                                                options={this.state.BayarDari}
-                                                />
-                                        </Form.Group> */}
-
                                         <Form.Group as={Col} >
                                             <Form.Label>Penerima</Form.Label>
                                             <ReactSelect
                                                 onChange={this.onChangePenerima} 
-                                                getOptionValue={option => option.name}
+                                                getOptionValue={option => option.FirstName}
                                                 getOptionLabel={option => option.FirstName}
                                                 options={this.state.Penerima}
                                             />
                                         </Form.Group>
                                         <Form.Group as={Col} >
                                             <Form.Label>Tgl Transaksi</Form.Label>
-                                            <Form.Control type="date" onChange={this.onChangeDate}/>
+                                            <Form.Control 
+                                                type="date" 
+                                                onChange={this.onChangeDate} 
+                                                />
                                         </Form.Group>
                                         <Form.Group as={Col} >
                                             <Form.Label>Cara Bayar</Form.Label>
                                             <ReactSelect
                                                 className="col-md-12 size-select"
+                                                onChange={ this.onChangePayMethod }
                                                 getOptionValue={option => option.name}
                                                 getOptionLabel={option => option.name}
                                                 options={carabayar}
@@ -333,7 +366,7 @@ class BiayaForm extends Component {
                                         </Form.Group>
                                         <Form.Group as={Col}  >
                                             <Form.Label>No Biaya</Form.Label>
-                                            <Form.Control placeholder="XXX/XXX/XXX"/>
+                                            <Form.Control placeholder="XXX/XXX/XXX auto" onChange={ this.onChangeExpenseNO }/>
                                         </Form.Group>
                                     </Form.Row>
 
@@ -358,6 +391,7 @@ class BiayaForm extends Component {
                                             <tr>
                                                 <td>
                                                     <ReactSelect
+                                                        onChange= {this.onChangeAkunBiaya}
                                                         getOptionValue={option => option.name}
                                                         getOptionLabel={option => option.name}
                                                         options={this.state.AkunBiaya}

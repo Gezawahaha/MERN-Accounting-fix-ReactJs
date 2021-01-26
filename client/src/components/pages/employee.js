@@ -25,9 +25,16 @@ class employee extends Component {
         super(props);
 
         this.columns = [
+            // {
+            //     key: "_id",
+            //     text: "Id",
+            //     className: "id",
+            //     align: "left",
+            //     sortable: true,
+            // },
             {
-                key: "_id",
-                text: "Id",
+                key: "EmployeeID",
+                text: "ID Karyawan",
                 className: "id",
                 align: "left",
                 sortable: true,
@@ -41,9 +48,9 @@ class employee extends Component {
                 cell: record => <Fragment>{`${record.FirstName} ${record.LastName}`}</Fragment>
             },
             {
-                key: "email",
-                text: "Email",
-                className: "email",
+                key: "JobTitle",
+                text: "Jabatan",
+                className: "text",
                 align: "left",
                 sortable: true
             },
@@ -188,7 +195,7 @@ class employee extends Component {
                             <button className="btn btn-link mt-3" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
                             <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-user-modal"><FontAwesomeIcon icon={faPlus}/> Add Customer</button>
                             <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-user-modal"><FontAwesomeIcon icon={faPlus}/> Add Supplier</button>
-                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-user-modal"><FontAwesomeIcon icon={faPlus}/> Add karyawan</button>
+                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-employee-modal"><FontAwesomeIcon icon={faPlus}/> Add karyawan</button>
                             <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-user-modal"><FontAwesomeIcon icon={faPlus}/> Add User Account</button>
                             <h1 className="mt-2 text-primary">Kontak</h1>
                             <Nav justify variant="tabs" defaultActiveKey="/karyawan">

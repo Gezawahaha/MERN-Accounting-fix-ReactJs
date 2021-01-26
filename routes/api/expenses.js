@@ -10,7 +10,7 @@ const DetailBuku = require("../../models/buku_detail");
 const moment = require("moment");
 
 //GET ALL THE POST
-router.get("/", async (req, res) => {
+router.get("/Biaya-data", async (req, res) => {
   try {
     const posts = await Expenses.find();
     res.json(posts);
@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
 });
 
 //SUBMIT A POST
-router.post("/", async (req, res) => {
+router.post("/Biaya-add", async (req, res) => {
   const expenses = new Expenses({
     pay_from_account_number: req.body.pay_from_account_number,
     beneficiary: req.body.beneficiary,

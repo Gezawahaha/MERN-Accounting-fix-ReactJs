@@ -6,6 +6,7 @@ import { addEmployee} from "../../actions/userActions";
 import { withRouter } from "react-router-dom";
 import { toast } from 'react-toastify';
 import $ from 'jquery';
+import axios from "axios";
 
 import ReactSelect from "react-select";
 import CurrencyFormat from 'react-currency-format';
@@ -23,6 +24,8 @@ class EmployeAddModal extends React.Component {
     constructor() {
         super();
         this.state = {
+
+            EmployeeID: "",
             FirstName: "",
             LastName: "",
             JobTitle: "",
@@ -34,7 +37,8 @@ class EmployeAddModal extends React.Component {
             Field: "",
             errors: {},
 
-            SalaryFormated: "",
+            //simpenan
+            EmpData: ""
         };
     }
 
@@ -75,6 +79,7 @@ class EmployeAddModal extends React.Component {
     onEmployeeAdd = e => {
         e.preventDefault();
         const newEmployee = {
+            EmployeeID: this.state.EmployeeID,
             FirstName: this.state.FirstName,
             LastName: this.state.LastName,
             JobTitle: this.state.JobTitle,
@@ -93,6 +98,31 @@ class EmployeAddModal extends React.Component {
             });
     };
 
+    getDataIDemp() {
+        axios.get('/employee/Emp-data')
+        .then(response => {
+            if (response.data.length < 10) {
+                this.setState({
+                    EmployeeID: `00${response.data.length + 1}`
+            
+                })
+                console.log("1");
+              }
+              else if(response.data.length < 100){
+                this.setState({
+                    EmployeeID: `0${response.data.length + 1}`
+            
+                })
+                  console.log("2");
+              }
+            //console.log("length",this.state.length);
+        })
+    }
+
+    componentDidMount() {
+        this.getDataIDemp();
+    }
+
     render() {
         const { errors } = this.state;
         return (
@@ -101,11 +131,20 @@ class EmployeAddModal extends React.Component {
                     <div className="modal-dialog modal-lg">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h4 className="modal-title">Add Karyawan</h4>
+                                <h4 className="modal-title">Add Karyawan </h4>
                                 <button type="button" className="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div className="modal-body">
                                 <form noValidate onSubmit={this.onEmployeeAdd} id="add-Emp">
+                                    <div className="row mt-2">
+                                        <div className="col-md-3">
+                                            <label htmlFor="name">EmployeeID</label>
+                                        </div>
+                                        <div className="col-md-9">
+                                        <small>{ `#${this.state.EmployeeID}`}</small>
+                                            
+                                        </div>
+                                    </div>
                                     <div className="row mt-2">
                                         <div className="col-md-3">
                                             <label htmlFor="name">First Name</label>
@@ -206,7 +245,7 @@ class EmployeAddModal extends React.Component {
                                             <NumberFormat 
                                                 //id="Salary"
                                                 className="form-control"
-                                                value={ this.state.Salary }
+                                                //value={ this.state.Salary }
                                                 //onChange={this.onChange}
                                                 isNumericString={ true }
                                                 thousandSeparator={ true }
