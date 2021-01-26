@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Expenses = require("../../models/expenses");
 const ExpensesDetail = require("../../models/expenses_detail");
+const Post = require("../../models/sub_account");
+const Main = require("../../models/main_account");
 const moment = require("moment");
 
 //GET ALL THE POST
@@ -16,7 +18,7 @@ router.get("/", async (req, res) => {
 
 //SUBMIT A POST
 router.post("/", async (req, res) => {
-  const post = new Expenses({
+  const expenses = new Expenses({
     pay_from_account_number: req.body.pay_from_account_number,
     beneficiary: req.body.beneficiary,
     transaction_date: req.body.transaction_date,
@@ -29,7 +31,75 @@ router.post("/", async (req, res) => {
   });
 
   try {
-    const savedPost = await post.save();
+    const savedPost = await expenses.save();
+    let datasaved = 0;
+    // console.log(savedPost._id);
+    // res.json(savedPost);
+    //
+    Object.keys(req.body.expense_detail).map(async (item) => {
+      const post = new ExpensesDetail({
+        expenses_account: req.body.expense_detail[item].expenses_account,
+        description: req.body.expense_detail[item].description,
+        tax: req.body.expense_detail[item].tax,
+        expenses_amount: req.body.expense_detail[item].expenses_amount,
+        created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+        updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+        link_id: savedPost._id,
+      });
+
+      const sub_post = new Post({
+        sub_account_number: req.body.expense_detail[item].expenses_account,
+        total_debit: 0,
+        total_kredit:
+          req.body.expense_detail[item].expenses_amount +
+          req.body.expense_detail[item].tax,
+        created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+        updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+        main_account_number: req.body.expense_detail[item].main_account_number,
+        coa_account_number: req.body.expense_detail[item].coa_account_number,
+      });
+
+      try {
+        const SubPost = await sub_post.save();
+        try {
+          const specific_main_account = await Main.findOne({
+            main_account_number:
+              req.body.expense_detail[item].main_account_number,
+          });
+
+          let debit = specific_main_account.total_debit;
+          let kredit = specific_main_account.total_kredit;
+          const updatedpost = await Main.updateOne(
+            {
+              main_account_number:
+                req.body.expense_detail[item].main_account_number,
+            },
+            {
+              $set: {
+                total_debit: debit + 0,
+                total_kredit:
+                  kredit +
+                  req.body.expense_detail[item].expenses_amount +
+                  req.body.expense_detail[item].tax,
+                updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+              },
+            }
+          );
+
+          const savedPost = await post.save();
+
+          datasaved = datasaved + 1;
+          // res.json(savedPost);
+        } catch (err) {
+          // console.log("1");
+          res.json({message: err});
+        }
+        // res.json(SubPost);
+      } catch (err) {
+        // console.log("2");
+        res.json({message: err});
+      }
+    });
     res.json(savedPost);
   } catch (err) {
     res.json({message: err});

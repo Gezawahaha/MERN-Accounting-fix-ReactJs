@@ -7,7 +7,7 @@ const SubAccountSchema = mongoose.Schema({
   },
   name: {
     type: String,
-    required: true,
+    // required: true,
   },
   total_debit: {
     type: Number,
