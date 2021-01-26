@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const BukuSchema = mongoose.Schema({
   buku_id: {
@@ -13,6 +14,14 @@ const BukuSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+  total_debit: {
+    type: Number,
+    required: true,
+  },
+  total_kredit: {
+    type: Number,
+    required: true,
+  },
   updated_at: {
     type: String,
   },
@@ -21,4 +30,5 @@ const BukuSchema = mongoose.Schema({
   },
 });
 
+BukuSchema.plugin(AutoIncrement, {inc_field: "buku_id"});
 module.exports = mongoose.model("Buku", BukuSchema);

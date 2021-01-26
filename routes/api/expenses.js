@@ -4,6 +4,9 @@ const Expenses = require("../../models/expenses");
 const ExpensesDetail = require("../../models/expenses_detail");
 const Post = require("../../models/sub_account");
 const Main = require("../../models/main_account");
+const Coa = require("../../models/chart_of_account");
+const Buku = require("../../models/buku");
+const DetailBuku = require("../../models/buku_detail");
 const moment = require("moment");
 
 //GET ALL THE POST
@@ -87,16 +90,11 @@ router.post("/", async (req, res) => {
           );
 
           const savedPost = await post.save();
-
-          datasaved = datasaved + 1;
           // res.json(savedPost);
         } catch (err) {
-          // console.log("1");
           res.json({message: err});
         }
-        // res.json(SubPost);
       } catch (err) {
-        // console.log("2");
         res.json({message: err});
       }
     });

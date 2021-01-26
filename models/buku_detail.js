@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 
 const BukuSchema = mongoose.Schema({
-  buku_id: {
-    type: Number,
-    required: true,
-  },
   coa_account_number: {
     type: Number,
     required: true,
@@ -34,6 +30,10 @@ const BukuSchema = mongoose.Schema({
     type: Number,
   },
   saldo: {
+    type: Number,
+    required: true,
+  },
+  link_id: {
     type: Number,
     required: true,
   },
