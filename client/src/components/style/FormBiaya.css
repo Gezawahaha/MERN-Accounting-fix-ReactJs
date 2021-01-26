@@ -75,3 +75,17 @@
     left: 10px;
     font-size: 12px
 }
+
+.font-hebbo {
+    font-family: 'Heebo', sans-serif;
+    color: white;
+}
+
+.card-form {
+    width: 90rem;
+}
+
+.flex-container{
+    display: flex;
+    justify-content: center;
+}

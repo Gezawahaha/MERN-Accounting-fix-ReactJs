@@ -38,6 +38,7 @@ class employee extends Component {
                 className: "name",
                 align: "left",
                 sortable: true,
+                cell: record => <Fragment>{`${record.FirstName} ${record.LastName}`}</Fragment>
             },
             {
                 key: "email",
@@ -115,11 +116,16 @@ class employee extends Component {
 
         this.state = {
             currentRecord: {
-                id: '',
-                name: '',
-                email: '',
-                password: '',
-                password2: '',
+                    FirstName: "",
+                    LastName: "",
+                    JobTitle: "",
+                    Gender: "",
+                    BirthDate: "",
+                    Salary: "",
+                    Phone: "",
+                    Address: "",
+                    Field: "",
+                  
             }
         };
 
@@ -136,7 +142,7 @@ class employee extends Component {
 
     getData() {
         axios
-            .post("/employee/Emp-data")
+            .get("/employee/Emp-data")
             .then(res => {
                 this.setState({ records: res.data})
             })

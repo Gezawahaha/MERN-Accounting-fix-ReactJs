@@ -19,6 +19,7 @@ import '../node_modules/popper.js/dist/popper';
 
 
 import Dashboard from "./components/pages/Dashboard";
+import KasdanBank from './components/pages/KasdanBank'
 import User from "./components/pages/Users";
 import Employee from './components/pages/employee';
 import DaftarAkun from "./components/pages/DaftarAkun";
@@ -51,6 +52,7 @@ class App extends Component {
                             <Route exact path="/login" component={Login} />
                             <Switch>
                                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
+                                <PrivateRoute exact path="/kasdanbank" component={KasdanBank}/>
                                 <PrivateRoute exact path="/users" component={User} />
                                 <PrivateRoute exact path="/karyawan" component={Employee} />
                                 <PrivateRoute exact path="/biaya" component={Biaya} />

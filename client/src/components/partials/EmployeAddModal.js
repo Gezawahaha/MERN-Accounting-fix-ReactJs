@@ -204,12 +204,18 @@ class EmployeAddModal extends React.Component {
                                                 decimalsLimit={9}
                                             />*/}
                                             <NumberFormat 
-                                                id="Salary"
+                                                //id="Salary"
                                                 className="form-control"
                                                 value={ this.state.Salary }
+                                                //onChange={this.onChange}
+                                                isNumericString={ true }
                                                 thousandSeparator={ true }
-                                                renderText={ value => <text>{ value } </text> }
-                                            />                                            
+                                                onValueChange={(values) => {
+                                                const {formattedValue, value} = values;
+                
+                                                this.setState({Salary: value})}}
+                                            />
+                            
                                         </InputGroup>
                                             <span className="text-danger">{errors.Salary}</span>
                                         </div>
@@ -220,12 +226,17 @@ class EmployeAddModal extends React.Component {
                                         </div>
                                         <div className="col-md-9">
                                         <InputGroup>
-                                            {/* <NumberFormat
-                                                id="Phone"
-                                                onChange={this.onChange}
+                                            <NumberFormat
+                                                //id="Phone"
+                                                //onChange={this.onChange}
+                                                value={ this.state.Phone}
                                                 className="form-control"
                                                 format="####-####-####"
-                                            /> */}
+                                                onValueChange={(values) => {
+                                                const {formattedValue, value} = values;
+                
+                                                this.setState({Phone: value})}}
+                                            />
                                         </InputGroup>
                                             <span className="text-danger">{errors.Salary}</span>
                                         </div>

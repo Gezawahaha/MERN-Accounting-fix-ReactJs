@@ -1,6 +1,6 @@
 
 
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
@@ -49,7 +49,13 @@ const carabayar=[
     {  name: "Cash",  Rek: "BCA 0841122564" }
   ]
 
+  const TaxOpt=[
+    {  b: 0, name: "no tax...",  rate: 0  },
+    {  b: 1, name: "PPN",  rate: 10/100 },
+    {  b: 1, name: "PPH 21",  rate: 5/100  }
+  ]
 
+    
 
 
 class BiayaForm extends Component {
@@ -82,8 +88,17 @@ class BiayaForm extends Component {
             BayarDari: [],
             AkunBiaya:[],
             items: [],
-            errors: {}
+            Penerima: [],
+            errors: {},
+
+            TaxName: '',
+            TaxRate: 0.00,
+            TaxB: 0,
+            AmountTax: 0,
+            expenses: 0 
         };
+
+        
 
         this.state = {
             currentRecord: {
@@ -106,7 +121,10 @@ class BiayaForm extends Component {
     onBiayaAdd = e => {
         e.preventDefault();
         const newBiaya = {
-            
+            beneficiary: this.state.beneficiary,
+            transaction_date: this.state.transaction_date,
+
+
         };
         console.log("submit",newBiaya);
     };
@@ -129,28 +147,75 @@ class BiayaForm extends Component {
         this.setState({
             beneficiary: e.name,
         })
-        console.log("Penerima",this.state.beneficiary);
+        //console.log("Penerima",this.state.beneficiary);
+        //console.log("Isi dari tax",this.state.expenses_amount);
+        console.log("Masok",this.state.expenses_amount);
     };
 
     onChangeDeskripsi = e => {  
         this.setState({
             description: e.target.value,
         })
-        console.log("Desc",this.state.description);
+        //console.log("Desc",this.state.description);
     };
 
+
+    onChangeTax = e => {  
+        this.setState({
+            TaxName: e.name,
+            TaxRate: e.rate,
+            TaxB: e.b,
+            
+        })
+        this.calcTaxTotal();
+        this.calcGrandTotal();
+        
+    };
 
     onChangeJumlah = e => {  
-        this.setState({
-            expenses_amount: e.target.value,
-        })
-        console.log("Amount",this.state.expenses_amount);
+        // this.setState({
+        //     expenses_amount: this.state.expenses + this.state.AmountTax
+        // })
+        // console.log("Masok",this.state.expenses_amount);
+        // if (this.state.TaxB == 1){
+        //     this.setState({
+        //         AmountTax: this.state.expenses_amount * this.state.TaxRate
+        //     })
+        //     //console.log("Masok",this.state.expenses_amount);
+        // }        
+        
     };
+
+
+    calcTaxTotal = () => { 
+        if (this.state.expenses > 0){
+            
+            return   ( this.state.expenses * this.state.TaxRate  ) 
+        }
+        return 0
+        
+       
+    };
+
+    calcGrandTotal = () => {
+        if (this.state.expenses > 0){
+            //console.log("Masok")
+            if(this.state.TaxB == 1){
+                
+                return  (this.state.expenses * 1) + (this.state.AmountTax * 1)
+            }
+            return this.state.expenses
+        }
+        return 0
+    }
 
     componentDidMount() {
         this.getDataBayardari();
         this.getDataAkunBiaya();
+        this.getDataPenerima();
         //console.log("test",this.state.records.value);
+         
+        
     };
 
     getDataAkunBiaya() {
@@ -160,7 +225,7 @@ class BiayaForm extends Component {
                     AkunBiaya: res.data,
                     
                 })
-                console.log("Akun Biaya", this.state.AkunBiaya);
+                //console.log("Akun Biaya", this.state.AkunBiaya);
             })
             .catch()
             this.getDataAkunBiaya = this.getDataAkunBiaya.bind(this);
@@ -178,6 +243,19 @@ class BiayaForm extends Component {
             .catch()
             this.getDataBayardari = this.getDataBayardari.bind(this);
     }
+
+    getDataPenerima() {
+        axios.get('/employee/Emp-data')
+            .then(res => {
+                this.setState({ 
+                    Penerima: res.data,
+                    
+                })
+                console.log("Penerima", this.state.Penerima);
+            })
+            .catch()
+            this.getDataPenerima = this.getDataPenerima.bind(this);
+    };
    
     onLogoutClick = e => {
         e.preventDefault();
@@ -203,11 +281,9 @@ class BiayaForm extends Component {
                         <div className="container-fluid">
                             <button className="btn btn-link mt-2" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
                             <h1 className="mt-2 text-primary">Buat Biaya</h1>
-                            <Card body>
-                                <Form noValidate onSubmit={this.onBiayaAdd}>
-                                    <Form.Row>
+                            <Card body bg="info" >
+                                        <Form.Label><h5 className="font-hebbo">Pilih Bayar Dari</h5></Form.Label>
                                         <Form.Group as={Col} >
-                                            <Form.Label>Bayar Dari</Form.Label>
                                             <ReactSelect
                                                 onChange={this.onChangeBayarDari} 
                                                 className="SizeSelect"
@@ -216,14 +292,30 @@ class BiayaForm extends Component {
                                                 options={this.state.BayarDari}
                                                 />
                                         </Form.Group>
+                            </Card>
+                            <br/>
+                            <div className="flex-container">
+                            <Card body className="card-form">
+                                <Form noValidate onSubmit={this.onBiayaAdd}>
+                                    <Form.Row>
+                                        {/* <Form.Group as={Col} >
+                                            <Form.Label>Bayar Dari</Form.Label>
+                                            <ReactSelect
+                                                onChange={this.onChangeBayarDari} 
+                                                className="SizeSelect"
+                                                getOptionValue={option => option._id}
+                                                getOptionLabel={option => option.name}
+                                                options={this.state.BayarDari}
+                                                />
+                                        </Form.Group> */}
 
                                         <Form.Group as={Col} >
                                             <Form.Label>Penerima</Form.Label>
                                             <ReactSelect
                                                 onChange={this.onChangePenerima} 
                                                 getOptionValue={option => option.name}
-                                                getOptionLabel={option => option.name}
-                                                options={options}
+                                                getOptionLabel={option => option.FirstName}
+                                                options={this.state.Penerima}
                                             />
                                         </Form.Group>
                                         <Form.Group as={Col} >
@@ -272,14 +364,36 @@ class BiayaForm extends Component {
                                                     />
                                                 </td>
                                                 <td><Form.Control type="text" onChange={this.onChangeDeskripsi} /></td>
-                                                <td><Form.Control type="text" /></td>
+                                                <td>
+                                                <ReactSelect
+                                                        onChange={this.onChangeTax}
+                                                        getOptionValue={option => option}
+                                                        getOptionLabel={option => option.name}
+                                                        options={TaxOpt}
+                                                    />
+                                                </td>
                                                 <td>
                                                     <InputGroup className="mb-3">
                                                         <InputGroup.Prepend>
                                                             <InputGroup.Text>Rp. </InputGroup.Text>
                                                         </InputGroup.Prepend>
                                                         
-                                                            <Currency className="form-control CurencySelect" onChange={this.onChangeJumlah}
+                                                            <CurrencyFormat 
+                                                                className="form-control" 
+                                                                //onChange={this.onChangeJumlah}
+                                                                thousandSeparator={ true }
+                                                                isNumericString={true}
+                                                                onValueChange={(values) => {
+                                                                        const {formattedValue, value} = values;
+                                                                        this.setState({
+                                                                            expenses:  value * 1,
+                                                                            AmountTax: value * this.state.TaxRate,
+                                                                            //expenses_amount: this.state.expenses + this.state.AmountTax
+                                                                        })
+                                                                        this.calcGrandTotal();  
+                                                                    }
+                                                                }                                                            
+
                                                             />
 
                                                         <InputGroup.Append>
@@ -308,22 +422,62 @@ class BiayaForm extends Component {
                                             <div className="invoice-price-row">
                                                 <div className="sub-price">
                                                     <small>SUBTOTAL</small>
-                                                    <span class="text-inverse"><CurrencyFormat value={ this.state.expenses_amount } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></span>
+                                                    <span className="text-inverse">
+                                                        <CurrencyFormat 
+                                                            value={ this.state.expenses } 
+                                                            displayType={'text'} 
+                                                            thousandSeparator={true} 
+                                                            prefix={'Rp. '} 
+                                                            
+                                                            />
+                                                    </span>
                                                 </div>
 
-                                                {/* Jika ada pajak otomatis akan ada dan + pajak 
-                                                <div class="sub-price">
-                                                    <i class="fa fa-plus text-muted"></i>
-                                                </div>
-                                                <div class="sub-price">
-                                                    <small>PPN</small>
-                                                    <span class="text-inverse"><CurrencyFormat value={1000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></span>
-                                                </div>
-                                                 */}
+                                                 
+                                                 { this.state.TaxB == 1 &&(
+                                                    <Fragment>
+                                                        <div className="sub-price">
+                                                            <i className="fa fa-plus text-muted"></i>
+                                                        </div>
+                                                        <div className="sub-price">
+                                                            <small>{this.state.TaxName}</small>
+                                                            <span className="text-inverse">
+                                                                <CurrencyFormat 
+                                                                    
+                                                                    value={ this.calcTaxTotal() } 
+                                                                    displayType={'text'} 
+                                                                    thousandSeparator={true}
+                                                                    isNumericString={true} 
+                                                                    prefix={'Rp. '} 
+                                                                    // onValueChange={(values) => {
+                                                                    //     const {formattedValue, value} = values;
+                                                                    //     this.setState({
+                                                                    //         AmountTax: this.calcTaxTotal() ,
+
+                                                                    //     })
+                                                                    //     console.log("Masoookkk2", this.state.AmountTax);
+                                                                    // }
+                                                                    // }       
+
+                                                                    />
+                                                            </span>
+                                                        </div>
+                                                        
+                                                    </Fragment>
+                                                 )}
                                             </div>
                                         </div>
                                         <div className="invoice-price-right">
-                                            <small>TOTAL</small> <span class="f-w-600"><CurrencyFormat value={ this.state.expenses_amount } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></span>
+                                            <small>TOTAL</small> <span className="f-w-600">
+                                                <CurrencyFormat 
+                                                    //onchange={ this.onChangeJumlah } 
+                                                    value={  this.calcGrandTotal() } 
+                                                    displayType={'text'} 
+                                                    thousandSeparator={true} 
+                                                    prefix={'Rp. '} 
+
+                                                    />
+                                            </span>
                                         </div>
                                     </div>
 
@@ -340,15 +494,16 @@ class BiayaForm extends Component {
                                         </Col>
                                         <Col xs lg="2">
                                             <Button variant="danger" type="reset" >
-                                                Cancel
+                                                Reset
                                             </Button>
                                         </Col>
                                     </Row>
                                 </Form>
-
+                                <br/>
+                                <Card.Footer><small>this form made by iosys</small></Card.Footer>                                
                             </Card>
-                            <Card.Footer><small>this form made by iosys</small></Card.Footer>
-
+                            
+                            </div>                               
                         </div>
                     </div>
                 </div>

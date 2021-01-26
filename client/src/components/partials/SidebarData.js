@@ -13,6 +13,7 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import BallotIcon from '@material-ui/icons/Ballot';
 import HorizontalSplitIcon from '@material-ui/icons/HorizontalSplit';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 import Divider from '@material-ui/core/Divider';
 
@@ -27,7 +28,7 @@ export const SidebarData = [
     {
       
       title: 'Kas & Bank',
-      path: '/dashboard',
+      path: '/kasdanbank',
       icon: <AccountBalanceIcon />
     
     },
@@ -123,6 +124,11 @@ export const SidebarData = [
             icon: <IoIcons.IoIosPaper />
           }
         ]
+      },
+      {
+        title: 'Configure',
+        path: '/configure',
+        icon: <SettingsIcon />
       },
       {
         title: 'Support',
