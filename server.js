@@ -64,7 +64,7 @@ app.use("/coa/main/sub", SubAccountRoute);
 app.use("/expense", ExpensesRoute);
 app.use("/expense/details", ExpensesDetailsRoute);
 // app.use("/customer", CustomerRoute);
-// app.use("/employee", EmployeeRoute);
+app.use("/employee", EmployeeRoute);
 // app.use("/invoice", InvoiceRoute);
 // app.use("/payments", PaymentRoute);
 // app.use("/supplier", SupplierRoute);
