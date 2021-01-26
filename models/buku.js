@@ -4,7 +4,7 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 const BukuSchema = mongoose.Schema({
   buku_id: {
     type: Number,
-    required: true,
+    // required: true,
   },
   nama_buku: {
     type: String,

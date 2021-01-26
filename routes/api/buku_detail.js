@@ -19,8 +19,8 @@ router.get("/", async (req, res) => {
 
 //SUBMIT A POST
 router.post("/", async (req, res) => {
+  let saldoakhir = req.body.total_debit - req.body.total_kredit;
   const post = new DetailBuku({
-    nama_buku: req.body.nama_buku,
     coa_account_number: req.body.coa_account_number,
     main_account_number: req.body.main_account_number,
     sub_account_number: req.body.sub_account_number,
@@ -29,14 +29,15 @@ router.post("/", async (req, res) => {
     keterangan: req.body.keterangan,
     total_debit: req.body.total_debit,
     total_kredit: req.body.total_kredit,
-    saldo: req.body.saldo,
+    saldo: saldoakhir,
     link_id: req.body.link_id,
   });
 
   try {
     // UPDATE BUKU
     const savedPost = await post.save();
-    if (savedPost.length > 0) {
+    if (savedPost != null) {
+      console.log("success");
       const buku = await Buku.findOne({buku_id: req.body.link_id});
       let saldo = buku.total_saldo;
       let debit = buku.total_debit;
@@ -45,9 +46,9 @@ router.post("/", async (req, res) => {
         {buku_id: req.body.link_id},
         {
           $set: {
-            total_saldo: saldo - req.body.saldo,
-            total_debit: debit + req.body.debit,
-            total_kredit: kredit + req.body.kredit,
+            total_saldo: saldo + saldoakhir,
+            total_debit: debit + req.body.total_debit,
+            total_kredit: kredit + req.body.total_kredit,
             updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
           },
         }
@@ -55,7 +56,7 @@ router.post("/", async (req, res) => {
     }
 
     //UPDATE SUB ACCOUNT
-    if (savedPost.length > 0) {
+    if (savedPost != null) {
       const sub = await Sub.findOne({
         coa_account_number: req.body.coa_account_number,
         main_account_number: req.body.main_account_number,
@@ -67,8 +68,8 @@ router.post("/", async (req, res) => {
         {_id: sub._id},
         {
           $set: {
-            total_debit: debit + req.body.debit,
-            total_kredit: kredit + req.body.kredit,
+            total_debit: debit + req.body.total_debit,
+            total_kredit: kredit + req.body.total_kredit,
             updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
           },
         }
@@ -76,7 +77,7 @@ router.post("/", async (req, res) => {
     }
 
     //UPDATE MAIN ACCOUNT
-    if (savedPost.length > 0) {
+    if (savedPost != null) {
       const main = await Main.findOne({
         coa_account_number: req.body.coa_account_number,
         main_account_number: req.body.main_account_number,
@@ -87,8 +88,8 @@ router.post("/", async (req, res) => {
         {_id: main._id},
         {
           $set: {
-            total_debit: debit + req.body.debit,
-            total_kredit: kredit + req.body.kredit,
+            total_debit: debit + req.body.total_debit,
+            total_kredit: kredit + req.body.total_kredit,
             updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
           },
         }
@@ -96,7 +97,7 @@ router.post("/", async (req, res) => {
     }
 
     //UPDATE COA ACCOUNT
-    if (savedPost.length > 0) {
+    if (savedPost != null) {
       const coa = await Post.findOne({
         coa_account_number: req.body.coa_account_number,
       });
@@ -106,8 +107,8 @@ router.post("/", async (req, res) => {
         {coa_account_number: req.body.coa_account_number},
         {
           $set: {
-            total_debit: debit + req.body.debit,
-            total_kredit: kredit + req.body.kredit,
+            total_debit: debit + req.body.total_debit,
+            total_kredit: kredit + req.body.total_kredit,
             updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
           },
         }

@@ -40,13 +40,14 @@ router.post("/", async (req, res) => {
 router.get("/:postId", async (req, res) => {
   try {
     // const post = await Post.findById({account_number: req.params.postId});
-    const post = await Buku.find({buku_id: req.params.postId});
+    const post = await Buku.findOne({buku_id: req.params.postId});
     const datacount = post.length;
+    let response = "";
     if (datacount === 0) {
-      res.json(posts);
+      res.json(post);
     } else {
       const detail_buku = await DetailBuku.find({link_id: req.params.postId});
-      let response = {
+      response = {
         buku_id: post.buku_id,
         nama_buku: post.nama_buku,
         total_saldo: post.total_saldo,
