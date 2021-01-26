@@ -55,6 +55,8 @@ const EmployeeRoute = require("./routes/api/employee");
 // const InvoiceRoute = require("./routes/api/invoice");
 // const PaymentRoute = require("./routes/api/payments");
 // const SupplierRoute = require("./routes/api/supplier");
+const BukuRoute = require("./routes/api/buku");
+const BukuDetailRoute = require("./routes/api/buku_detail");
 
 app.use("/coa", ChartOfAccountRoute);
 app.use("/coa/main", MainAccountRoute);
@@ -66,6 +68,8 @@ app.use("/employee", EmployeeRoute);
 // app.use("/invoice", InvoiceRoute);
 // app.use("/payments", PaymentRoute);
 // app.use("/supplier", SupplierRoute);
+app.use("/buku", BukuRoute);
+app.use("/buku/details", BukuDetailRoute);
 
 app.use(express.static(path.join(__dirname, "client/build")));
 
