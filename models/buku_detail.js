@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const BukuSchema = mongoose.Schema({
+const BukuDetailSchema = mongoose.Schema({
   coa_account_number: {
     type: Number,
     required: true,
@@ -39,4 +39,4 @@ const BukuSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Buku", BukuSchema);
+module.exports = mongoose.model("BukuDetail", BukuDetailSchema);
