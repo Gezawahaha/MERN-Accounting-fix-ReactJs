@@ -1,25 +1,22 @@
-
-
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { logoutUser } from "../../actions/authActions";
+import React, { Component, Fragment } from "react";
 import Navbar from "../partials/Navbar";
 import Sidebar from "../partials/Sidebar";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faList} from "@fortawesome/free-solid-svg-icons/faList";
-import {Link} from "react-router-dom";
-import {faUserAlt} from "@fortawesome/free-solid-svg-icons/faUserAlt";
-import {faPlus} from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
 import ReactDatatable from '@ashvin27/react-datatable';
-
-
-import Grid from "@material-ui/core/Grid";
-import { Card, CardBody , Table} from 'reactstrap';
-import { NavLink } from 'react-router-dom';
+//import ReactDatatable from 'react-table';
+import PropTypes from "prop-types";
+import {connect} from "react-redux";
+import axios from "axios";
+import {faPlus} from "@fortawesome/free-solid-svg-icons";
+import BiayaAddModal from "../partials/BiayaAddModal";
+import UserUpdateModal from "../partials/UserUpdateModal";
+import { toast, ToastContainer} from "react-toastify";
 import CurrencyFormat from 'react-currency-format';
 
+import {Link, NavLink} from "react-router-dom";
+import { Button } from "@material-ui/core";
+import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
 
 class Biaya extends Component {
 
@@ -35,40 +32,42 @@ class Biaya extends Component {
             //     sortable: true,
             // },
             {
-                key: "date",
-                text: "Tanggal",
-                className: "date",
-                align: "left",
-                sortable: true,
-            },
-            {
-                key: "Nomor_Akun",
-                text: "Nomor",
+                key: "transaction_date",
+                text: "Tanggal Transaksi",
                 className: "name",
                 align: "left",
                 sortable: true,
             },
             {
-                key: "Penerima",
-                text: "Penerima",
+                key: "expense_no",
+                text: "No Biaya",
                 className: "name",
                 align: "left",
                 sortable: true,
             },
             {
-                key: "status",
-                text: "Status",
+                key: "pay_from_account_number",
+                text: "No Akun",
                 className: "name",
                 align: "left",
                 sortable: true,
             },
-            {
-                key: "total_biaya",
-                text: "Total",
-                className: "number",
-                align: "left",
-                sortable: true
-            },
+            // {
+            //     key: "total_debit",
+            //     text: "Total Debit",
+            //     className: "currency",
+            //     align: "left",
+            //     sortable: true,
+            //     cell: record => <Fragment>{this.toCurrency(record.total_debit)}</Fragment>
+            // },
+            // {
+            //     key: "total_kredit",
+            //     text: "Total Kredit",
+            //     className: "email",
+            //     align: "left",
+            //     sortable: true,
+            //     cell: record => <Fragment>{this.toCurrency(record.total_kredit)}</Fragment>
+            // },
             // {
             //     key: "created_at",
             //     text: "created Date",
@@ -76,42 +75,48 @@ class Biaya extends Component {
             //     align: "left",
             //     sortable: true
             // },
-        
-            
             // {
-            //     key: "action",
-            //     text: "Action",
-            //     className: "action",
-            //     width: 100,
+            //     key: "updated_at",
+            //     text: "Update",
+            //     className: "date",
             //     align: "left",
-            //     sortable: false,
-            //     cell: record => {
-            //         return (
-            //             <Fragment>
-            //                 <button
-            //                     data-toggle="modal"
-            //                     data-target="#update-user-modal"
-            //                     className="btn btn-primary btn-sm"
-            //                     onClick={() => this.editRecord(record)}
-            //                     style={{marginRight: '5px'}}>
-            //                     <i className="fa fa-edit"></i>
-            //                 </button>
-            //                 <button
-            //                     className="btn btn-danger btn-sm"
-            //                     onClick={() => this.deleteRecord(record)}>
-            //                     <i className="fa fa-trash"></i>
-            //                 </button>
-            //             </Fragment>
-            //         );
-            //     }
+            //     sortable: true
             // }
+            
+            {
+                key: "action",
+                text: "Action",
+                className: "action",
+                width: 100,
+                align: "left",
+                sortable: false,
+                cell: record => {
+                    return (
+                        <Fragment>
+                            <button
+                                data-toggle="modal"
+                                data-target="#update-user-modal"
+                                className="btn btn-primary btn-sm"
+                                onClick={() => this.editRecord(record)}
+                                style={{marginRight: '5px'}}>
+                                <i className="fa fa-edit"></i>
+                            </button>
+                            <button
+                                className="btn btn-danger btn-sm"
+                                onClick={() => this.deleteRecord(record)}>
+                                <i className="fa fa-trash"></i>
+                            </button>
+                        </Fragment>
+                    );
+                }
+            }
         ];
 
         this.config = {
             page_size: 10,
-            length_menu: [ 10, 10, 30 ],
-            filename: "coa_account_number",
-            no_data_text: 'Anda belum memiliki transaksi.',
+            length_menu: [ 10, 20, 50 ],
+            filename: "transaction",
+            no_data_text: 'No transaction found!',
             button: {
                 excel: true,
                 print: true,
@@ -139,14 +144,6 @@ class Biaya extends Component {
         };
 
         this.state = {
-            kaskecil: []
-        };
-
-        this.state = {
-            kasbesar: []
-        };
-
-        this.state = {
             currentRecord: {
                 id: '',
                 coa_account_number: '',
@@ -161,46 +158,64 @@ class Biaya extends Component {
         this.getData = this.getData.bind(this);
     }
 
+    toCurrency(numberString) {
+        //console.log("number" ,numberString);
+        let number = parseFloat(numberString);
+        return (<CurrencyFormat value={number} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} />);
+    }   
+
     componentDidMount() {
         this.getData();
-        //console.log("test",this.state.records.value);
+        //console.log("halo");
     };
 
+    componentWillReceiveProps(nextProps) {
+        this.getData()
+    }
 
     getData() {
-        axios.get('/coa/main/sub/Sub-data')
+        axios.get('/expense/Biaya-data')
             .then(res => {
-                this.setState({ 
-                    records: res.data,
-                    //kaskecil: res.data[1].total_debit,
-                    //kasbesar: res.data[0].total_debit
-                })
-                console.log("DK", this.state.records);
+                this.setState({ records: res.data})
             })
             .catch()
     }
-   
-    onLogoutClick = e => {
-        e.preventDefault();
-        this.props.logoutUser();
-    };
 
-   
+    editRecord(record) {
+        this.setState({ currentRecord: record});
+    }
+
+    deleteRecord(record) {
+        axios
+            .delete(`expense/expense-delete/${record._id}`, {_id: record._id})
+            .then(res => {
+                if (res.status === 200) {
+                   toast("Data Deleted", {
+                       position: toast.POSITION.TOP_CENTER,
+                   })
+                }
+            })
+            .catch();
+        this.getData();
+    }
+
+    pageChange(pageData) {
+        console.log("OnPageChange", pageData);
+    }
 
     render() {
-        const { user } = this.props.auth;
         return (
             <div>
-            
-            <Navbar />
+                <Navbar />
                 <div className="d-flex" id="wrapper">
-                <Sidebar/>
+                    <Sidebar/>
+                    <BiayaAddModal />
+
                     <div id="page-content-wrapper">
                         <div className="container-fluid">
-                            <button className="btn btn-link mt-2" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
-                            <NavLink className="btn btn-outline-primary float-right mt-3 mr-2" to="/biayaform"><FontAwesomeIcon icon={faPlus}/> Tambah Transaksi</NavLink>
+                            <button className="btn btn-link mt-3" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
+                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-biaya-modal"><FontAwesomeIcon icon={faPlus}/>   Transaksi</button>
                             <h1 className="mt-2 text-primary">Biaya</h1>
-
                             <div className="row px-2">
                                 <div className="col-sm-3 p-sm-2">
                                     <div className="card bg-info text-white shadow-lg">
@@ -216,7 +231,7 @@ class Biaya extends Component {
                                         <div className="card-body">
                                         <h5 className="card-title">Saldo Kas Besar</h5>
                                             <small>TOTAL</small>
-                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={ 140000000 } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
+                                            <h2 className="card-text"><CurrencyFormat value={ 140000000 } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
                                         </div>
                                     </div>
                                 </div>
@@ -225,7 +240,7 @@ class Biaya extends Component {
                                         <div className="card-body">
                                         <h5 className="card-title">Biaya Dalam Bulan Ini</h5>
                                             <small>TOTAL</small>
-                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={15000000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
+                                            <h2 className="card-text"><CurrencyFormat value={15000000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
                                         </div>
                                     </div>
                                 </div>
@@ -234,39 +249,42 @@ class Biaya extends Component {
                                         <div className="card-body">
                                         <h5 className="card-title">Biaya Dalam Tahun Ini</h5>
                                             <small>TOTAL</small>
-                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={20500000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
+                                            <h2 className="card-text"><CurrencyFormat value={20500000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <br/>
+                            <br/>
+
+
                             
                             
                             <ReactDatatable
                                 config={this.config}
                                 records={this.state.records}
                                 columns={this.columns}
-                                //onPageChange={this.pageChange.bind(this)}
+                                onPageChange={this.pageChange.bind(this)}
                             />
-
-
                         </div>
                     </div>
+                    <ToastContainer/>
                 </div>
             </div>
         );
     }
+
 }
 
 Biaya.propTypes = {
-    logoutUser: PropTypes.func.isRequired,
-    auth: PropTypes.object.isRequired
+    auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
-    auth: state.auth
+    auth: state.auth,
+    records: state.records
 });
 
 export default connect(
-    mapStateToProps,
-    { logoutUser }
+    mapStateToProps
 )(Biaya);

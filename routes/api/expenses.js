@@ -161,7 +161,7 @@ router.get("/:postId", async (req, res) => {
 // });
 
 //DELETE POST
-router.delete("/:postId", async (req, res) => {
+router.delete("/expense-delete/:postId", async (req, res) => {
   try {
     const removedpost = await Expenses.remove({
       _id: req.params.postId,

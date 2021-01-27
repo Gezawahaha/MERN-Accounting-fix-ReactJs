@@ -126,7 +126,7 @@ class BiayaForm extends Component {
         const newBiaya = {
             pay_from_account_number: this.state.pay_from_account_number,
             beneficiary: this.state.beneficiary,
-            transaction_date: this.state.transaction_date,
+            transaction_date: moment(this.state.transaction_date).format("YYYY-MM-DD HH:mm:ss"),
             payment_method: this.state.payment_method,
             expense_no: this.state.expense_no,
             tags: this.state.tags,
@@ -149,6 +149,7 @@ class BiayaForm extends Component {
 
     onChangeBayarDari = e => {  
         //this.setState({ [e.target.id]: e.target.value });
+        console.log("C",e);
         if ( e.main_account_number < 10 && e.sub_account_number < 10 ){
             this.setState({
                 pay_from_account_number: `${e.coa_account_number}-0${e.main_account_number}-0${e.sub_account_number}`
@@ -166,12 +167,12 @@ class BiayaForm extends Component {
                 pay_from_account_number: `${e.coa_account_number}-${e.main_account_number}-${e.sub_account_number}`
             })
         }
-        console.log("Bayar Dari",this.state.pay_from_account_number);
+        
     };
 
     onChangeDate = e => {  
         this.setState({
-            transaction_date: moment( e.target.value ).format("YYYY-MM-DD HH:mm:ss"),
+            transaction_date: e.target.value,
         })
         console.log("Date",this.state.transaction_date);
     };
@@ -327,7 +328,7 @@ class BiayaForm extends Component {
                                             <ReactSelect
                                                 onChange={this.onChangeBayarDari} 
                                                 className="SizeSelect"
-                                                getOptionValue={option => option._id}
+                                                getOptionValue={option => option}
                                                 getOptionLabel={option => option.name}
                                                 options={this.state.BayarDari}
                                                 />
