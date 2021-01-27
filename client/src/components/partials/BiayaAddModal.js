@@ -53,6 +53,7 @@ class BiayaAddModal extends React.Component {
             created_at: '',
             updated_at: '',
 
+            expenses_detail: [],
             //expense Detail
             expenses_account: '',
             main_account_number: '',
@@ -104,7 +105,7 @@ class BiayaAddModal extends React.Component {
             expense_no: this.state.expense_no,
             tags: "Tags",
             billing_address: this.state.billing_address,
-            expenses_detail:[{
+            expense_detail:[{
                 expenses_account: this.state.expenses_account,
                 description: this.state.description,
                 tax: this.state.AmountTax,
@@ -113,7 +114,8 @@ class BiayaAddModal extends React.Component {
                 coa_account_number: this.state.coa_account_number
                 }
             ]
-        };
+            
+        }
         console.log(newBiaya);
         this.props.addBiaya(newBiaya, this.props.history);
         $('#add-biaya-modal').modal('hide');
