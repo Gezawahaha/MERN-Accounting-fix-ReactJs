@@ -35,14 +35,14 @@ export const SidebarData = [
     {
         
       title: 'Penjualan',
-      path: '/dashboard',
+      path: '/penjualan',
       icon: <LoyaltyIcon />
     
     },
     {
           
       title: 'Pembelian',
-      path: '/dashboard',
+      path: '/pembelian',
       icon: <ShoppingCartIcon />
 
     },
@@ -104,27 +104,27 @@ export const SidebarData = [
         path: '/users',
         icon: <IoIcons.IoMdPeople />
       },
-      {
-        title: 'Messages',
-        path: '/messages',
-        icon: <FaIcons.FaEnvelopeOpenText />,
+      // {
+      //   title: 'Messages',
+      //   path: '/messages',
+      //   icon: <FaIcons.FaEnvelopeOpenText />,
     
-        iconClosed: <RiIcons.RiArrowDownSFill />,
-        iconOpened: <RiIcons.RiArrowUpSFill />,
+      //   iconClosed: <RiIcons.RiArrowDownSFill />,
+      //   iconOpened: <RiIcons.RiArrowUpSFill />,
     
-        subNav: [
-          {
-            title: 'Message 1',
-            path: '/messages/message1',
-            icon: <IoIcons.IoIosPaper />
-          },
-          {
-            title: 'Message 2',
-            path: '/messages/message2',
-            icon: <IoIcons.IoIosPaper />
-          }
-        ]
-      },
+      //   subNav: [
+      //     {
+      //       title: 'Message 1',
+      //       path: '/messages/message1',
+      //       icon: <IoIcons.IoIosPaper />
+      //     },
+      //     {
+      //       title: 'Message 2',
+      //       path: '/messages/message2',
+      //       icon: <IoIcons.IoIosPaper />
+      //     }
+      //   ]
+      // },
       {
         title: 'Configure',
         path: '/configure',

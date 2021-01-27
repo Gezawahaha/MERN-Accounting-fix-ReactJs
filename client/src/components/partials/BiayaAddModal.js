@@ -102,7 +102,7 @@ class BiayaAddModal extends React.Component {
             transaction_date: moment(this.state.transaction_date).format("YYYY-MM-DD HH:mm:ss"),
             payment_method: this.state.payment_method,
             expense_no: this.state.expense_no,
-            tags: this.state.tags,
+            tags: "Tags",
             billing_address: this.state.billing_address,
             expenses_detail:[{
                 expenses_account: this.state.expenses_account,

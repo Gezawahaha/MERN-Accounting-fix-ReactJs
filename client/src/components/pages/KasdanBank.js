@@ -203,38 +203,38 @@ class KasdanBank extends Component {
 
                             <div className="row px-2">
                                 <div className="col-sm-3 p-sm-2">
-                                    <div className="card bg-info text-white shadow-lg">
+                                    <div className="card bg-dark text-white shadow-lg">
                                         <div className="card-body">
-                                            <h5 className="card-title">Saldo Kas Kecil</h5>
+                                            <h5 className="card-title">Lorem Ipsum</h5>
                                             <small>TOTAL</small>
-                                            <h2 className="card-text"><CurrencyFormat value={ 10000000 } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
+                                            <h2 className="card-text"><CurrencyFormat value={ 120000 } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-sm-3 p-sm-2">
-                                    <div className="card bg-info text-white shadow-lg">
+                                    <div className="card bg-dark text-white shadow-lg">
                                         <div className="card-body">
-                                        <h5 className="card-title">Saldo Kas Besar</h5>
+                                        <h5 className="card-title">Lorem Ipsum</h5>
                                             <small>TOTAL</small>
-                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={ 140000000 } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
+                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={ 400000 } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-sm-3 p-sm-2">
-                                    <div className="card bg-info text-white shadow-lg">
+                                    <div className="card bg-dark text-white shadow-lg">
                                         <div className="card-body">
-                                        <h5 className="card-title">Biaya Dalam Bulan Ini</h5>
+                                        <h5 className="card-title">Lorem Ipsum</h5>
                                             <small>TOTAL</small>
-                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={15000000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
+                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={30000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-sm-3 p-sm-2">
-                                    <div className="card bg-info text-white shadow-lg">
+                                    <div className="card bg-dark text-white shadow-lg">
                                         <div className="card-body">
-                                        <h5 className="card-title">Biaya Dalam Tahun Ini</h5>
+                                        <h5 className="card-title">Lorem Ipsum</h5>
                                             <small>TOTAL</small>
-                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={20500000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
+                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={210000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
                                         </div>
                                     </div>
                                 </div>

@@ -44,6 +44,11 @@ class Biaya extends Component {
                 className: "name",
                 align: "left",
                 sortable: true,
+                // cell: record => {
+                //     <Fragment>
+                        
+                //     </Fragment>
+                // }
             },
             {
                 key: "pay_from_account_number",
