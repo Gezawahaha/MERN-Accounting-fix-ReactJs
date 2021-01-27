@@ -16,7 +16,7 @@ const ExpensesSchema = mongoose.Schema({
     type: String,
   },
   expense_no: {
-    type: Number,
+    type: String,
   },
   tags: {
     type: String,
