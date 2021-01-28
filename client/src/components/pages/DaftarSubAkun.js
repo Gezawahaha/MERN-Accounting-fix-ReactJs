@@ -94,35 +94,35 @@ class DaftarSubAkun extends Component {
                 className: "date",
                 align: "left",
                 sortable: true
-            }
+            },
             
-            // {
-            //     key: "action",
-            //     text: "Action",
-            //     className: "action",
-            //     width: 100,
-            //     align: "left",
-            //     sortable: false,
-            //     cell: record => {
-            //         return (
-            //             <Fragment>
-            //                 <button
-            //                     data-toggle="modal"
-            //                     data-target="#update-user-modal"
-            //                     className="btn btn-primary btn-sm"
-            //                     onClick={() => this.editRecord(record)}
-            //                     style={{marginRight: '5px'}}>
-            //                     <i className="fa fa-edit"></i>
-            //                 </button>
-            //                 <button
-            //                     className="btn btn-danger btn-sm"
-            //                     onClick={() => this.deleteRecord(record)}>
-            //                     <i className="fa fa-trash"></i>
-            //                 </button>
-            //             </Fragment>
-            //         );
-            //     }
-            // }
+            {
+                key: "action",
+                text: "Action",
+                className: "action",
+                width: 100,
+                align: "left",
+                sortable: false,
+                cell: record => {
+                    return (
+                        <Fragment>
+                            <button
+                                data-toggle="modal"
+                                data-target="#update-user-modal"
+                                className="btn btn-primary btn-sm"
+                                onClick={() => this.editRecord(record)}
+                                style={{marginRight: '5px'}}>
+                                <i className="fa fa-edit"></i>
+                            </button>
+                            <button
+                                className="btn btn-danger btn-sm"
+                                onClick={() => this.deleteRecord(record)}>
+                                <i className="fa fa-trash"></i>
+                            </button>
+                        </Fragment>
+                    );
+                }
+            }
         ];
 
         this.config = {
@@ -174,7 +174,7 @@ class DaftarSubAkun extends Component {
 
     }
     toCurrency(numberString) {
-        console.log("number" ,numberString);
+        //console.log("number" ,numberString);
         let number = parseFloat(numberString);
         return (<CurrencyFormat value={number} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} />);
     }   
@@ -195,7 +195,7 @@ class DaftarSubAkun extends Component {
         axios.get('/coa/main/sub/Sub-data')
             .then(res => {
                 this.setState({ records: res.data})
-                console.log("DK", this.state.records);
+                //console.log("DK", this.state.records);
             })
             .catch()
             
@@ -206,11 +206,12 @@ class DaftarSubAkun extends Component {
     }
 
     deleteRecord(record) {
+        console.log("Masok Delete");
         axios
-            .post("/api/user-delete", {_id: record._id})
+            .delete(`/coa/main/sub/delete/${record._id}`, {_id: record._id})
             .then(res => {
                 if (res.status === 200) {
-                   toast(res.data.message, {
+                   toast("Data Deleted!", {
                        position: toast.POSITION.TOP_CENTER,
                    })
                 }
