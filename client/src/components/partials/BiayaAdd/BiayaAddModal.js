@@ -43,7 +43,7 @@ const carabayar=[
 
 class BiayaAddModal extends React.Component {
     locale = 'en-US'
-    currency = 'USD'
+    currency = 'IDR'
 
     constructor() {
         super();
@@ -90,8 +90,11 @@ class BiayaAddModal extends React.Component {
             taxRate: 0.00,
             lineItems: [
               {
-                id: 'initial',      // react-beautiful-dnd unique key
+                id: '',      // react-beautiful-dnd unique key
                 name: '',
+                expenses_account: '',
+                main_account_number: '',
+                sub_account_number: '',
                 description: '',
                 quantity: 0,
                 price: 0.00,
@@ -258,6 +261,16 @@ class BiayaAddModal extends React.Component {
     this.setState({lineItems})
   }
 
+  handleLineItemAkun = (elementIndex) => (event) => {
+
+    let lineItems = this.state.lineItems.map((item, i) => {
+      if (elementIndex !== i) return item
+      return {...item, expenses_account: event.sub_account_number, main_account_number: event.main_account_number, coa_account_number: event.coa_account_number}
+    })
+    this.setState({lineItems})
+    console.log(this.state.lineItems);
+  }
+
   handleAddLineItem = (event) => {
     this.setState({
       // use optimistic uuid for drag drop; in a production app this could be a database id
@@ -317,7 +330,7 @@ class BiayaAddModal extends React.Component {
 
     componentDidMount() {
         this.getDataBayardari();
-        this.getDataAkunBiaya();
+        //this.getDataAkunBiaya();
         this.getDataPenerima();
         this.getDataBiaya();
         //console.log("test",this.state.records.value);
@@ -455,14 +468,16 @@ class BiayaAddModal extends React.Component {
                                                 <br/>
                                                 <br/>
                                                 <LineItems
-            items={this.state.lineItems}
-            currencyFormatter={this.formatCurrency}
-            addHandler={this.handleAddLineItem}
-            changeHandler={this.handleLineItemChange}
-            focusHandler={this.handleFocusSelect}
-            deleteHandler={this.handleRemoveLineItem}
-            reorderHandler={this.handleReorderLineItems}
-          />
+                                                    items={this.state.lineItems}
+                                                    currencyFormatter={this.formatCurrency}
+                                                    addHandler={this.handleAddLineItem}
+                                                    changeHandler={this.handleLineItemChange}
+                                                    changeHandlerAkun={this.handleLineItemAkun}
+                                                    focusHandler={this.handleFocusSelect}
+                                                    deleteHandler={this.handleRemoveLineItem}
+                                                    reorderHandler={this.handleReorderLineItems}
+
+                                                />
                                                 {/* <Table responsive="sm">
                                                     <thead>
                                                         <tr>

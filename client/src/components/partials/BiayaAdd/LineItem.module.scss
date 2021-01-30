@@ -7,9 +7,11 @@
 
   & > div {
     @extend %flex-center;
+    display: flex;
     padding: ($rhythm/2);
     border-left: 1px solid $tableBorderColor;
     width: 100%;
+    height: 150px;
     line-height: $rhythm;
     min-width: $rhythm;
     &:first-of-type {
