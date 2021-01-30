@@ -2,14 +2,14 @@ import React, { Component, Fragment } from 'react'
 import classnames from "classnames";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { addBiaya } from "../../actions/userActions";
+import { addBiaya } from "../../../actions/userActions";
 import { withRouter } from "react-router-dom";
 import { toast } from 'react-toastify';
 import $ from 'jquery';
 import axios from "axios";
 
 import 'react-toastify/dist/ReactToastify.css';
-import '../style/FormBiaya.css';
+import '../../style/FormBiaya.css';
 
 //Bootsrap
 import Form from 'react-bootstrap/Form';
@@ -26,6 +26,10 @@ import moment from 'moment';
 import ReactSelect from "react-select";
 import CurrencyFormat from 'react-currency-format';
 
+//line items
+import LineItems from './LineItems';
+import uuidv4 from 'uuid/v4';
+
 const carabayar=[
     {  name: "Transfer"},
     {  name: "Cash"}
@@ -38,6 +42,8 @@ const carabayar=[
   ]
 
 class BiayaAddModal extends React.Component {
+    locale = 'en-US'
+    currency = 'USD'
 
     constructor() {
         super();
@@ -79,6 +85,19 @@ class BiayaAddModal extends React.Component {
             AmountTax: 0,
             expenses: 0 
         };
+
+        this.state = {
+            taxRate: 0.00,
+            lineItems: [
+              {
+                id: 'initial',      // react-beautiful-dnd unique key
+                name: '',
+                description: '',
+                quantity: 0,
+                price: 0.00,
+              },
+            ]
+        }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -96,6 +115,7 @@ class BiayaAddModal extends React.Component {
 
     //SUBMITPOSTT HERE
     onBiayaAdd = e => {
+        console.log(this.state.lineItems);
         e.preventDefault();
         const newBiaya = {
             pay_from_account_number: this.state.pay_from_account_number,
@@ -191,39 +211,109 @@ class BiayaAddModal extends React.Component {
         })
     };
 
-    onChangeTax = e => {  
-        this.setState({
-            TaxName: e.name,
-            TaxRate: e.rate,
-            TaxB: e.b,
+    // onChangeTax = e => {  
+    //     this.setState({
+    //         TaxName: e.name,
+    //         TaxRate: e.rate,
+    //         TaxB: e.b,
             
-        })
-        this.calcTaxTotal();
-        this.calcGrandTotal();
+    //     })
+    //     this.calcTaxTotal();
+    //     this.calcGrandTotal();
         
-    };
+    // };
 
-    calcTaxTotal = () => { 
-        if (this.state.expenses > 0){
+    // calcTaxTotal = () => { 
+    //     if (this.state.expenses > 0){
             
-            return   ( this.state.expenses * this.state.TaxRate  ) 
-        }
-        return 0
+    //         return   ( this.state.expenses * this.state.TaxRate  ) 
+    //     }
+    //     return 0
         
        
-    };
+    // };
 
-    calcGrandTotal = () => {
-        if (this.state.expenses > 0){
-            //console.log("Masok")
-            if(this.state.TaxB == 1){
+    // calcGrandTotal = () => {
+    //     if (this.state.expenses > 0){
+    //         //console.log("Masok")
+    //         if(this.state.TaxB == 1){
                 
-                return  (this.state.expenses * 1) + (this.state.AmountTax * 1)
-            }
-            return this.state.expenses
-        }
-        return 0
-    }
+    //             return  (this.state.expenses * 1) + (this.state.AmountTax * 1)
+    //         }
+    //         return this.state.expenses
+    //     }
+    //     return 0
+    // }
+
+    
+  handleInvoiceChange = (event) => {
+    this.setState({[event.target.name]: event.target.value})
+  }
+
+  handleLineItemChange = (elementIndex) => (event) => {
+    let lineItems = this.state.lineItems.map((item, i) => {
+      if (elementIndex !== i) return item
+      return {...item, [event.target.name]: event.target.value}
+    })
+    this.setState({lineItems})
+  }
+
+  handleAddLineItem = (event) => {
+    this.setState({
+      // use optimistic uuid for drag drop; in a production app this could be a database id
+      lineItems: this.state.lineItems.concat(
+        [{ id: uuidv4(), name: '', description: '', quantity: 0, price: 0.00 }]
+      )
+    })
+  }
+
+  handleRemoveLineItem = (elementIndex) => (event) => {
+    this.setState({
+      lineItems: this.state.lineItems.filter((item, i) => {
+        return elementIndex !== i
+      })
+    })
+  }
+
+  handleReorderLineItems = (newLineItems) => {
+    this.setState({
+      lineItems: newLineItems,
+    })
+  }
+
+  handleFocusSelect = (event) => {
+    event.target.select()
+  }
+
+  handlePayButtonClick = () => {
+    console.log(this.state.lineItems);
+  }
+
+  formatCurrency = (amount) => {
+    return (new Intl.NumberFormat(this.locale, {
+      style: 'currency',
+      currency: this.currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(amount))
+  }
+
+  calcTaxAmount = (c) => {
+    return c * (this.state.taxRate / 100)
+  }
+
+  calcLineItemsTotal = () => {
+    return this.state.lineItems.reduce((prev, cur) => (prev + (cur.quantity * cur.price)), 0)
+  }
+
+  calcTaxTotal = () => {
+    return this.calcLineItemsTotal() * (this.state.taxRate / 100)
+  }
+
+  calcGrandTotal = () => {
+    return this.calcLineItemsTotal() + this.calcTaxTotal()
+  }
+
 
     componentDidMount() {
         this.getDataBayardari();
@@ -364,8 +454,16 @@ class BiayaAddModal extends React.Component {
 
                                                 <br/>
                                                 <br/>
-
-                                                <Table responsive="sm">
+                                                <LineItems
+            items={this.state.lineItems}
+            currencyFormatter={this.formatCurrency}
+            addHandler={this.handleAddLineItem}
+            changeHandler={this.handleLineItemChange}
+            focusHandler={this.handleFocusSelect}
+            deleteHandler={this.handleRemoveLineItem}
+            reorderHandler={this.handleReorderLineItems}
+          />
+                                                {/* <Table responsive="sm">
                                                     <thead>
                                                         <tr>
                                                             <th>Akun Biaya</th>
@@ -422,11 +520,11 @@ class BiayaAddModal extends React.Component {
                                                                     </InputGroup.Append>
                                                                 </InputGroup>
                                                             </td>
-                                                            {/* <td><Form.Control type="text" onChange={ this.onChangeJumlah }/></td> */}
+                                                            
                                                         </tr>
                                                     </tbody>
                         
-                                                </Table>
+                                                </Table> */}
 
                                                 <Form.Group as={Col} xs={5}>
                                                     <Form.Label>Memo</Form.Label>

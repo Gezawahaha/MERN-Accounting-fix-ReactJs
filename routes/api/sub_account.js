@@ -152,7 +152,7 @@ router.patch("/:main/:postId", async (req, res) => {
 router.delete("/delete/:postId", async (req, res) => {
   try {
     const removedpost = await Post.remove({
-      sub_account_number: req.params.postId,
+      _id: req.params.postId,
     });
     res.json(removedpost);
   } catch (err) {

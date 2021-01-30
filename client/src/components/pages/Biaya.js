@@ -9,7 +9,7 @@ import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import axios from "axios";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
-import BiayaAddModal from "../partials/BiayaAddModal";
+import BiayaAddModal from "../partials/BiayaAdd/BiayaAddModal";
 import UserUpdateModal from "../partials/UserUpdateModal";
 import { toast, ToastContainer} from "react-toastify";
 import CurrencyFormat from 'react-currency-format';
@@ -234,7 +234,7 @@ class Biaya extends Component {
                                 <div className="col-sm-3 p-sm-2">
                                     <div className="card bg-info text-white shadow-lg">
                                         <div className="card-body">
-                                        <h5 className="card-title">Saldo Kas Besar</h5>
+                                        <h5 className="card-title">Biaya Hari Ini</h5>
                                             <small>TOTAL</small>
                                             <h2 className="card-text"><CurrencyFormat value={ 140000000 } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
                                         </div>

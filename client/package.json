@@ -48,7 +48,10 @@
     "semantic-ui-react": "^2.0.2",
     "simplebar-react": "^2.3.0",
     "styled-components": "^5.2.1",
-    "text-mask-addons": "^3.8.0"
+    "text-mask-addons": "^3.8.0",
+    "node-sass": "^4.10.0",
+    "react-beautiful-dnd": "^11.0.4",
+    "uuid": "^3.3.2"
   },
   "scripts": {
     "start": "react-scripts start",
