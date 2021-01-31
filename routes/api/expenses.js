@@ -29,6 +29,7 @@ router.post("/Biaya-add", async (req, res) => {
     expense_no: req.body.expense_no,
     tags: req.body.tags,
     billing_address: req.body.billing_address,
+    total_expense_amount: req.body.total_expense_amount,
     created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
     updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
   });

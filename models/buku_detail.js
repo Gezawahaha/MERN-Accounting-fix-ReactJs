@@ -33,6 +33,13 @@ const BukuDetailSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+  tgl_transaksi: {
+    type: String,
+    required: true,
+  },
+  nomor_bukti: {
+    type: String,
+  },
   link_id: {
     type: Number,
     required: true,

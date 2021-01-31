@@ -30,6 +30,8 @@ router.post("/", async (req, res) => {
     total_debit: req.body.total_debit,
     total_kredit: req.body.total_kredit,
     saldo: saldoakhir,
+    tgl_transaksi: req.body.tgl_transaksi,
+    nomor_bukti: req.body.nomor_bukti,
     link_id: req.body.link_id,
   });
 

@@ -30,6 +30,9 @@ const ExpensesSchema = mongoose.Schema({
   created_at: {
     type: String,
   },
+  total_expense_amount: {
+    type: Number,
+  },
 });
 
 module.exports = mongoose.model("Expenses", ExpensesSchema);
