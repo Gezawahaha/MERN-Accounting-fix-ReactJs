@@ -51,20 +51,37 @@ router.post("/Biaya-add", async (req, res) => {
         link_id: savedPost._id,
       });
 
-      const sub_post = new Post({
-        sub_account_number: req.body.expense_detail[item].expenses_account,
-        total_debit: 0,
-        total_kredit:
-          req.body.expense_detail[item].expenses_amount +
-          req.body.expense_detail[item].tax,
-        created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-        updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-        main_account_number: req.body.expense_detail[item].main_account_number,
-        coa_account_number: req.body.expense_detail[item].coa_account_number,
-      });
+      // const sub_post = new Post({
+      //   sub_account_number: req.body.expense_detail[item].expenses_account,
+      //   total_debit: 0,
+      //   total_kredit:
+      //     req.body.expense_detail[item].expenses_amount +
+      //     req.body.expense_detail[item].tax,
+      //   created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+      //   updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+      //   main_account_number: req.body.expense_detail[item].main_account_number,
+      //   coa_account_number: req.body.expense_detail[item].coa_account_number,
+      // });
 
       try {
-        const SubPost = await sub_post.save();
+        // const SubPost = await sub_post.save();
+        const updatedpost = await Post.updateOne(
+          {
+            sub_account_number: req.body.expense_detail[item].expenses_account,
+            main_account_number:
+              req.body.expense_detail[item].main_account_number,
+            coa_account_number:
+              req.body.expense_detail[item].coa_account_number,
+          },
+          {
+            $set: {
+              total_kredit:
+                req.body.expense_detail[item].expenses_amount +
+                req.body.expense_detail[item].tax,
+              updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+            },
+          }
+        );
         try {
           const specific_main_account = await Main.findOne({
             main_account_number:
