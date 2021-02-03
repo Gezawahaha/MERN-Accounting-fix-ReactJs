@@ -160,6 +160,7 @@ class DaftarSubAkun extends Component {
         this.state = {
             currentRecord: {
                 id: '',
+                coa_account_number: '',
                 main_account_number: '',
                 sub_account_number: '',
                 name: '',
@@ -195,7 +196,7 @@ class DaftarSubAkun extends Component {
         axios.get('/coa/main/sub/Sub-data')
             .then(res => {
                 this.setState({ records: res.data})
-                //console.log("DK", this.state.records);
+                console.log("DK", this.state.records);
             })
             .catch()
             
@@ -203,6 +204,7 @@ class DaftarSubAkun extends Component {
 
     editRecord(record) {
         this.setState({ currentRecord: record});
+        //console.log(this.state.currentRecord);
     }
 
     deleteRecord(record) {

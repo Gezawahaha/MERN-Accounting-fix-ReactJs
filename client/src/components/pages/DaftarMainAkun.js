@@ -192,7 +192,7 @@ class DaftarMainAkun extends Component {
                 this.setState({ 
                     records: res.data,
                 })
-                //console.log("Cek Data", this.state.records);
+                console.log("Cek Data Main", this.state.records);
             })
             .catch()
     }

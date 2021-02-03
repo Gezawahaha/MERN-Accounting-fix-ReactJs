@@ -2,7 +2,7 @@ import React from 'react'
 import classnames from "classnames";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { updateUser } from "../../actions/userActions";
+//import { updateSubakun } from "../../actions/userActions";
 import { withRouter } from "react-router-dom";
 import { toast } from 'react-toastify';
 import $ from 'jquery';
@@ -10,6 +10,7 @@ import $ from 'jquery';
 import 'react-toastify/dist/ReactToastify.css';
 import CurrencyFormat from 'react-currency-format';
 import InputGroup from 'react-bootstrap/InputGroup';
+import axios from "axios";
 
 class SubAkunUpdateModal extends React.Component {
 
@@ -20,6 +21,9 @@ class SubAkunUpdateModal extends React.Component {
             name: this.props.record.name,
             total_debit: this.props.record.total_debit,
             total_kredit: this.props.record.total_kredit,
+            coa_account_number: this.props.record.coa_account_number,
+            main_account_number: this.props.record.main_account_number,
+            sub_account_number: this.props.record.sub_account_number,
             errors: {},
         };
     }
@@ -30,7 +34,10 @@ class SubAkunUpdateModal extends React.Component {
                 id: nextProps.record.id,
                 name: nextProps.record.name,
                 total_debit: nextProps.record.total_debit,
-                total_kredit: nextProps.record.total_kredit
+                total_kredit: nextProps.record.total_kredit,
+                coa_account_number: nextProps.record.coa_account_number,
+                main_account_number: nextProps.record.main_account_number,
+                sub_account_number: nextProps.record.sub_account_number,
             })
         }
         if (nextProps.errors) {
@@ -56,16 +63,27 @@ class SubAkunUpdateModal extends React.Component {
     onUserUpdate = e => {
         e.preventDefault();
         const newUser = {
-            _id: this.state.id,
             name: this.state.name,
-            email: this.state.email,
-            password: this.state.password
+            total_debit: this.state.total_debit,
+            total_kredit: this.state.total_kredit,
+            coa_account_number: this.state.coa_account_number,
+            main_account_number: this.state.main_account_number,
+            sub_account_number: this.state.sub_account_number
         };
-        this.props.updateUser(newUser);
-        $('#update-subakun-modal').modal('hide');
-            toast("Data Updated!", {
-                position: toast.POSITION.TOP_CENTER
-            });
+        //this.props.updateUser(newUser);
+        console.log(newUser);
+        axios
+            .patch(`/coa/main/sub/${this.state.coa_account_number}/${this.state.main_account_number}/${this.state.sub_account_number}`, newUser)
+            .then(res => {
+                if (res.status === 200) {
+                    $('#update-subakun-modal').modal('hide');
+                    toast("Data Updated!", {
+                        position: toast.POSITION.TOP_CENTER
+                    });
+                }
+            })
+            .catch();
+        
     };
 
     render() {
@@ -80,7 +98,7 @@ class SubAkunUpdateModal extends React.Component {
                                 <button type="button" className="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div className="modal-body">
-                                <form noValidate onSubmit={this.onUserUpdate} id="update-user">
+                                <form noValidate onSubmit={this.onUserUpdate} id="update-subakun">
                                     <input
                                         onChange={this.onChange}
                                         value={this.state.id}
@@ -137,8 +155,9 @@ class SubAkunUpdateModal extends React.Component {
                                                         onValueChange={(values) => {
                                                                 const {formattedValue, value} = values;
                                                                 this.setState({
-                                                                    total_debit: value
+                                                                    total_debit: value * 1
                                                                 })
+                                                                //console.log("test",this.state.coa_account_number);
                                                             }
                                                         }                                                            
 
@@ -170,7 +189,7 @@ class SubAkunUpdateModal extends React.Component {
                                                         onValueChange={(values) => {
                                                                 const {formattedValue, value} = values;
                                                                 this.setState({
-                                                                    total_kredit: value
+                                                                    total_kredit: value * 1
                                                                 })
                                                             }
                                                         }                                                            
@@ -200,10 +219,10 @@ class SubAkunUpdateModal extends React.Component {
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <button
-                                    form="update-user"
+                                    form="update-subakun"
                                     type="submit"
                                     className="btn btn-primary">
-                                    Update User
+                                    Update
                                 </button>
                             </div>
                         </div>
@@ -215,7 +234,7 @@ class SubAkunUpdateModal extends React.Component {
 }
 
 SubAkunUpdateModal.propTypes = {
-    updateUser: PropTypes.func.isRequired,
+    //updateUser: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired
 };
@@ -227,5 +246,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { updateUser }
+    // { updateUser }
 )(withRouter(SubAkunUpdateModal));
