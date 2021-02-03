@@ -136,6 +136,7 @@ router.get("/test/MoA-data", async (req, res) => {
       Object.keys(posts).map(async (item) => {
         let temporary = await Sub.find({
           main_account_number: posts[item].main_account_number,
+          coa_account_number: posts[item].coa_account_number,
         });
 
         let temporary_totaldebit = posts[item].total_debit;
@@ -154,7 +155,10 @@ router.get("/test/MoA-data", async (req, res) => {
           temporary_totalkredit == total_kredit
         ) {
           const updatedpost = await Post.updateOne(
-            {main_account_number: posts[item].main_account_number},
+            {
+              main_account_number: posts[item].main_account_number,
+              coa_account_number: posts[item].coa_account_number,
+            },
             {
               $set: {
                 total_debit: total_debit,
@@ -164,7 +168,10 @@ router.get("/test/MoA-data", async (req, res) => {
           );
         } else {
           const updatedpost = await Post.updateOne(
-            {main_account_number: posts[item].main_account_number},
+            {
+              main_account_number: posts[item].main_account_number,
+              coa_account_number: posts[item].coa_account_number,
+            },
             {
               $set: {
                 total_debit: total_debit,
