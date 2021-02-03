@@ -19,7 +19,7 @@ const BukuDetailSchema = mongoose.Schema({
   created_at: {
     type: String,
   },
-  keterangan: {
+  description: {
     type: String,
     required: true,
   },

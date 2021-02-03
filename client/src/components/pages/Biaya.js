@@ -34,8 +34,9 @@ class Biaya extends Component {
             {
                 key: "transaction_date",
                 text: "Tanggal Transaksi",
-                className: "name",
+                className: "date",
                 align: "left",
+                width: 280,
                 sortable: true,
             },
             {
@@ -43,6 +44,7 @@ class Biaya extends Component {
                 text: "No Biaya",
                 className: "name",
                 align: "left",
+                width: 200,
                 sortable: true,
                 // cell: record => {
                 //     <Fragment>
@@ -55,8 +57,26 @@ class Biaya extends Component {
                 text: "No Akun",
                 className: "name",
                 align: "left",
+                width: 200,
                 sortable: true,
             },
+            {
+                key: "tags",
+                text: "Keterangan",
+                className: "name",
+                align: "left",
+                sortable: true,
+            },
+            {
+                key: "total_expense_amount",
+                text: "Total Biaya",
+                className: "name",
+                align: "left",
+                width: 230,
+                sortable: true,
+            },
+            
+            
             // {
             //     key: "total_debit",
             //     text: "Total Debit",

@@ -56,11 +56,11 @@ class BiayaAddModal extends React.Component {
             expense_no: '',
             tags: '',
             billing_address: '',
+            total_expense_amount: '',
             created_at: '',
             updated_at: '',
 
-            expenses_detail: [],
-            //expense Detail
+            
             expenses_account: '',
             main_account_number: '',
             sub_account_number: '',
@@ -96,8 +96,8 @@ class BiayaAddModal extends React.Component {
                 main_account_number: '',
                 sub_account_number: '',
                 description: '',
-                quantity: 0,
-                price: 0.00,
+                quantity: 1,
+                expenses_amount: 0.00,
               },
             ]
         }
@@ -121,22 +121,25 @@ class BiayaAddModal extends React.Component {
         console.log(this.state.lineItems);
         e.preventDefault();
         const newBiaya = {
-            pay_from_account_number: this.state.pay_from_account_number,
-            beneficiary: this.state.beneficiary,
-            transaction_date: moment(this.state.transaction_date).format("YYYY-MM-DD HH:mm:ss"),
-            payment_method: this.state.payment_method,
+            total_expense_amount: this.calcGrandTotal(),
             expense_no: this.state.expense_no,
-            tags: "Tags",
-            billing_address: this.state.billing_address,
-            expense_detail:[{
-                expenses_account: this.state.expenses_account,
-                description: this.state.description,
-                tax: this.state.AmountTax,
-                expenses_amount: this.calcGrandTotal(),
-                main_account_number: this.state.main_account_number,
-                coa_account_number: this.state.coa_account_number
-                }
-            ]
+            transaction_date: this.state.transaction_date,
+            tags: `Biaya Pada Tanggal ${this.state.transaction_date}`,
+
+            pay_from_account_number: this.state.pay_from_account_number,//Udh pasti dari kas kecil 
+            beneficiary: this.state.beneficiary,                        // ga penting
+            payment_method: this.state.payment_method,                  // ga penting
+            billing_address: this.state.billing_address,                // ga penting
+            expense_detail: this.state.lineItems
+            // [{
+            //     expenses_account: this.state.expenses_account,
+            //     description: this.state.description,
+            //     tax: this.state.AmountTax,
+            //     expenses_amount: this.calcGrandTotal(),
+            //     main_account_number: this.state.main_account_number,
+            //     coa_account_number: this.state.coa_account_number
+            //     }
+            // ]
             
         }
         console.log(newBiaya);
@@ -172,7 +175,7 @@ class BiayaAddModal extends React.Component {
 
     onChangeDate = e => {  
         this.setState({
-            transaction_date: e.target.value,
+            transaction_date: moment( e.target.value ).format("YYYY-MM-DD HH:mm:ss"),
         })
         console.log("Date",this.state.transaction_date);
     };
@@ -265,7 +268,7 @@ class BiayaAddModal extends React.Component {
 
     let lineItems = this.state.lineItems.map((item, i) => {
       if (elementIndex !== i) return item
-      return {...item, expenses_account: event.sub_account_number, main_account_number: event.main_account_number, coa_account_number: event.coa_account_number}
+      return {...item, expenses_account: event.sub_account_number, main_account_number: event.main_account_number, coa_account_number: event.coa_account_number, name: event.name}
     })
     this.setState({lineItems})
     console.log(this.state.lineItems);
@@ -275,7 +278,15 @@ class BiayaAddModal extends React.Component {
     this.setState({
       // use optimistic uuid for drag drop; in a production app this could be a database id
       lineItems: this.state.lineItems.concat(
-        [{ id: uuidv4(), name: '', description: '', quantity: 0, price: 0.00 }]
+        [{ id: uuidv4(), 
+            name: '', 
+            description: '', 
+            quantity: 1, 
+            expenses_amount: 0.00 ,
+            expenses_account: '',
+            main_account_number: '', 
+            coa_account_number: ''
+        }]
       )
     })
   }
@@ -298,9 +309,6 @@ class BiayaAddModal extends React.Component {
     event.target.select()
   }
 
-  handlePayButtonClick = () => {
-    console.log(this.state.lineItems);
-  }
 
   formatCurrency = (amount) => {
     return (new Intl.NumberFormat(this.locale, {
@@ -316,7 +324,7 @@ class BiayaAddModal extends React.Component {
   }
 
   calcLineItemsTotal = () => {
-    return this.state.lineItems.reduce((prev, cur) => (prev + (cur.quantity * cur.price)), 0)
+    return this.state.lineItems.reduce((prev, cur) => (prev + (cur.quantity * cur.expenses_amount)), 0)
   }
 
   calcTaxTotal = () => {
@@ -324,7 +332,7 @@ class BiayaAddModal extends React.Component {
   }
 
   calcGrandTotal = () => {
-    return this.calcLineItemsTotal() + this.calcTaxTotal()
+    return this.calcLineItemsTotal() 
   }
 
 
@@ -343,14 +351,14 @@ class BiayaAddModal extends React.Component {
         .then(response => {
             if (response.data.length < 10) {
                 this.setState({
-                    expense_no: `EB/BK/00${response.data.length + 1}`
+                    expense_no: `BKK/00${response.data.length + 1}/KAS/${moment().year()}`
             
                 })
                 console.log("1");
               }
               else if(response.data.length < 100){
                 this.setState({
-                    expense_no: `EB/BK/0${response.data.length + 1}`
+                    expense_no: `BKK/0${response.data.length + 1}/KAS/${moment().year()}`
             
                 })
                   console.log("2");
@@ -379,7 +387,7 @@ class BiayaAddModal extends React.Component {
                     BayarDari: res.data,
                     
                 })
-                //console.log("Bayar Dari Data", this.state.BayarDari);
+                //console.log("Bayar Dari Data", res.data[0].name);
             })
             .catch()
             this.getDataBayardari = this.getDataBayardari.bind(this);
@@ -461,8 +469,10 @@ class BiayaAddModal extends React.Component {
                                                 </Form.Row>
 
                                                 <Form.Group as={Col} xs={6}>
-                                                    <Form.Label>Address</Form.Label>
-                                                    <Form.Control as="textarea" />
+                                                    {/* <Form.Label>Address</Form.Label>
+                                                    <Form.Control as="textarea" /> */}
+                                                    <br/>
+                                                    <br/>
                                                 </Form.Group>
 
                                                 <br/>
@@ -542,8 +552,10 @@ class BiayaAddModal extends React.Component {
                                                 </Table> */}
 
                                                 <Form.Group as={Col} xs={5}>
-                                                    <Form.Label>Memo</Form.Label>
-                                                    <Form.Control as="textarea" />
+                                                    {/* <Form.Label>Memo</Form.Label>
+                                                    <Form.Control as="textarea" /> */}
+                                                    <br/>
+                                                    <br/>
                                                 </Form.Group>
 
                                                 <div>
@@ -602,7 +614,7 @@ class BiayaAddModal extends React.Component {
                                                         </div>
                                                     </div>
                                                     <div className="invoice-price-right">
-                                                        <small>TOTAL</small> <span className="f-w-600">
+                                                        <small>GRAND TOTAL</small> <span className="f-w-600">
                                                             <CurrencyFormat 
                                                                 //onchange={ this.onChangeJumlah } 
                                                                 value={  this.calcGrandTotal() } 

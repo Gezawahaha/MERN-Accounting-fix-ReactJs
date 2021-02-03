@@ -75,12 +75,18 @@ export const SidebarData = [
     },
     {
         title: 'Daftar Akun',
-        path: '/daftarakun',
+        //path: '/daftarakun',
         icon: <IoIcons.IoIosPaper />,
         iconClosed: <RiIcons.RiArrowDownSFill />,
         iconOpened: <RiIcons.RiArrowUpSFill />,
     
         subNav: [
+          {
+            title: 'Account',
+            path: '/daftarakun',
+            icon: <IoIcons.IoIosPaper />,
+            cName: 'sub-nav'
+          },
           {
             title: 'Main Account',
             path: '/daftarakun/daftarmainakun',
@@ -129,6 +135,34 @@ export const SidebarData = [
         title: 'Configure',
         path: '/configure',
         icon: <SettingsIcon />
+
+        
+      },
+      {
+        title: 'Configure',
+        icon: <SettingsIcon />,
+        iconClosed: <RiIcons.RiArrowDownSFill />,
+        iconOpened: <RiIcons.RiArrowUpSFill />,
+    
+        subNav: [
+          {
+            title: 'Daftar Buku',
+            path: '/buku',
+            icon: <IoIcons.IoIosPaper />,
+            cName: 'sub-nav'
+          },
+          {
+            title: 'Main Account',
+            path: '/daftarakun/daftarmainakun',
+            icon: <IoIcons.IoIosPaper />,
+            cName: 'sub-nav'
+          },
+          {
+            title: 'Sub Account',
+            path: '/daftarakun/daftarsubakun',
+            icon: <IoIcons.IoIosPaper />
+          }
+        ]
       },
       {
         title: 'Support',

@@ -59,7 +59,7 @@ class LineItems extends Component {
                 <LineItem
                   style={{color: 'red'}}
                   key={i + item.id} index={i} name={item.name}
-                  description={item.description} quantity={item.quantity} price={item.price}
+                  description={item.description} quantity={item.quantity} expenses_amount={item.expenses_amount}
                   {...functions}
                 />
               ))}

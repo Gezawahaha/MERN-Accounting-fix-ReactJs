@@ -26,7 +26,7 @@ router.post("/", async (req, res) => {
     sub_account_number: req.body.sub_account_number,
     created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
     updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-    keterangan: req.body.keterangan,
+    description: req.body.description,
     total_debit: req.body.total_debit,
     total_kredit: req.body.total_kredit,
     saldo: saldoakhir,
