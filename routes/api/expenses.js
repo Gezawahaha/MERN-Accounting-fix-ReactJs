@@ -69,6 +69,8 @@ router.post("/Biaya-add", async (req, res) => {
           const specific_main_account = await Main.findOne({
             main_account_number:
               req.body.expense_detail[item].main_account_number,
+            coa_account_number:
+              req.body.expense_detail[item].coa_account_number,
           });
 
           let debit = specific_main_account.total_debit;
@@ -77,6 +79,8 @@ router.post("/Biaya-add", async (req, res) => {
             {
               main_account_number:
                 req.body.expense_detail[item].main_account_number,
+              coa_account_number:
+                req.body.expense_detail[item].coa_account_number,
             },
             {
               $set: {
