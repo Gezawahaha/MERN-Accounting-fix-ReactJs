@@ -8,6 +8,8 @@ import { toast } from 'react-toastify';
 import $ from 'jquery';
 
 import 'react-toastify/dist/ReactToastify.css';
+import CurrencyFormat from 'react-currency-format';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 class SubAkunUpdateModal extends React.Component {
 
@@ -16,8 +18,8 @@ class SubAkunUpdateModal extends React.Component {
         this.state = {
             id: this.props.record.id,
             name: this.props.record.name,
-            email: this.props.record.email,
-            password: '',
+            total_debit: this.props.record.total_debit,
+            total_kredit: this.props.record.total_kredit,
             errors: {},
         };
     }
@@ -27,7 +29,8 @@ class SubAkunUpdateModal extends React.Component {
             this.setState({
                 id: nextProps.record.id,
                 name: nextProps.record.name,
-                email: nextProps.record.email,
+                total_debit: nextProps.record.total_debit,
+                total_kredit: nextProps.record.total_kredit
             })
         }
         if (nextProps.errors) {
@@ -35,16 +38,7 @@ class SubAkunUpdateModal extends React.Component {
                 errors: nextProps.errors
             });
         }
-        if (nextProps.auth !== undefined
-            && nextProps.auth.user !== undefined
-            && nextProps.auth.user.data !== undefined
-            && nextProps.auth.user.data.message !== undefined
-            && nextProps.auth.user.data.success) {
-            $('#update-user-modal').modal('hide');
-            toast(nextProps.auth.user.data.message, {
-                position: toast.POSITION.TOP_CENTER
-            });
-        }
+        
     }
 
     onChange = e => {
@@ -68,6 +62,10 @@ class SubAkunUpdateModal extends React.Component {
             password: this.state.password
         };
         this.props.updateUser(newUser);
+        $('#update-subakun-modal').modal('hide');
+            toast("Data Updated!", {
+                position: toast.POSITION.TOP_CENTER
+            });
     };
 
     render() {
@@ -94,6 +92,7 @@ class SubAkunUpdateModal extends React.Component {
                                             <label htmlFor="name">Name</label>
                                         </div>
                                         <div className="col-md-9">
+                                        <InputGroup className="mb-3">
                                             <input
                                                 onChange={this.onChange}
                                                 value={this.state.name}
@@ -103,15 +102,17 @@ class SubAkunUpdateModal extends React.Component {
                                                 className={classnames("form-control", {
                                                     invalid: errors.name
                                                 })}/>
+                                        </InputGroup>
+                                            
                                             <span className="text-danger">{errors.name}</span>
                                         </div>
                                     </div>
                                     <div className="row mt-2">
                                         <div className="col-md-3">
-                                            <label htmlFor="email">Email</label>
+                                            <label htmlFor="email">Debit</label>
                                         </div>
                                         <div className="col-md-9">
-                                            <input
+                                            {/* <input
                                                 onChange={this.onChange}
                                                 value={this.state.email}
                                                 error={errors.email}
@@ -120,16 +121,67 @@ class SubAkunUpdateModal extends React.Component {
                                                 className={classnames("form-control", {
                                                     invalid: errors.email
                                                 })}
-                                            />
+                                            /> */}
+
+                                            <InputGroup className="mb-3">
+                                                <InputGroup.Prepend>
+                                                    <InputGroup.Text>Rp. </InputGroup.Text>
+                                                </InputGroup.Prepend>
+                                                
+                                                    <CurrencyFormat 
+                                                        className="form-control" 
+                                                        //onChange={this.onChangeJumlah}
+                                                        value={ this.state.total_debit }
+                                                        thousandSeparator={ true }
+                                                        isNumericString={true}
+                                                        onValueChange={(values) => {
+                                                                const {formattedValue, value} = values;
+                                                                this.setState({
+                                                                    total_debit: value
+                                                                })
+                                                            }
+                                                        }                                                            
+
+                                                    />
+
+                                                <InputGroup.Append>
+                                                    <InputGroup.Text>.00</InputGroup.Text>
+                                                </InputGroup.Append>
+                                            </InputGroup>
                                             <span className="text-danger">{errors.email}</span>
                                         </div>
                                     </div>
                                     <div className="row mt-2">
                                         <div className="col-md-3">
-                                            <label htmlFor="password">Password</label>
+                                            <label htmlFor="password">Kredit</label>
                                         </div>
                                         <div className="col-md-9">
-                                            <input
+                                        <InputGroup className="mb-3">
+                                                <InputGroup.Prepend>
+                                                    <InputGroup.Text>Rp. </InputGroup.Text>
+                                                </InputGroup.Prepend>
+                                                
+                                                    <CurrencyFormat 
+                                                        className="form-control" 
+                                                        //onChange={this.onChangeJumlah}
+                                                        value={ this.state.total_kredit }
+                                                        thousandSeparator={ true }
+                                                        isNumericString={true}
+                                                        onValueChange={(values) => {
+                                                                const {formattedValue, value} = values;
+                                                                this.setState({
+                                                                    total_kredit: value
+                                                                })
+                                                            }
+                                                        }                                                            
+
+                                                    />
+
+                                                <InputGroup.Append>
+                                                    <InputGroup.Text>.00</InputGroup.Text>
+                                                </InputGroup.Append>
+                                            </InputGroup>
+                                            {/* <input
                                                 data-reset-input={true}
                                                 autoComplete={''}
                                                 onChange={this.onChange}
@@ -139,7 +191,7 @@ class SubAkunUpdateModal extends React.Component {
                                                 className={classnames("form-control", {
                                                     invalid: errors.password
                                                 })}
-                                            />
+                                            /> */}
                                             <span className="text-danger">{errors.password}</span>
                                         </div>
                                     </div>
