@@ -9,7 +9,7 @@ import {connect} from "react-redux";
 import axios from "axios";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import SubAkunAddModal from "../partials/SubAkunAddModal";
-import UserUpdateModal from "../partials/UserUpdateModal";
+import SubAkunUpdateModal from "../partials/SubAkunUpdateModal";
 import { toast, ToastContainer} from "react-toastify";
 import CurrencyFormat from 'react-currency-format';
 
@@ -108,7 +108,7 @@ class DaftarSubAkun extends Component {
                         <Fragment>
                             <button
                                 data-toggle="modal"
-                                data-target="#update-user-modal"
+                                data-target="#update-subakun-modal"
                                 className="btn btn-primary btn-sm"
                                 onClick={() => this.editRecord(record)}
                                 style={{marginRight: '5px'}}>
@@ -231,7 +231,7 @@ class DaftarSubAkun extends Component {
                 <div className="d-flex" id="wrapper">
                     <Sidebar/>
                     <SubAkunAddModal />
-                    <UserUpdateModal record={this.state.currentRecord}/>
+                    <SubAkunUpdateModal record={this.state.currentRecord}/>
                     <div id="page-content-wrapper">
                         <div className="container-fluid">
                             <button className="btn btn-link mt-3" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
