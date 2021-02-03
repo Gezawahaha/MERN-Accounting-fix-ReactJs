@@ -75,7 +75,7 @@ router.post("/Biaya-add", async (req, res) => {
           },
           {
             $set: {
-              total_kredit:
+              total_debit:
                 req.body.expense_detail[item].expenses_amount +
                 req.body.expense_detail[item].tax,
               updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
@@ -101,11 +101,11 @@ router.post("/Biaya-add", async (req, res) => {
             },
             {
               $set: {
-                total_debit: debit + 0,
-                total_kredit:
-                  kredit +
+                total_debit:
+                  debit +
                   req.body.expense_detail[item].expenses_amount +
                   req.body.expense_detail[item].tax,
+                total_kredit: kredit + 0,
                 updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
               },
             }
