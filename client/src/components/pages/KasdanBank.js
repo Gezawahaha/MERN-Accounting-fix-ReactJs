@@ -1,6 +1,6 @@
 
 
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
@@ -35,39 +35,55 @@ class KasdanBank extends Component {
             //     sortable: true,
             // },
             {
-                key: "date",
-                text: "Tanggal",
-                className: "date",
+                key: "sub_account_number",
+                text: "Account Number",
+                className: "name",
                 align: "left",
-                sortable: true,
+                sortable: false,
+                cell: record => <Fragment>{record.coa_account_number}
+                
+                    {record.main_account_number < 10 && (
+                        `-0${record.main_account_number}`
+                    )}
+                    
+                    {record.main_account_number >= 10 && (
+                        `-${record.main_account_number}`
+                    )}
+
+                    {record.sub_account_number < 10 && (
+                        `-0${record.sub_account_number}`
+                    )}
+                    
+                    {record.sub_account_number >= 10 && (
+                        `-${record.sub_account_number}`
+                    )}
+                  
+                                        
+                
+                </Fragment>
             },
             {
-                key: "Nomor_Akun",
-                text: "Nomor",
+                key: "name",
+                text: "Name",
                 className: "name",
                 align: "left",
                 sortable: true,
             },
             {
-                key: "Penerima",
-                text: "Penerima",
-                className: "name",
+                key: "total_debit",
+                text: "Total Debit",
+                className: "currency",
                 align: "left",
                 sortable: true,
+                cell: record => <Fragment>{this.toCurrency(record.total_debit)}</Fragment>
             },
             {
-                key: "status",
-                text: "Status",
-                className: "name",
+                key: "total_kredit",
+                text: "Total Kredit",
+                className: "email",
                 align: "left",
                 sortable: true,
-            },
-            {
-                key: "total_biaya",
-                text: "Total",
-                className: "number",
-                align: "left",
-                sortable: true
+                cell: record => <Fragment>{this.toCurrency(record.total_kredit)}</Fragment>
             },
             // {
             //     key: "created_at",
@@ -76,42 +92,49 @@ class KasdanBank extends Component {
             //     align: "left",
             //     sortable: true
             // },
-        
+            {
+                key: "updated_at",
+                text: "Update",
+                className: "date",
+                align: "left",
+                sortable: true
+            },
             
-            // {
-            //     key: "action",
-            //     text: "Action",
-            //     className: "action",
-            //     width: 100,
-            //     align: "left",
-            //     sortable: false,
-            //     cell: record => {
-            //         return (
-            //             <Fragment>
-            //                 <button
-            //                     data-toggle="modal"
-            //                     data-target="#update-user-modal"
-            //                     className="btn btn-primary btn-sm"
-            //                     onClick={() => this.editRecord(record)}
-            //                     style={{marginRight: '5px'}}>
-            //                     <i className="fa fa-edit"></i>
-            //                 </button>
-            //                 <button
-            //                     className="btn btn-danger btn-sm"
-            //                     onClick={() => this.deleteRecord(record)}>
-            //                     <i className="fa fa-trash"></i>
-            //                 </button>
-            //             </Fragment>
-            //         );
-            //     }
-            // }
+            {
+                key: "action",
+                text: "Action",
+                className: "action",
+                width: 100,
+                align: "left",
+                sortable: false,
+                cell: record => {
+                    return (
+                        <Fragment>
+                            <button
+                                data-toggle="modal"
+                                data-target="#update-subakun-modal"
+                                className="btn btn-primary btn-sm"
+                                onClick={() => this.editRecord(record)}
+                                style={{marginRight: '5px'}}>
+                                <i className="fa fa-edit"></i>
+                            </button>
+                            <button
+                                className="btn btn-danger btn-sm"
+                                onClick={() => this.deleteRecord(record)}>
+                                <i className="fa fa-trash"></i>
+                            </button>
+                        </Fragment>
+                    );
+                }
+            }
         ];
 
         this.config = {
             page_size: 10,
-            length_menu: [ 10, 10, 30 ],
-            filename: "coa_account_number",
-            no_data_text: 'Anda belum memiliki transaksi.',
+            length_menu: [ 10, 20, 50 ],
+            filename: "sub_account_number",
+            no_data_text: 'No sub akun found!',
+            sort: { column: "coa_account_number", order: "dsc" },
             button: {
                 excel: true,
                 print: true,
@@ -135,17 +158,14 @@ class KasdanBank extends Component {
         };
 
         this.state = {
-            records: []
+            records: [],
+            kaskecil: [],
+            saldoBank: 0
         };
 
-        this.state = {
-            kaskecil: []
-        };
-
-        this.state = {
-            kasbesar: []
-        };
-
+        
+            
+        
         this.state = {
             currentRecord: {
                 id: '',
@@ -158,27 +178,52 @@ class KasdanBank extends Component {
             }
         };
 
-        this.getData = this.getData.bind(this);
+        this.getDataBank = this.getDataBank.bind(this);
     }
 
+    toCurrency(numberString) {
+        //console.log("number" ,numberString);
+        let number = parseFloat(numberString);
+        return (<CurrencyFormat value={number} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} />);
+    }   
+
     componentDidMount() {
-        this.getData();
+        this.getDataBank();
         //console.log("test",this.state.records.value);
+        
     };
 
 
-    getData() {
-        axios.get('/coa/main/sub/Sub-data')
+    getDataBank() {
+        axios.get('/coa/main/sub/1')
             .then(res => {
+                
+                
+                var saldo = 0
+                for (let index = 0; index < res.data.length; index++) {
+                    //console.log("for",index);
+                    if (res.data[index].main_account_number == 2){
+                        
+                        saldo = saldo + (res.data[index].total_debit * 1);
+                        //console.log("Masok", saldo);
+                    }
+                    
+                }
+
                 this.setState({ 
                     records: res.data,
-                    //kaskecil: res.data[1].total_debit,
+                    kaskecil: res.data[0].total_debit,
+                    saldoBank: saldo
                     //kasbesar: res.data[0].total_debit
                 })
-                console.log("DK", this.state.records);
+                //console.log("DK",res.data.length);
             })
             .catch()
+
+            
+            
     }
+
    
     onLogoutClick = e => {
         e.preventDefault();
@@ -198,43 +243,47 @@ class KasdanBank extends Component {
                     <div id="page-content-wrapper">
                         <div className="container-fluid">
                             <button className="btn btn-link mt-2" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
-                            <NavLink className="btn btn-outline-primary float-right mt-3 mr-2" to="/biayaform"><FontAwesomeIcon icon={faPlus}/> Tambah Transaksi</NavLink>
+                            
+                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-kaskecil-modal"><FontAwesomeIcon icon={faPlus}/> Top Up Kas</button>
+                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-transfer-modal"><FontAwesomeIcon icon={faPlus}/> Transfer</button>
+                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-terima-modal"><FontAwesomeIcon icon={faPlus}/> Terima</button>
+
                             <h1 className="mt-2 text-primary">Kas & Bank</h1>
 
                             <div className="row px-2">
-                                <div className="col-sm-3 p-sm-2">
+                                <div className="col-sm-3 p-sm-2" >
                                     <div className="card bg-dark text-white shadow-lg">
                                         <div className="card-body">
-                                            <h5 className="card-title">Lorem Ipsum</h5>
+                                            <h5 className="card-title">Saldo Bank</h5>
                                             <small>TOTAL</small>
-                                            <h2 className="card-text"><CurrencyFormat value={ 120000 } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
+                                            <h2 className="card-text"><CurrencyFormat value={ this.state.saldoBank } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-sm-3 p-sm-2">
                                     <div className="card bg-dark text-white shadow-lg">
                                         <div className="card-body">
-                                        <h5 className="card-title">Lorem Ipsum</h5>
+                                        <h5 className="card-title">Dana Yang Akan Datang</h5>
                                             <small>TOTAL</small>
-                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={ 400000 } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
+                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={ 0 } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-sm-3 p-sm-2">
                                     <div className="card bg-dark text-white shadow-lg">
                                         <div className="card-body">
-                                        <h5 className="card-title">Lorem Ipsum</h5>
+                                        <h5 className="card-title">Dana Yang Akan Keluar</h5>
                                             <small>TOTAL</small>
-                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={30000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
+                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={ 0 } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-sm-3 p-sm-2">
                                     <div className="card bg-dark text-white shadow-lg">
                                         <div className="card-body">
-                                        <h5 className="card-title">Lorem Ipsum</h5>
+                                        <h5 className="card-title">Saldo Kas</h5>
                                             <small>TOTAL</small>
-                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={210000} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
+                                            <h2 className="card-text"><h2 className="card-text"><CurrencyFormat value={ this.state.kaskecil } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2></h2>
                                         </div>
                                     </div>
                                 </div>

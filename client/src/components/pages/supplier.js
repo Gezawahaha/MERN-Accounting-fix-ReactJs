@@ -19,7 +19,7 @@ import {Link} from "react-router-dom";
 //botstrap
 import Nav from 'react-bootstrap/Nav';
 
-class employee extends Component {
+class supplier extends Component {
 
     constructor(props) {
         super(props);
@@ -194,11 +194,11 @@ class employee extends Component {
                         <div className="container-fluid">
                             <button className="btn btn-link mt-3" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
                             <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-user-modal"><FontAwesomeIcon icon={faPlus}/> Add Customer</button>
-                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-user-modal"><FontAwesomeIcon icon={faPlus}/> Add Supplier</button>
+                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-supplier-modal"><FontAwesomeIcon icon={faPlus}/> Add Supplier</button>
                             <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-employee-modal"><FontAwesomeIcon icon={faPlus}/> Add karyawan</button>
                             <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-user-modal"><FontAwesomeIcon icon={faPlus}/> Add User Account</button>
                             <h1 className="mt-2 text-primary">Kontak</h1>
-                            <Nav justify variant="tabs" defaultActiveKey="/karyawan">
+                            <Nav justify variant="tabs" defaultActiveKey="/supplier">
                                 <Nav.Item>
                                     <Nav.Link href="/users">User Account</Nav.Link>
                                 </Nav.Item>
@@ -233,7 +233,7 @@ class employee extends Component {
 
 }
 
-employee.propTypes = {
+supplier.propTypes = {
     auth: PropTypes.object.isRequired,
 };
 
@@ -244,4 +244,4 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps
-)(employee);
+)(supplier);

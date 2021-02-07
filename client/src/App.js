@@ -22,6 +22,7 @@ import Dashboard from "./components/pages/Dashboard";
 import KasdanBank from './components/pages/KasdanBank'
 import User from "./components/pages/Users";
 import Employee from './components/pages/employee';
+import Supplier from './components/pages/supplier'
 import DaftarAkun from "./components/pages/DaftarAkun";
 import DaftarMainAkun from "./components/pages/DaftarMainAkun";
 import DaftarSubAkun from "./components/pages/DaftarSubAkun";
@@ -55,6 +56,8 @@ class App extends Component {
                                 <PrivateRoute exact path="/kasdanbank" component={KasdanBank}/>
                                 <PrivateRoute exact path="/users" component={User} />
                                 <PrivateRoute exact path="/karyawan" component={Employee} />
+                                <PrivateRoute exact path="/supplier" component={Supplier} />
+
                                 <PrivateRoute exact path="/biaya" component={Biaya} />
                                 {/* <PrivateRoute exact path="/biayaForm" component={BiayaForm} /> */}
                                 <PrivateRoute exact path="/daftarakun" component={DaftarAkun} />
