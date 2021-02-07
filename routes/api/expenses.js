@@ -65,35 +65,17 @@ router.post("/Biaya-add", async (req, res) => {
 
       try {
         // const SubPost = await sub_post.save();
-        const updatedpost = await Post.updateOne(
-          {
-            sub_account_number: req.body.expense_detail[item].expenses_account,
-            main_account_number:
-              req.body.expense_detail[item].main_account_number,
-            coa_account_number:
-              req.body.expense_detail[item].coa_account_number,
-          },
-          {
-            $set: {
-              total_debit:
-                req.body.expense_detail[item].expenses_amount +
-                req.body.expense_detail[item].tax,
-              updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-            },
-          }
-        );
+        const biaya_sub = await Post.findOne({
+          sub_account_number: req.body.expense_detail[item].expenses_account,
+          main_account_number:
+            req.body.expense_detail[item].main_account_number,
+          coa_account_number: req.body.expense_detail[item].coa_account_number,
+        });
         try {
-          const specific_main_account = await Main.findOne({
-            main_account_number:
-              req.body.expense_detail[item].main_account_number,
-            coa_account_number:
-              req.body.expense_detail[item].coa_account_number,
-          });
-
-          let debit = specific_main_account.total_debit;
-          let kredit = specific_main_account.total_kredit;
-          const updatedpost = await Main.updateOne(
+          const updatedpost = await Post.updateOne(
             {
+              sub_account_number:
+                req.body.expense_detail[item].expenses_account,
               main_account_number:
                 req.body.expense_detail[item].main_account_number,
               coa_account_number:
@@ -102,17 +84,111 @@ router.post("/Biaya-add", async (req, res) => {
             {
               $set: {
                 total_debit:
-                  debit +
+                  biaya_sub.total_debit +
                   req.body.expense_detail[item].expenses_amount +
                   req.body.expense_detail[item].tax,
-                total_kredit: kredit + 0,
                 updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
               },
             }
           );
+          try {
+            const specific_main_account = await Main.findOne({
+              main_account_number:
+                req.body.expense_detail[item].main_account_number,
+              coa_account_number:
+                req.body.expense_detail[item].coa_account_number,
+            });
 
-          const savedPost = await post.save();
-          // res.json(savedPost);
+            let debit = specific_main_account.total_debit;
+            let kredit = specific_main_account.total_kredit;
+            const updatedpost = await Main.updateOne(
+              {
+                main_account_number:
+                  req.body.expense_detail[item].main_account_number,
+                coa_account_number:
+                  req.body.expense_detail[item].coa_account_number,
+              },
+              {
+                $set: {
+                  total_debit:
+                    debit +
+                    req.body.expense_detail[item].expenses_amount +
+                    req.body.expense_detail[item].tax,
+                  total_kredit: kredit + 0,
+                  updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+                },
+              }
+            );
+
+            //UPDATE KAS
+            const post_kas = await Post.findOne({
+              sub_account_number: 1,
+              main_account_number: 1,
+              coa_account_number: 1,
+            });
+
+            const updatedpost_kas = await Post.updateOne(
+              {
+                sub_account_number: 1,
+                main_account_number: 1,
+                coa_account_number: 1,
+              },
+              {
+                $set: {
+                  total_debit:
+                    post_kas.total_debit -
+                    req.body.expense_detail[item].expenses_amount -
+                    req.body.expense_detail[item].tax,
+                  updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+                },
+              }
+            );
+
+            const savedPost = await post.save();
+
+            //POST BUKU BIAYA
+            const postbuku = new DetailBuku({
+              sub_account_number:
+                req.body.expense_detail[item].expenses_account,
+              main_account_number:
+                req.body.expense_detail[item].main_account_number,
+              coa_account_number:
+                req.body.expense_detail[item].coa_account_number,
+              created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+              updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+              description: req.body.expense_detail[item].description,
+              total_debit: req.body.expense_detail[item].expenses_amount,
+              total_kredit: 0,
+              saldo: req.body.expense_detail[item].expenses_amount,
+              tgl_transaksi: moment().format("YYYY-MM-DD HH:mm:ss"),
+              nomor_bukti: "Bukti",
+              link_id: 3,
+            });
+
+            const postbukusaved = await postbuku.save();
+            if (postbukusaved != null) {
+              const buku = await Buku.findOne({buku_id: 3});
+              let saldo = buku.total_saldo;
+              let debit = buku.total_debit;
+              let kredit = buku.total_kredit;
+              const updatedpost = await Buku.updateOne(
+                {buku_id: 3},
+                {
+                  $set: {
+                    total_saldo:
+                      saldo + req.body.expense_detail[item].expenses_amount,
+                    total_debit:
+                      debit + req.body.expense_detail[item].expenses_amount,
+                    total_kredit: kredit + 0,
+                    updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+                  },
+                }
+              );
+            }
+            // res.json(savedPost);
+          } catch (err) {
+            res.json({message: err});
+          }
         } catch (err) {
           res.json({message: err});
         }
