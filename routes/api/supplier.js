@@ -3,7 +3,7 @@ const router = express.Router();
 const Post = require("../../models/supplier");
 
 //GET ALL THE POST
-router.get("/", async (req, res) => {
+router.get("/Sup-data", async (req, res) => {
   try {
     const posts = await Post.find();
     res.json(posts);
@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
 });
 
 //SUBMIT A POST
-router.post("/", async (req, res) => {
+router.post("/Sup-add", async (req, res) => {
   const post = new Post({
     SupplierID: req.body.SupplierID,
     CompanyName: req.body.CompanyName,
@@ -74,7 +74,7 @@ router.patch("/:postId", async (req, res) => {
 });
 
 //DELETE POST
-router.delete("/:postId", async (req, res) => {
+router.delete("/delete/:postId", async (req, res) => {
   try {
     const removedpost = await Post.remove({
       SupplierID: req.params.postId,

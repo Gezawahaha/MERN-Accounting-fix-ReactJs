@@ -67,6 +67,20 @@ export const addEmployee = (userData, history) => dispatch => {
         );
 };
 
+export const addSupplier = (userData, history) => dispatch => {
+    axios
+        .post("/supplier/Sup-add", userData)
+        .then(res =>
+            dispatch({
+                type: USER_LOADING,
+                payload: res,
+            })
+        ).catch(err =>
+        dispatch({
+        })
+        );
+};
+
 
 export const addAkun = (userData, history) => dispatch => {
     axios

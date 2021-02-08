@@ -13,6 +13,7 @@ import { toast, ToastContainer} from "react-toastify";
 
 import UserAddModal from "../partials/UserAddModal";
 import EmployeAddModal from "../partials/EmployeAddModal";
+import SupplierAddModal from "../partials/SupplierAddModal";
 
 import {Link} from "react-router-dom";
 
@@ -33,31 +34,31 @@ class supplier extends Component {
             //     sortable: true,
             // },
             {
-                key: "EmployeeID",
-                text: "ID Karyawan",
+                key: "SupplierID",
+                text: "ID Supplier",
                 className: "id",
                 align: "left",
+                width: 150,
                 sortable: true,
             },
             {
-                key: "name",
-                text: "Name",
+                key: "CompanyName",
+                text: "Company Name",
                 className: "name",
                 align: "left",
-                sortable: true,
-                cell: record => <Fragment>{`${record.FirstName} ${record.LastName}`}</Fragment>
+                sortable: true
             },
             {
-                key: "JobTitle",
-                text: "Jabatan",
+                key: "Email",
+                text: "E-mail",
                 className: "text",
                 align: "left",
                 sortable: true
             },
             {
-                key: "date",
-                text: "Date",
-                className: "date",
+                key: "Phone",
+                text: "Phone",
+                className: "text",
                 align: "left",
                 sortable: true
             },
@@ -93,8 +94,8 @@ class supplier extends Component {
         this.config = {
             page_size: 10,
             length_menu: [ 10, 20, 50 ],
-            filename: "employee",
-            no_data_text: 'No Employee found!',
+            filename: "supplier",
+            no_data_text: 'No Supplier found!',
             button: {
                 excel: true,
                 print: true,
@@ -123,15 +124,17 @@ class supplier extends Component {
 
         this.state = {
             currentRecord: {
-                    FirstName: "",
-                    LastName: "",
-                    JobTitle: "",
-                    Gender: "",
-                    BirthDate: "",
-                    Salary: "",
-                    Phone: "",
-                    Address: "",
-                    Field: "",
+                SupplierID: "",
+                CompanyName: "",
+                Address1: "",
+                Address2: "",
+                Country: "",
+                City: "",
+                StateProvince: "",
+                ZipPostalCode: "",
+                Email: "",
+                Phone: "",
+                Fax: ""
                   
             }
         };
@@ -149,7 +152,7 @@ class supplier extends Component {
 
     getData() {
         axios
-            .get("/employee/Emp-data")
+            .get("/supplier/Sup-data")
             .then(res => {
                 this.setState({ records: res.data})
             })
@@ -162,7 +165,7 @@ class supplier extends Component {
 
     deleteRecord(record) {
         axios
-            .delete(`/employee/delete/${record.EmployeeID}`, {id: record.EmployeeID})
+            .delete(`/supplier/delete/${record.SupplierID}`, {id: record.SupplierID})
             .then(res => {
                 if (res.status === 200) {
                    toast("employee deleted!", {
@@ -188,6 +191,8 @@ class supplier extends Component {
                     <UserUpdateModal record={this.state.currentRecord}/>
 
                     <EmployeAddModal />
+
+                    <SupplierAddModal />
 
                     
                     <div id="page-content-wrapper">

@@ -15,6 +15,7 @@ import {Link} from "react-router-dom";
 
 import UserAddModal from "../partials/UserAddModal";
 import EmployeAddModal from "../partials/EmployeAddModal";
+import SupplierAddModal from "../partials/SupplierAddModal";
 
 //botstrap
 import Nav from 'react-bootstrap/Nav';
@@ -175,12 +176,14 @@ class Users extends Component {
                     <UserUpdateModal record={this.state.currentRecord}/>
                     
                     <EmployeAddModal />
+
+                    <SupplierAddModal />
                     
                     <div id="page-content-wrapper">
                         <div className="container-fluid">
                             <button className="btn btn-link mt-3" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
                             <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-user-modal"><FontAwesomeIcon icon={faPlus}/> Add Customer</button>
-                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-user-modal"><FontAwesomeIcon icon={faPlus}/> Add Supplier</button>
+                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-supplier-modal"><FontAwesomeIcon icon={faPlus}/> Add Supplier</button>
                             <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-employee-modal"><FontAwesomeIcon icon={faPlus}/> Add karyawan</button>
                             <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-user-modal"><FontAwesomeIcon icon={faPlus}/> Add User Account</button>
                             <h1 className="mt-2 text-primary">Kontak</h1>
