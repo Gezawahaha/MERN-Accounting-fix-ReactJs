@@ -27,7 +27,7 @@ class Dashboard extends Component {
                     <div id="page-content-wrapper">
                         <div className="container-fluid">
                             <button className="btn btn-link mt-2" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
-                            <h1 className="mt-2 text-primary">Dashboard</h1>
+                            <h1 className="mt-2 text-primary">Dashboard </h1>
                             <div className="row px-2">
                                 <div className="col-sm-3 p-sm-2">
                                     <div className="card bg-primary text-white shadow-lg">

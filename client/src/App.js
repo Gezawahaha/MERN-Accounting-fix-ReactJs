@@ -27,6 +27,12 @@ import DaftarAkun from "./components/pages/DaftarAkun";
 import DaftarMainAkun from "./components/pages/DaftarMainAkun";
 import DaftarSubAkun from "./components/pages/DaftarSubAkun";
 import Biaya from './components/pages/Biaya';
+import Customer from './components/pages/costumer';
+import costumer from "./components/pages/costumer";
+
+import Buku from './components/pages/configure/buku';
+import BukuDetails from './components/pages/configure/bukudetails'
+
 //import BiayaForm from './components/pages/BiayaForm';
 
 if (localStorage.jwtToken) {
@@ -57,12 +63,16 @@ class App extends Component {
                                 <PrivateRoute exact path="/users" component={User} />
                                 <PrivateRoute exact path="/karyawan" component={Employee} />
                                 <PrivateRoute exact path="/supplier" component={Supplier} />
+                                <PrivateRoute exact path="/customer" component={costumer} />
 
                                 <PrivateRoute exact path="/biaya" component={Biaya} />
                                 {/* <PrivateRoute exact path="/biayaForm" component={BiayaForm} /> */}
                                 <PrivateRoute exact path="/daftarakun" component={DaftarAkun} />
                                 <PrivateRoute exact path="/daftarakun/daftarmainakun" component={DaftarMainAkun} />
                                 <PrivateRoute exact path="/daftarakun/daftarsubakun" component={DaftarSubAkun} />
+
+                                <PrivateRoute exact path="/buku" component={Buku} />
+                                <PrivateRoute exact path="/buku/bukudetails" component={BukuDetails} />
                             </Switch>
                             <Route exact path="*" component={NotFound} />
                         </Switch>

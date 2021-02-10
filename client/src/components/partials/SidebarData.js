@@ -54,26 +54,6 @@ export const SidebarData = [
 
     },
     {
-        title: 'Overview',
-        path: '/dashboard',
-        icon: <AiIcons.AiFillHome />,
-        iconClosed: <RiIcons.RiArrowDownSFill />,
-        iconOpened: <RiIcons.RiArrowUpSFill />,
-
-        subNav: [
-            {
-              title: 'Users',
-              path: '/daftarakun',
-              icon: <IoIcons.IoIosPaper />
-            },
-            {
-              title: 'Revenue',
-              path: '/overview/revenue',
-              icon: <IoIcons.IoIosPaper />
-            }
-        ]
-    },
-    {
         title: 'Daftar Akun',
         //path: '/daftarakun',
         icon: <IoIcons.IoIosPaper />,
@@ -84,6 +64,32 @@ export const SidebarData = [
           {
             title: 'Account',
             path: '/daftarakun',
+            icon: <IoIcons.IoIosPaper />,
+            cName: 'sub-nav'
+          },
+          {
+            title: 'Main Account',
+            path: '/daftarakun/daftarmainakun',
+            icon: <IoIcons.IoIosPaper />,
+            cName: 'sub-nav'
+          },
+          {
+            title: 'Sub Account',
+            path: '/daftarakun/daftarsubakun',
+            icon: <IoIcons.IoIosPaper />
+          }
+        ]
+      },
+      {
+        title: 'Configure',
+        icon: <SettingsIcon />,
+        iconClosed: <RiIcons.RiArrowDownSFill />,
+        iconOpened: <RiIcons.RiArrowUpSFill />,
+    
+        subNav: [
+          {
+            title: 'Daftar Buku',
+            path: '/buku',
             icon: <IoIcons.IoIosPaper />,
             cName: 'sub-nav'
           },
@@ -131,39 +137,7 @@ export const SidebarData = [
       //     }
       //   ]
       // },
-      {
-        title: 'Configure',
-        path: '/configure',
-        icon: <SettingsIcon />
-
-        
-      },
-      {
-        title: 'Configure',
-        icon: <SettingsIcon />,
-        iconClosed: <RiIcons.RiArrowDownSFill />,
-        iconOpened: <RiIcons.RiArrowUpSFill />,
-    
-        subNav: [
-          {
-            title: 'Daftar Buku',
-            path: '/buku',
-            icon: <IoIcons.IoIosPaper />,
-            cName: 'sub-nav'
-          },
-          {
-            title: 'Main Account',
-            path: '/daftarakun/daftarmainakun',
-            icon: <IoIcons.IoIosPaper />,
-            cName: 'sub-nav'
-          },
-          {
-            title: 'Sub Account',
-            path: '/daftarakun/daftarsubakun',
-            icon: <IoIcons.IoIosPaper />
-          }
-        ]
-      },
+      
       {
         title: 'Support',
         path: '/support',

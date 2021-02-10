@@ -8,7 +8,7 @@ const Sub = require("../../models/sub_account");
 const moment = require("moment");
 
 //GET ALL THE POST
-router.get("/", async (req, res) => {
+router.get("/Buku-data", async (req, res) => {
   try {
     const posts = await Buku.find();
     res.json(posts);

@@ -81,6 +81,20 @@ export const addSupplier = (userData, history) => dispatch => {
         );
 };
 
+export const addCustomer = (userData, history) => dispatch => {
+    axios
+        .post("/customer/Cust-add", userData)
+        .then(res =>
+            dispatch({
+                type: USER_LOADING,
+                payload: res,
+            })
+        ).catch(err =>
+        dispatch({
+        })
+        );
+};
+
 
 export const addAkun = (userData, history) => dispatch => {
     axios
@@ -123,4 +137,6 @@ export const addSubAkun = (userData, history) => dispatch => {
         })
         );
 };
+
+
 
