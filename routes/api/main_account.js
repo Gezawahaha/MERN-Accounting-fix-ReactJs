@@ -31,63 +31,64 @@ router.get("/:postId", async (req, res) => {
     // const post = await Post.findById({account_number: req.params.postId});
     const posts = await Post.find({coa_account_number: req.params.postId});
     const datacount = posts.length;
-    if (datacount === 0) {
-      res.json(posts);
-    } else {
-      let count = 0;
-      Object.keys(posts).map(async (item) => {
-        let temporary = await Sub.find({
-          main_account_number: posts[item].main_account_number,
-        });
-        const temporarydatacount = posts.length;
-        let temporary_totaldebit = posts[item].total_debit;
-        let temporary_totalkredit = posts[item].total_kredit;
-        let total_debit = 0;
-        let total_kredit = 0;
-        if (temporarydatacount === 0) {
-        } else {
-          Object.keys(temporary).map((temporaryitem) => {
-            // Create a new array based on current state:
-            total_debit = total_debit + temporary[temporaryitem].total_debit;
-            total_kredit = total_kredit + temporary[temporaryitem].total_kredit;
-          });
-          if (
-            temporary_totaldebit == total_debit &&
-            temporary_totalkredit == total_kredit
-          ) {
-            const updatedpost = await Post.updateOne(
-              {main_account_number: posts[item].main_account_number},
-              {
-                $set: {
-                  total_debit: total_debit,
-                  total_kredit: total_kredit,
-                },
-              }
-            );
-          } else {
-            const updatedpost = await Post.updateOne(
-              {main_account_number: posts[item].main_account_number},
-              {
-                $set: {
-                  total_debit: total_debit,
-                  total_kredit: total_kredit,
-                  updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-                },
-              }
-            );
-          }
-        }
+    res.json(posts);
+    // if (datacount === 0) {
+    //   res.json(posts);
+    // } else {
+    //   let count = 0;
+    //   Object.keys(posts).map(async (item) => {
+    //     let temporary = await Sub.find({
+    //       main_account_number: posts[item].main_account_number,
+    //     });
+    //     const temporarydatacount = posts.length;
+    //     let temporary_totaldebit = posts[item].total_debit;
+    //     let temporary_totalkredit = posts[item].total_kredit;
+    //     let total_debit = 0;
+    //     let total_kredit = 0;
+    //     if (temporarydatacount === 0) {
+    //     } else {
+    //       Object.keys(temporary).map((temporaryitem) => {
+    //         // Create a new array based on current state:
+    //         total_debit = total_debit + temporary[temporaryitem].total_debit;
+    //         total_kredit = total_kredit + temporary[temporaryitem].total_kredit;
+    //       });
+    //       if (
+    //         temporary_totaldebit == total_debit &&
+    //         temporary_totalkredit == total_kredit
+    //       ) {
+    //         const updatedpost = await Post.updateOne(
+    //           {main_account_number: posts[item].main_account_number},
+    //           {
+    //             $set: {
+    //               total_debit: total_debit,
+    //               total_kredit: total_kredit,
+    //             },
+    //           }
+    //         );
+    //       } else {
+    //         const updatedpost = await Post.updateOne(
+    //           {main_account_number: posts[item].main_account_number},
+    //           {
+    //             $set: {
+    //               total_debit: total_debit,
+    //               total_kredit: total_kredit,
+    //               updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+    //             },
+    //           }
+    //         );
+    //       }
+    //     }
 
-        count = count + 1;
+    //     count = count + 1;
 
-        if (datacount == count) {
-          const anotherone = await Post.find({
-            coa_account_number: req.params.postId,
-          });
-          res.json(anotherone);
-        }
-      });
-    }
+    //     if (datacount == count) {
+    //       const anotherone = await Post.find({
+    //         coa_account_number: req.params.postId,
+    //       });
+    //       res.json(anotherone);
+    //     }
+    //   });
+    // }
   } catch (err) {
     res.json({message: err});
   }
@@ -130,66 +131,67 @@ router.get("/test/MoA-data", async (req, res) => {
     const posts = await Post.find();
     const datacount = posts.length;
     let count = 0;
-    if (datacount === 0) {
-      res.json(posts);
-    } else {
-      Object.keys(posts).map(async (item) => {
-        let temporary = await Sub.find({
-          main_account_number: posts[item].main_account_number,
-          coa_account_number: posts[item].coa_account_number,
-        });
+    res.json(posts);
+    // if (datacount === 0) {
+    //   res.json(posts);
+    // } else {
+    //   Object.keys(posts).map(async (item) => {
+    //     let temporary = await Sub.find({
+    //       main_account_number: posts[item].main_account_number,
+    //       coa_account_number: posts[item].coa_account_number,
+    //     });
 
-        let temporary_totaldebit = posts[item].total_debit;
-        let temporary_totalkredit = posts[item].total_kredit;
-        let total_debit = 0;
-        let total_kredit = 0;
+    //     let temporary_totaldebit = posts[item].total_debit;
+    //     let temporary_totalkredit = posts[item].total_kredit;
+    //     let total_debit = 0;
+    //     let total_kredit = 0;
 
-        Object.keys(temporary).map((temporaryitem) => {
-          // Create a new array based on current state:
-          total_debit = total_debit + temporary[temporaryitem].total_debit;
-          total_kredit = total_kredit + temporary[temporaryitem].total_kredit;
-        });
+    //     Object.keys(temporary).map((temporaryitem) => {
+    //       // Create a new array based on current state:
+    //       total_debit = total_debit + temporary[temporaryitem].total_debit;
+    //       total_kredit = total_kredit + temporary[temporaryitem].total_kredit;
+    //     });
 
-        if (
-          temporary_totaldebit == total_debit &&
-          temporary_totalkredit == total_kredit
-        ) {
-          const updatedpost = await Post.updateOne(
-            {
-              main_account_number: posts[item].main_account_number,
-              coa_account_number: posts[item].coa_account_number,
-            },
-            {
-              $set: {
-                total_debit: total_debit,
-                total_kredit: total_kredit,
-              },
-            }
-          );
-        } else {
-          const updatedpost = await Post.updateOne(
-            {
-              main_account_number: posts[item].main_account_number,
-              coa_account_number: posts[item].coa_account_number,
-            },
-            {
-              $set: {
-                total_debit: total_debit,
-                total_kredit: total_kredit,
-                updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-              },
-            }
-          );
-        }
+    //     if (
+    //       temporary_totaldebit == total_debit &&
+    //       temporary_totalkredit == total_kredit
+    //     ) {
+    //       const updatedpost = await Post.updateOne(
+    //         {
+    //           main_account_number: posts[item].main_account_number,
+    //           coa_account_number: posts[item].coa_account_number,
+    //         },
+    //         {
+    //           $set: {
+    //             total_debit: total_debit,
+    //             total_kredit: total_kredit,
+    //           },
+    //         }
+    //       );
+    //     } else {
+    //       const updatedpost = await Post.updateOne(
+    //         {
+    //           main_account_number: posts[item].main_account_number,
+    //           coa_account_number: posts[item].coa_account_number,
+    //         },
+    //         {
+    //           $set: {
+    //             total_debit: total_debit,
+    //             total_kredit: total_kredit,
+    //             updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+    //           },
+    //         }
+    //       );
+    //     }
 
-        count = count + 1;
+    //     count = count + 1;
 
-        if (datacount == count) {
-          const anotherone = await Post.find();
-          res.json(anotherone);
-        }
-      });
-    }
+    //     if (datacount == count) {
+    //       const anotherone = await Post.find();
+    //       res.json(anotherone);
+    //     }
+    //   });
+    // }
   } catch (err) {
     res.json({message: err});
   }

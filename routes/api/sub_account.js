@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Post = require("../../models/sub_account");
 const Main = require("../../models/main_account");
+const COA = require("../../models/chart_of_account");
 const moment = require("moment");
 
 //GET ALL SUB ACCOUNT
@@ -32,15 +33,37 @@ router.post("/SoA-add", async (req, res) => {
     try {
       const specific_main_account = await Main.findOne({
         main_account_number: req.body.main_account_number,
+        coa_account_number: req.body.coa_account_number,
       });
       let debit = specific_main_account.total_debit;
       let kredit = specific_main_account.total_kredit;
       const updatedpost = await Main.updateOne(
-        {main_account_number: req.body.main_account_number},
+        {
+          main_account_number: req.body.main_account_number,
+          coa_account_number: req.body.coa_account_number,
+        },
         {
           $set: {
             total_debit: debit + req.body.total_debit,
             total_kredit: kredit + req.body.total_kredit,
+            updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+          },
+        }
+      );
+
+      const specific_coa_account = await COA.findOne({
+        coa_account_number: req.body.coa_account_number,
+      });
+      let coa_debit = specific_coa_account.total_debit;
+      let coa_kredit = specific_coa_account.total_kredit;
+      const coa_updatedpost = await COA.updateOne(
+        {
+          coa_account_number: req.body.coa_account_number,
+        },
+        {
+          $set: {
+            total_debit: coa_debit + req.body.total_debit,
+            total_kredit: coa_kredit + req.body.total_kredit,
             updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
           },
         }
@@ -71,6 +94,14 @@ router.get("/:coa/:postId", async (req, res) => {
 //EDIT PENGELUARAN
 router.patch("/:coa/:main/:postId", async (req, res) => {
   try {
+    const post = await Post.findOne({
+      sub_account_number: req.params.postId,
+      main_account_number: req.params.main,
+      coa_account_number: req.params.coa,
+    });
+    const sub_debit = post.total_debit;
+    const sub_kredit = post.total_kredit;
+
     const updatedpost = await Post.updateOne(
       {
         sub_account_number: req.params.postId,
@@ -88,61 +119,46 @@ router.patch("/:coa/:main/:postId", async (req, res) => {
     );
 
     try {
-      const posts = await Main.find();
-      const datacount = posts.length;
-      let count = 0;
-      if (datacount === 0) {
-        res.json(posts);
-      } else {
-        Object.keys(posts).map(async (item) => {
-          let temporary = await Post.find({
-            main_account_number: posts[item].main_account_number,
-          });
+      const specific_main_account = await Main.findOne({
+        main_account_number: req.params.main,
+        coa_account_number: req.params.coa,
+      });
+      let debit = specific_main_account.total_debit;
+      let kredit = specific_main_account.total_kredit;
+      const updatemain = await Main.updateOne(
+        {
+          main_account_number: req.params.main,
+          coa_account_number: req.params.coa,
+        },
+        {
+          $set: {
+            total_debit: debit - sub_debit + req.body.total_debit,
+            total_kredit: kredit - sub_kredit + req.body.total_kredit,
+            updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+          },
+        }
+      );
 
-          let temporary_totaldebit = posts[item].total_debit;
-          let temporary_totalkredit = posts[item].total_kredit;
-          let total_debit = 0;
-          let total_kredit = 0;
-
-          Object.keys(temporary).map((temporaryitem) => {
-            // Create a new array based on current state:
-            total_debit = total_debit + temporary[temporaryitem].total_debit;
-            total_kredit = total_kredit + temporary[temporaryitem].total_kredit;
-          });
-
-          if (
-            temporary_totaldebit == total_debit &&
-            temporary_totalkredit == total_kredit
-          ) {
-            const updatedpost = await Main.updateOne(
-              {main_account_number: posts[item].main_account_number},
-              {
-                $set: {
-                  name: posts[item].name,
-                  total_debit: total_debit,
-                  total_kredit: total_kredit,
-                },
-              }
-            );
-          } else {
-            const updatedpost = await Main.updateOne(
-              {main_account_number: posts[item].main_account_number},
-              {
-                $set: {
-                  name: posts[item].name,
-                  total_debit: total_debit,
-                  total_kredit: total_kredit,
-                  updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-                },
-              }
-            );
-          }
-        });
-      }
+      const specific_coa_account = await COA.findOne({
+        coa_account_number: req.params.coa,
+      });
+      let coa_debit = specific_coa_account.total_debit;
+      let coa_kredit = specific_coa_account.total_kredit;
+      const coa_updatedpost = await COA.updateOne(
+        {
+          coa_account_number: req.body.coa,
+        },
+        {
+          $set: {
+            total_debit: coa_debit - sub_debit + req.body.total_debit,
+            total_kredit: coa_kredit - sub_kredit + req.body.total_kredit,
+            updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+          },
+        }
+      );
     } catch (err) {
       res.json({message: err});
     }
-
     res.json(updatedpost);
   } catch (err) {
     res.json({message: err});
@@ -152,10 +168,64 @@ router.patch("/:coa/:main/:postId", async (req, res) => {
 //DELETE POST
 router.delete("/delete/:postId", async (req, res) => {
   try {
-    const removedpost = await Post.remove({
+    const post = await Post.findOne({
       _id: req.params.postId,
     });
-    res.json(removedpost);
+    const removed_coa = post.coa_account_number;
+    const removed_main = post.main_account_number;
+    const removed_sub = post.sub_account_number;
+    const removed_debit = post.total_debit;
+    const removed_kredit = post.total_kredit;
+
+    try {
+      const specific_main_account = await Main.findOne({
+        main_account_number: removed_main,
+        coa_account_number: removed_coa,
+      });
+      let debit = specific_main_account.total_debit;
+      let kredit = specific_main_account.total_kredit;
+      const updatemain = await Main.updateOne(
+        {
+          main_account_number: removed_main,
+          coa_account_number: removed_coa,
+        },
+        {
+          $set: {
+            total_debit: debit - removed_debit,
+            total_kredit: kredit - removed_kredit,
+            updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+          },
+        }
+      );
+
+      const specific_coa_account = await COA.findOne({
+        coa_account_number: removed_coa,
+      });
+      let coa_debit = specific_coa_account.total_debit;
+      let coa_kredit = specific_coa_account.total_kredit;
+      const coa_updatedpost = await COA.updateOne(
+        {
+          coa_account_number: req.body.coa,
+        },
+        {
+          $set: {
+            total_debit: coa_debit - removed_debit,
+            total_kredit: coa_kredit - removed_kredit,
+            updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+          },
+        }
+      );
+      try {
+        const removedpost = await Post.remove({
+          _id: req.params.postId,
+        });
+        res.json(removedpost);
+      } catch (err) {
+        res.json({message: err});
+      }
+    } catch (err) {
+      res.json({message: err});
+    }
   } catch (err) {
     res.json({message: err});
   }

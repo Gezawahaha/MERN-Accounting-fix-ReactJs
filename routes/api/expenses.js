@@ -65,14 +65,14 @@ router.post("/Biaya-add", async (req, res) => {
 
       try {
         // const SubPost = await sub_post.save();
-        const biaya_sub = await Post.findOne({
+        let biaya_sub = await Post.findOne({
           sub_account_number: req.body.expense_detail[item].expenses_account,
           main_account_number:
             req.body.expense_detail[item].main_account_number,
           coa_account_number: req.body.expense_detail[item].coa_account_number,
         });
         try {
-          const updatedpost = await Post.updateOne(
+          let updatedpost = await Post.updateOne(
             {
               sub_account_number:
                 req.body.expense_detail[item].expenses_account,
@@ -92,7 +92,8 @@ router.post("/Biaya-add", async (req, res) => {
             }
           );
           try {
-            const specific_main_account = await Main.findOne({
+            //UPDATE MAIN ACC
+            let specific_main_account = await Main.findOne({
               main_account_number:
                 req.body.expense_detail[item].main_account_number,
               coa_account_number:
@@ -101,7 +102,7 @@ router.post("/Biaya-add", async (req, res) => {
 
             let debit = specific_main_account.total_debit;
             let kredit = specific_main_account.total_kredit;
-            const updatedpost = await Main.updateOne(
+            let updatedmain = await Main.updateOne(
               {
                 main_account_number:
                   req.body.expense_detail[item].main_account_number,
@@ -120,14 +121,39 @@ router.post("/Biaya-add", async (req, res) => {
               }
             );
 
+            //UPDATE COA
+            let specific_coa_account = await Coa.findOne({
+              coa_account_number:
+                req.body.expense_detail[item].coa_account_number,
+            });
+
+            let coa_debit = specific_coa_account.total_debit;
+            let coa_kredit = specific_coa_account.total_kredit;
+            let updatecoa = await Coa.updateOne(
+              {
+                coa_account_number:
+                  req.body.expense_detail[item].coa_account_number,
+              },
+              {
+                $set: {
+                  total_debit:
+                    coa_debit +
+                    req.body.expense_detail[item].expenses_amount +
+                    req.body.expense_detail[item].tax,
+                  total_kredit: coa_kredit + 0,
+                  updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+                },
+              }
+            );
+
             //UPDATE KAS
-            const post_kas = await Post.findOne({
+            let post_kas = await Post.findOne({
               sub_account_number: 1,
               main_account_number: 1,
               coa_account_number: 1,
             });
 
-            const updatedpost_kas = await Post.updateOne(
+            let updatedpost_kas = await Post.updateOne(
               {
                 sub_account_number: 1,
                 main_account_number: 1,
@@ -144,10 +170,10 @@ router.post("/Biaya-add", async (req, res) => {
               }
             );
 
-            const savedPost = await post.save();
+            let savedPost = await post.save();
 
             //POST BUKU BIAYA
-            const postbuku = new DetailBuku({
+            let postbuku = new DetailBuku({
               sub_account_number:
                 req.body.expense_detail[item].expenses_account,
               main_account_number:
@@ -161,17 +187,17 @@ router.post("/Biaya-add", async (req, res) => {
               total_kredit: 0,
               saldo: req.body.expense_detail[item].expenses_amount,
               tgl_transaksi: moment().format("YYYY-MM-DD HH:mm:ss"),
-              nomor_bukti: "Bukti",
+              nomor_bukti: req.body.expense_detail[item].nomor_bukti,
               link_id: 3,
             });
 
-            const postbukusaved = await postbuku.save();
+            let postbukusaved = await postbuku.save();
             if (postbukusaved != null) {
-              const buku = await Buku.findOne({buku_id: 3});
+              let buku = await Buku.findOne({buku_id: 3});
               let saldo = buku.total_saldo;
               let debit = buku.total_debit;
               let kredit = buku.total_kredit;
-              const updatedpost = await Buku.updateOne(
+              let updatedbuku = await Buku.updateOne(
                 {buku_id: 3},
                 {
                   $set: {
