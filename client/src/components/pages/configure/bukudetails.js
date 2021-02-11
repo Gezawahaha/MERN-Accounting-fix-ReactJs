@@ -39,21 +39,22 @@ class bukudetails extends Component {
             {
                 key: "created_at",
                 text: "Tanggal",
-                align: "left",
+                align: "center",
                 sortable: true,
+                width: 150
             },
             {
                 key: "nomor_bukti",
                 text: "NO Bukti",
-                align: "left",
+                align: "center",
                 sortable: true,
+                width: 200
             },
             {
                 key: "sub_account_number",
                 text: "COA",
-                className: "name",
                 width: 100,
-                align: "left",
+                align: "center",
                 sortable: false,
                 cell: record => <Fragment>{record.coa_account_number}
                 
@@ -81,23 +82,23 @@ class bukudetails extends Component {
                 key: "description",
                 text: "Keterangan",
                 className: "name",
-                align: "left",
+                align: "center",
                 sortable: true,
             },
             {
                 key: "total_debit",
                 text: "Total Debit",
-                className: "currency",
-                align: "left",
+                align: "center",
                 sortable: true,
+                width: 200,
                 cell: record => <Fragment>{this.toCurrency(record.total_debit)}</Fragment>
             },
             {
                 key: "total_kredit",
                 text: "Total Kredit",
-                className: "email",
-                align: "left",
+                align: "center",
                 sortable: true,
+                width: 200,
                 cell: record => <Fragment>{this.toCurrency(record.total_kredit)}</Fragment>
             },
             // {
@@ -110,9 +111,9 @@ class bukudetails extends Component {
             {
                 key: "saldo",
                 text: "Saldo",
-                className: "date",
-                align: "left",
-                sortable: true
+                align: "center",
+                sortable: true,
+                width: 200,
             },
             
             

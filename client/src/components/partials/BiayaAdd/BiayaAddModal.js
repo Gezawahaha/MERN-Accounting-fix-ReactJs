@@ -268,7 +268,7 @@ class BiayaAddModal extends React.Component {
 
     let lineItems = this.state.lineItems.map((item, i) => {
       if (elementIndex !== i) return item
-      return {...item, expenses_account: event.sub_account_number, main_account_number: event.main_account_number, coa_account_number: event.coa_account_number, name: event.name}
+      return {...item, expenses_account: event.sub_account_number, main_account_number: event.main_account_number, coa_account_number: event.coa_account_number, name: event.name, tax: 0}
     })
     this.setState({lineItems})
     console.log(this.state.lineItems);
@@ -285,7 +285,8 @@ class BiayaAddModal extends React.Component {
             expenses_amount: 0.00 ,
             expenses_account: '',
             main_account_number: '', 
-            coa_account_number: ''
+            coa_account_number: '',
+            //tax: 0,
         }]
       )
     })
