@@ -94,15 +94,10 @@ export const SidebarData = [
             cName: 'sub-nav'
           },
           {
-            title: 'Main Account',
-            path: '/daftarakun/daftarmainakun',
+            title: 'Assets',
+            path: '/assets',
             icon: <IoIcons.IoIosPaper />,
             cName: 'sub-nav'
-          },
-          {
-            title: 'Sub Account',
-            path: '/daftarakun/daftarsubakun',
-            icon: <IoIcons.IoIosPaper />
           }
         ]
       },

@@ -9,7 +9,7 @@ const Aset = require("../../models/aset");
 const moment = require("moment");
 
 //GET ALL THE POST
-router.get("/", async (req, res) => {
+router.get("/Aset-Data", async (req, res) => {
   try {
     const posts = await Aset.find();
     res.json(posts);
@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
 });
 
 //SUBMIT A POST
-router.post("/", async (req, res) => {
+router.post("/Aset-add", async (req, res) => {
   const post = new Aset({
     nama_barang: req.body.nama_barang,
     jumlah_barang: req.body.jumlah_barang,

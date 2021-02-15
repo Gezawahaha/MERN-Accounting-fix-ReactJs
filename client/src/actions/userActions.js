@@ -139,4 +139,19 @@ export const addSubAkun = (userData, history) => dispatch => {
 };
 
 
+export const addAsset = (userData, history) => dispatch => {
+    axios
+        .post("/aset/Aset-add", userData)
+        .then(res =>
+            dispatch({
+                type: USER_LOADING,
+                payload: res,
+            })
+        ).catch(err =>
+        dispatch({
+        })
+        );
+};
+
+
 
