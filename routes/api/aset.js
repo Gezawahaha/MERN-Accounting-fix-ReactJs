@@ -27,6 +27,8 @@ router.post("/Aset-add", async (req, res) => {
     total_price: req.body.total_price,
     tanggal_beli: req.body.tanggal_beli,
     coa_account_number: req.body.coa_account_number,
+    main_account_number: req.body.main_account_number,
+    sub_account_number: req.body.sub_account_number,
     created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
     updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
   });
@@ -43,7 +45,49 @@ router.post("/Aset-add", async (req, res) => {
       },
       {
         $set: {
-          total_debit: coa_debit + total_price,
+          total_debit: coa_debit + req.body.total_price,
+          updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+        },
+      }
+    );
+
+    //UPDATE MAIN ACC
+    const specific_main_account = await Main.findOne({
+      main_account_number: req.body.main_account_number,
+      coa_account_number: req.body.coa_account_number,
+    });
+
+    let main_debit = specific_main_account.total_debit;
+    let updatedmain = await Main.updateOne(
+      {
+        main_account_number: req.body.main_account_number,
+        coa_account_number: req.body.coa_account_number,
+      },
+      {
+        $set: {
+          total_debit: main_debit + req.body.total_price,
+          updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+        },
+      }
+    );
+
+    //UPDATE SUB ACC
+    const specific_sub_account = await Sub.findOne({
+      sub_account_number: req.body.sub_account_number,
+      main_account_number: req.body.main_account_number,
+      coa_account_number: req.body.coa_account_number,
+    });
+
+    let sub_debit = specific_sub_account.total_debit;
+    let updatedsub = await Sub.updateOne(
+      {
+        sub_account_number: req.body.sub_account_number,
+        main_account_number: req.body.main_account_number,
+        coa_account_number: req.body.coa_account_number,
+      },
+      {
+        $set: {
+          total_debit: sub_debit + req.body.total_price,
           updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         },
       }
