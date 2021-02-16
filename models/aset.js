@@ -36,6 +36,14 @@ const AsetSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+  main_account_number: {
+    type: Number,
+    required: true,
+  },
+  sub_account_number: {
+    type: Number,
+    required: true,
+  },
 });
 
 AsetSchema.plugin(AutoIncrement, {inc_field: "aset_id"});
