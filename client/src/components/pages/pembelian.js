@@ -4,22 +4,20 @@ import Sidebar from "../partials/Sidebar";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faList} from "@fortawesome/free-solid-svg-icons/faList";
 import ReactDatatable from '@ashvin27/react-datatable';
-//import ReactDatatable from 'react-table';
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import axios from "axios";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
-import BiayaAddModal from "../partials/BiayaAdd/BiayaAddModal";
-import UserUpdateModal from "../partials/UserUpdateModal";
+import SubAkunAddModal from "../partials/SubAkunAddModal";
+import SubAkunUpdateModal from "../partials/SubAkunUpdateModal";
 import { toast, ToastContainer} from "react-toastify";
 import CurrencyFormat from 'react-currency-format';
-import moment from 'moment';
 
 import {Link, NavLink} from "react-router-dom";
 import { Button } from "@material-ui/core";
 import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
 
-class Biaya extends Component {
+class pembelian extends Component {
 
     constructor(props) {
         super(props);
@@ -33,68 +31,56 @@ class Biaya extends Component {
             //     sortable: true,
             // },
             {
-                key: "transaction_date",
-                text: "Tanggal Transaksi",
-                className: "date",
+                key: "sub_account_number",
+                text: "Account Number",
+                className: "name",
                 align: "left",
-                width: 280,
+                sortable: false,
+                cell: record => <Fragment>{record.coa_account_number}
+                
+                    {record.main_account_number < 10 && (
+                        `-0${record.main_account_number}`
+                    )}
+                    
+                    {record.main_account_number >= 10 && (
+                        `-${record.main_account_number}`
+                    )}
+
+                    {record.sub_account_number < 10 && (
+                        `-0${record.sub_account_number}`
+                    )}
+                    
+                    {record.sub_account_number >= 10 && (
+                        `-${record.sub_account_number}`
+                    )}
+                  
+                                        
+                
+                </Fragment>
+            },
+            {
+                key: "name",
+                text: "Name",
+                className: "name",
+                align: "left",
                 sortable: true,
             },
             {
-                key: "expense_no",
-                text: "No Biaya",
-                className: "name",
+                key: "total_debit",
+                text: "Total Debit",
+                className: "currency",
                 align: "left",
-                width: 200,
                 sortable: true,
-                // cell: record => {
-                //     <Fragment>
-                        
-                //     </Fragment>
-                // }
+                cell: record => <Fragment>{this.toCurrency(record.total_debit)}</Fragment>
             },
             {
-                key: "pay_from_account_number",
-                text: "No Akun",
-                className: "name",
-                align: "left",
-                width: 200,
-                sortable: true,
-            },
-            {
-                key: "tags",
-                text: "Keterangan",
-                className: "name",
+                key: "total_kredit",
+                text: "Total Kredit",
+                className: "email",
                 align: "left",
                 sortable: true,
+                cell: record => <Fragment>{this.toCurrency(record.total_kredit)}</Fragment>
             },
-            {
-                key: "total_expense_amount",
-                text: "Total Biaya",
-                className: "name",
-                align: "left",
-                width: 230,
-                sortable: true,
-                cell: record => <Fragment>{this.toCurrency(record.total_expense_amount)}</Fragment>
-            },
-            
-            
-            // {
-            //     key: "total_debit",
-            //     text: "Total Debit",
-            //     className: "currency",
-            //     align: "left",
-            //     sortable: true,
-            //     cell: record => <Fragment>{this.toCurrency(record.total_debit)}</Fragment>
-            // },
-            // {
-            //     key: "total_kredit",
-            //     text: "Total Kredit",
-            //     className: "email",
-            //     align: "left",
-            //     sortable: true,
-            //     cell: record => <Fragment>{this.toCurrency(record.total_kredit)}</Fragment>
-            // },
             // {
             //     key: "created_at",
             //     text: "created Date",
@@ -102,13 +88,13 @@ class Biaya extends Component {
             //     align: "left",
             //     sortable: true
             // },
-            // {
-            //     key: "updated_at",
-            //     text: "Update",
-            //     className: "date",
-            //     align: "left",
-            //     sortable: true
-            // }
+            {
+                key: "updated_at",
+                text: "Update",
+                className: "date",
+                align: "left",
+                sortable: true
+            },
             
             {
                 key: "action",
@@ -122,7 +108,7 @@ class Biaya extends Component {
                         <Fragment>
                             <button
                                 data-toggle="modal"
-                                data-target="#update-user-modal"
+                                data-target="#update-subakun-modal"
                                 className="btn btn-primary btn-sm"
                                 onClick={() => this.editRecord(record)}
                                 style={{marginRight: '5px'}}>
@@ -142,8 +128,9 @@ class Biaya extends Component {
         this.config = {
             page_size: 10,
             length_menu: [ 10, 20, 50 ],
-            filename: "transaction",
-            no_data_text: 'No transaction found!',
+            filename: "sub_account_number",
+            no_data_text: 'No sub akun found!',
+            sort: { column: "coa_account_number", order: "dsc" },
             button: {
                 excel: true,
                 print: true,
@@ -167,17 +154,15 @@ class Biaya extends Component {
         };
 
         this.state = {
-            records: [],
-            kaskecil: '',
-            biayaToday: 0,
-            biayaMonth: 0,
-            biayaYear: 0
+            records: []
         };
 
         this.state = {
             currentRecord: {
                 id: '',
                 coa_account_number: '',
+                main_account_number: '',
+                sub_account_number: '',
                 name: '',
                 total_debit: '',
                 total_kredit: '',
@@ -187,8 +172,8 @@ class Biaya extends Component {
         };
 
         this.getData = this.getData.bind(this);
-    }
 
+    }
     toCurrency(numberString) {
         //console.log("number" ,numberString);
         let number = parseFloat(numberString);
@@ -197,71 +182,38 @@ class Biaya extends Component {
 
     componentDidMount() {
         this.getData();
-        this.getDataBank();
+        //console.log("testad", this.state.records);
+        
         
     };
 
     componentWillReceiveProps(nextProps) {
         this.getData()
+        
     }
 
     getData() {
-        axios.get('/expense/Biaya-data')
+        axios.get('/coa/main/sub/Sub-data')
             .then(res => {
-                var biayaT = 0 ;
-                var biayaM = 0;
-                var biayaY = 0;
-                for (let index = 0; index < res.data.length; index++) {
-                    if ( moment(res.data[index].transaction_date).format("YYYY-MM-DD") == moment().format("YYYY-MM-DD") ){
-                        biayaT = biayaT + (res.data[index].total_expense_amount * 1);
-                       //console.log("Masok" , moment(res.data[index].transaction_date).month());
-                    }
-                    if( moment(res.data[index].transaction_date).month() == (moment().month()) ){
-                        biayaM  = biayaM + (res.data[index].total_expense_amount * 1);
-
-                        //temp = res.data[index].total_expense_amount * 1
-                        //console.log("masuk", biayaM  )
-                    }
-                    if( moment(res.data[index].transaction_date).year() == (moment().year()) ){
-                        biayaY  = biayaY + (res.data[index].total_expense_amount * 1);
-
-                        //temp = res.data[index].total_expense_amount * 1
-                        console.log("biayaT", biayaY  )
-                    }
-                }
-                this.setState({ records: res.data, biayaToday: biayaT, biayaMonth: biayaM, biayaYear: biayaY})
+                this.setState({ records: res.data})
+                console.log("DK", this.state.records);
             })
             .catch()
-            //console.log(this.state.records)
-    }
-
-    getDataBank() {
-        axios.get('/coa/main/sub/1')
-            .then(res => {
-
-                this.setState({ 
-                    //records: res.data,
-                    kaskecil: res.data[0].total_debit,
-                    //kasbesar: res.data[0].total_debit
-                })
-                //console.log("DK",res.data.length);
-            })
-            .catch()      
             
     }
 
-    
-
     editRecord(record) {
         this.setState({ currentRecord: record});
+        //console.log(this.state.currentRecord);
     }
 
     deleteRecord(record) {
+        console.log("Masok Delete");
         axios
-            .delete(`expense/expense-delete/${record._id}`, {_id: record._id})
+            .delete(`/coa/main/sub/delete/${record._id}`, {_id: record._id})
             .then(res => {
                 if (res.status === 200) {
-                   toast("Data Deleted", {
+                   toast("Data Deleted!", {
                        position: toast.POSITION.TOP_CENTER,
                    })
                 }
@@ -271,7 +223,7 @@ class Biaya extends Component {
     }
 
     pageChange(pageData) {
-        //console.log("OnPageChange", pageData);
+        console.log("OnPageChange", pageData);
     }
 
     render() {
@@ -280,58 +232,62 @@ class Biaya extends Component {
                 <Navbar />
                 <div className="d-flex" id="wrapper">
                     <Sidebar/>
-                    <BiayaAddModal />
-
+                    <SubAkunAddModal />
+                    <SubAkunUpdateModal record={this.state.currentRecord}/>
                     <div id="page-content-wrapper">
                         <div className="container-fluid">
                             <button className="btn btn-link mt-3" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
-                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-biaya-modal"><FontAwesomeIcon icon={faPlus}/>   Transaksi</button>
-                            <h1 className="mt-2 text-primary">Biaya</h1>
+                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-pembelian-modal"><FontAwesomeIcon icon={faPlus}/> Transaksi</button>
+                            <h1 className="mt-2 text-primary">Pembelian</h1>
                             <div className="row px-2">
+                                <br/>
                                 <div className="col-sm-3 p-sm-2">
-                                    <div className="card bg-info text-white shadow-lg">
+                                    <div className="card bg-secondary text-white shadow-lg">
+                                        <div className="card-body">
+                                            <h5 className="card-title">Invoice Belum Selesai</h5>
+                                            <small>TAGIHAN</small>
+                                            <h2 className="card-text"><CurrencyFormat value={ 0 } displayType={'text'} thousandSeparator={true} suffix={''} /></h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div className="col-sm-3 p-sm-2">
+                                    <div className="card bg-secondary text-white shadow-lg">
+                                        <div className="card-body">
+                                            <h5 className="card-title">Jumlah Hutang</h5>
+                                            <small>TOTAL</small>
+                                            <h2 className="card-text"><CurrencyFormat value={ 0 } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div className="col-sm-3 p-sm-2">
+                                    <div className="card bg-secondary text-white shadow-lg">
+                                        <div className="card-body">
+                                            <h5 className="card-title">Pembelian Bulan Ini</h5>
+                                            <small>TOTAL</small>
+                                            <h2 className="card-text"><CurrencyFormat value={ 0 } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div className="col-sm-3 p-sm-2">
+                                    <div className="card bg-secondary text-white shadow-lg">
                                         <div className="card-body">
                                             <h5 className="card-title">Saldo Kas Kecil</h5>
                                             <small>TOTAL</small>
-                                            <h2 className="card-text"><CurrencyFormat value={ this.state.kaskecil } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-sm-3 p-sm-2">
-                                    <div className="card bg-info text-white shadow-lg">
-                                        <div className="card-body">
-                                        <h5 className="card-title">Biaya Hari Ini</h5>
-                                            <small>TOTAL</small>
-                                            <h2 className="card-text"><CurrencyFormat value={ this.state.biayaToday } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-sm-3 p-sm-2">
-                                    <div className="card bg-info text-white shadow-lg">
-                                        <div className="card-body">
-                                        <h5 className="card-title">Biaya Dalam Bulan Ini</h5>
-                                            <small>TOTAL</small>
-                                            <h2 className="card-text"><CurrencyFormat value={ this.state.biayaMonth } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-sm-3 p-sm-2">
-                                    <div className="card bg-info text-white shadow-lg">
-                                        <div className="card-body">
-                                        <h5 className="card-title">Biaya Dalam Tahun Ini</h5>
-                                            <small>TOTAL</small>
-                                            <h2 className="card-text"><CurrencyFormat value={ this.state.biayaYear } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
+                                            <h2 className="card-text"><CurrencyFormat value={ 0 } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <br/>
                             <br/>
 
 
                             
                             
                             <ReactDatatable
+                                
                                 config={this.config}
                                 records={this.state.records}
                                 columns={this.columns}
@@ -347,7 +303,7 @@ class Biaya extends Component {
 
 }
 
-Biaya.propTypes = {
+pembelian.propTypes = {
     auth: PropTypes.object.isRequired,
 };
 
@@ -358,4 +314,4 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps
-)(Biaya);
+)(pembelian);   

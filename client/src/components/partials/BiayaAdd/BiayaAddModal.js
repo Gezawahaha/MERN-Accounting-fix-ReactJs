@@ -118,7 +118,7 @@ class BiayaAddModal extends React.Component {
 
     //SUBMITPOSTT HERE
     onBiayaAdd = e => {
-        console.log(this.state.lineItems);
+        //console.log(this.state.lineItems);
         e.preventDefault();
         const newBiaya = {
             total_expense_amount: this.calcGrandTotal(),
@@ -177,7 +177,7 @@ class BiayaAddModal extends React.Component {
         this.setState({
             transaction_date: moment( e.target.value ).format("YYYY-MM-DD HH:mm:ss"),
         })
-        console.log("Date",this.state.transaction_date);
+        //console.log("Date",this.state.transaction_date);
     };
 
     onChangePenerima= e => {  
@@ -187,7 +187,7 @@ class BiayaAddModal extends React.Component {
         })
         //console.log("Penerima",this.state.beneficiary);
         //console.log("Isi dari tax",this.state.expenses_amount);
-        console.log("Masok",this.state.expenses_amount);
+        //console.log("Masok",this.state.expenses_amount);
     };
 
     onChangePayMethod= e => {
@@ -196,11 +196,7 @@ class BiayaAddModal extends React.Component {
         })
     };
 
-    onChangeExpenseNO= e => {
-        this.setState({
-            expense_no: 1
-        })
-    };
+    
 
     onChangeDeskripsi = e => {  
         this.setState({
@@ -271,7 +267,7 @@ class BiayaAddModal extends React.Component {
       return {...item, expenses_account: event.sub_account_number, main_account_number: event.main_account_number, coa_account_number: event.coa_account_number, name: event.name, tax: 0}
     })
     this.setState({lineItems})
-    console.log(this.state.lineItems);
+    //console.log(this.state.lineItems);
   }
 
   handleAddLineItem = (event) => {
@@ -355,16 +351,16 @@ class BiayaAddModal extends React.Component {
                     expense_no: `BKK/00${response.data.length + 1}/KAS/${moment().year()}`
             
                 })
-                console.log("1");
+                //console.log("1");
               }
               else if(response.data.length < 100){
                 this.setState({
                     expense_no: `BKK/0${response.data.length + 1}/KAS/${moment().year()}`
             
                 })
-                  console.log("2");
+                  //console.log("2");
               }
-            console.log("length",this.state.expense_no);
+            //console.log("length",this.state.expense_no);
         })
     }
 
@@ -401,7 +397,7 @@ class BiayaAddModal extends React.Component {
                     Penerima: res.data,
                     
                 })
-                console.log("Penerima", this.state.Penerima);
+                //console.log("Penerima", this.state.Penerima);
             })
             .catch()
             this.getDataPenerima = this.getDataPenerima.bind(this);

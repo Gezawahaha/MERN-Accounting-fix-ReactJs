@@ -33,6 +33,7 @@ import costumer from "./components/pages/costumer";
 import Buku from './components/pages/configure/buku';
 import BukuDetails from './components/pages/configure/bukudetails';
 import Assets from './components/pages/configure/assets'
+import pembelian from "./components/pages/pembelian";
 
 //import BiayaForm from './components/pages/BiayaForm';
 
@@ -61,6 +62,8 @@ class App extends Component {
                             <Switch>
                                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
                                 <PrivateRoute exact path="/kasdanbank" component={KasdanBank}/>
+
+                                <PrivateRoute exact path="/pembelian" component={pembelian}/>
                                 <PrivateRoute exact path="/users" component={User} />
                                 <PrivateRoute exact path="/karyawan" component={Employee} />
                                 <PrivateRoute exact path="/supplier" component={Supplier} />

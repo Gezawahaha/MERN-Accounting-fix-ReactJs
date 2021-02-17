@@ -28,7 +28,7 @@ class LineItem extends Component {
                 AkunBiaya: res.data,
                 
             })
-            console.log("Akun Biaya", this.state.AkunBiaya);
+            //console.log("Akun Biaya", this.state.AkunBiaya);
         })
         .catch()
         this.getDataAkunBiaya = this.getDataAkunBiaya.bind(this);
