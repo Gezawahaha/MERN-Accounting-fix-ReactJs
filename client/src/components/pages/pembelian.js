@@ -7,7 +7,7 @@ import ReactDatatable from '@ashvin27/react-datatable';
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import axios from "axios";
-import {faPlus} from "@fortawesome/free-solid-svg-icons";
+import {faMoneyBill, faPlus} from "@fortawesome/free-solid-svg-icons";
 import SubAkunAddModal from "../partials/SubAkunAddModal";
 import SubAkunUpdateModal from "../partials/SubAkunUpdateModal";
 import { toast, ToastContainer} from "react-toastify";
@@ -16,6 +16,9 @@ import CurrencyFormat from 'react-currency-format';
 import {Link, NavLink} from "react-router-dom";
 import { Button } from "@material-ui/core";
 import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
+
+import moment from 'moment';
+import ReactMomentCountDown from "react-moment-countdown";
 
 class pembelian extends Component {
 
@@ -32,9 +35,10 @@ class pembelian extends Component {
             // },
             {
                 key: "sub_account_number",
-                text: "Account Number",
+                text: "NO Invoice",
                 className: "name",
-                align: "left",
+                align: "center",
+                width: 150,
                 sortable: false,
                 cell: record => <Fragment>{record.coa_account_number}
                 
@@ -66,16 +70,42 @@ class pembelian extends Component {
                 sortable: true,
             },
             {
-                key: "total_debit",
-                text: "Total Debit",
+                key: "updated_at",
+                text: "Due Date",
+                width: 100,
+                className: "date",
+                align: "center",
+                sortable: true,
+                cell: record => <Fragment>  
+                    {record.updated_at <= moment().format("YYYY-MM-DD HH:mm:ss") && (`Due`) }
+                    {record.updated_at >= moment().format("YYYY-MM-DD HH:mm:ss") && (<ReactMomentCountDown toDate={record.updated_at} targetFormatMask='DD:HH:mm:ss'/>)}
+                
+                </Fragment>
+            },
+            {
+                key: "status",
+                text: "Status",
+                width: 50,
+                className: "name",
+                align: "center",
+                sortable: true,
+                cell: record => <Fragment>
+                    {record == 1 && (<span class="badge badge-success">Lunas</span>)}
+                    <span class="badge badge-warning">On-going</span>
+                
+                </Fragment>
+            },
+            {
+                key: "total_amount_purchase",
+                text: "Total Invoice",
                 className: "currency",
                 align: "left",
                 sortable: true,
                 cell: record => <Fragment>{this.toCurrency(record.total_debit)}</Fragment>
             },
             {
-                key: "total_kredit",
-                text: "Total Kredit",
+                key: "amount_dibayar",
+                text: "Sudah di Bayar",
                 className: "email",
                 align: "left",
                 sortable: true,
@@ -88,13 +118,6 @@ class pembelian extends Component {
             //     align: "left",
             //     sortable: true
             // },
-            {
-                key: "updated_at",
-                text: "Update",
-                className: "date",
-                align: "left",
-                sortable: true
-            },
             
             {
                 key: "action",
@@ -159,15 +182,14 @@ class pembelian extends Component {
 
         this.state = {
             currentRecord: {
-                id: '',
-                coa_account_number: '',
-                main_account_number: '',
-                sub_account_number: '',
-                name: '',
-                total_debit: '',
-                total_kredit: '',
-                created_at: '',
-                updated_at: ''
+                SupplierID: '',
+                No_purchase: '',
+                purchaseDate: '',
+                dueDate: '',
+                Purchase_detail: [],
+                total_amount_purchase: '',
+                amount_dibayar: '',
+                status: 0, 
             }
         };
 
@@ -196,7 +218,7 @@ class pembelian extends Component {
         axios.get('/coa/main/sub/Sub-data')
             .then(res => {
                 this.setState({ records: res.data})
-                console.log("DK", this.state.records);
+                //console.log("DK", this.state.records);
             })
             .catch()
             
@@ -237,7 +259,8 @@ class pembelian extends Component {
                     <div id="page-content-wrapper">
                         <div className="container-fluid">
                             <button className="btn btn-link mt-3" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
-                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-pembelian-modal"><FontAwesomeIcon icon={faPlus}/> Transaksi</button>
+                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-pembayaran-modal"><FontAwesomeIcon icon={faMoneyBill}/> Bayar Invoice</button>
+                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-pembelian-modal"><FontAwesomeIcon icon={faPlus}/> Invoice</button>
                             <h1 className="mt-2 text-primary">Pembelian</h1>
                             <div className="row px-2">
                                 <br/>
@@ -274,7 +297,7 @@ class pembelian extends Component {
                                 <div className="col-sm-3 p-sm-2">
                                     <div className="card bg-secondary text-white shadow-lg">
                                         <div className="card-body">
-                                            <h5 className="card-title">Saldo Kas Kecil</h5>
+                                            <h5 className="card-title">Saldo Bank</h5>
                                             <small>TOTAL</small>
                                             <h2 className="card-text"><CurrencyFormat value={ 0 } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
                                         </div>

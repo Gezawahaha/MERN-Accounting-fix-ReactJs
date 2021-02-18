@@ -59,7 +59,7 @@ class assets extends Component {
                 width: 200,
                 align: "center",
                 sortable: true,
-                cell: record => <Fragment>{this.toCurrency(record.total_debit)}</Fragment>
+                cell: record => <Fragment>{this.toCurrency(record.price)}</Fragment>
             },
             {
                 key: "total_price",
@@ -67,7 +67,7 @@ class assets extends Component {
                 width: 200,
                 align: "center",
                 sortable: true,
-                cell: record => <Fragment>{this.toCurrency(record.total_kredit)}</Fragment>
+                cell: record => <Fragment>{this.toCurrency(record.total_price)}</Fragment>
             },
             {
                 key: "action",

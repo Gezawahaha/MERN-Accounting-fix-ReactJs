@@ -15,6 +15,7 @@ import NumberFormat from 'react-number-format';
 
 import InputGroup from 'react-bootstrap/InputGroup'
 import 'react-toastify/dist/ReactToastify.css';
+import moment from 'moment';
 
 class AssetsAddModal extends React.Component {
 
@@ -27,7 +28,11 @@ class AssetsAddModal extends React.Component {
             price: '',
             total_price: '',
             tanggal_beli: '',
-            coa_account_number:''
+            coa_account_number: '',
+            main_account_number: '',
+            sub_account_number: '',
+
+            jenisAset: []
 
             
         };
@@ -59,12 +64,37 @@ class AssetsAddModal extends React.Component {
         //console.log(this.state.price);
     };
 
+    onChangeAset = e => {
+        this.setState({
+            coa_account_number: e.coa_account_number,
+            main_account_number: e.main_account_number,
+            sub_account_number: e.sub_account_number
+        });
+        console.log(e);
+
+    }
+
+    onChangeDate = e => {  
+        this.setState({
+            tanggal_beli: moment( e.target.value ).format("YYYY-MM-DD HH:mm:ss"),
+        })
+        //console.log("Date",this.state.transaction_date);
+    };
+
 
 
     onAsetAdd = e => {
         e.preventDefault();
         const newAset = {
-            
+            aset_id: this.state.aset_id,
+            coa_account_number: this.state.coa_account_number,
+            main_account_number: this.state.main_account_number,
+            sub_account_number: this.state.sub_account_number,
+            nama_barang: this.state.nama_barang,
+            jumlah_barang: this.state.jumlah_barang,
+            price: this.state.price,
+            total_price: this.state.total_price,
+            tanggal_beli: this.state.tanggal_beli,
         };
         console.log(newAset) ;
         this.props.addAsset (newAset , this.props.history);
@@ -73,6 +103,18 @@ class AssetsAddModal extends React.Component {
                 position: toast.POSITION.TOP_CENTER
             });
     };
+    
+    getDataJenisAset(){
+        axios.get('/coa/main/sub/1/12')
+            .then(res => {
+                this.setState({ 
+                    jenisAset: res.data,
+                    
+                })
+                console.log("jenisAset", res.data);
+            })
+            .catch()
+    }
 
     getDataIDaset() {
         axios.get('/aset/Aset-Data')
@@ -94,6 +136,7 @@ class AssetsAddModal extends React.Component {
 
     componentDidMount() {
         this.getDataIDaset();
+        this.getDataJenisAset();
     }
 
     render() {
@@ -120,12 +163,39 @@ class AssetsAddModal extends React.Component {
 
                                     <div className="row mt-2">
                                         <div className="col-md-3">
+                                            <label htmlFor="name">Jenis Asset</label>
+                                        </div>
+                                        <div className="col-md-9">
+                                            <ReactSelect
+                                                onChange={this.onChangeAset}
+                                                getOptionValue={option => option}
+                                                getOptionLabel={option => option.name}
+                                                options={this.state.jenisAset}
+                                            />
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="row mt-2">
+                                        <div className="col-md-3">
+                                            <label htmlFor="name">Tgl Pembelian</label>
+                                        </div>
+                                        <div className="col-md-9">
+                                            <input
+                                                type="date" 
+                                                onChange={this.onChangeDate} 
+                                                className="form-control"
+                                                />
+                                        </div>
+                                    </div>                        
+
+                                    <div className="row mt-2">
+                                        <div className="col-md-3">
                                             <label htmlFor="name">Nama Barang</label>
                                         </div>
                                         <div className="col-md-9">
                                             <input
                                                 onChange={this.onChange}
-                                                id="nama_barange"
+                                                id="nama_barang"
                                                 type="text"
                                                 className="form-control"
                                                 />
