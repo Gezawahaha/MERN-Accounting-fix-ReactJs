@@ -97,7 +97,6 @@ router.delete("/:postId", async (req, res) => {
       {main_account_number: sub_post.main_account_number},
       {
         $set: {
-          name: sub_post.name,
           total_debit: debit - sub_post.total_debit,
           total_kredit: kredit - sub_post.total_kredit,
           updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),

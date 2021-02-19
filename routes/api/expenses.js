@@ -205,7 +205,6 @@ router.post("/Biaya-add", async (req, res) => {
                       saldo + req.body.expense_detail[item].expenses_amount,
                     total_debit:
                       debit + req.body.expense_detail[item].expenses_amount,
-                    total_kredit: kredit + 0,
                     updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
                   },
                 }
@@ -222,6 +221,41 @@ router.post("/Biaya-add", async (req, res) => {
         res.json({message: err});
       }
     });
+
+    let postbukukas = new DetailBuku({
+      sub_account_number: 1,
+      main_account_number: 1,
+      coa_account_number: 1,
+      created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+      updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+      description: req.body.tags,
+      total_debit: 0,
+      total_kredit: req.body.total_expense_amount,
+      saldo: req.body.total_expense_amount,
+      tgl_transaksi: moment().format("YYYY-MM-DD HH:mm:ss"),
+      nomor_bukti: req.body.nomor_bukti,
+      link_id: 4,
+    });
+
+    let postbukukassaved = await postbukukas.save();
+
+    if (postbukukassaved != null) {
+      let BukuKAS = await Buku.findOne({buku_id: 4});
+      let kas_saldo = BukuKAS.total_saldo;
+      let kas_debit = BukuKAS.total_debit;
+      let kas_kredit = BukuKAS.total_kredit;
+      let updatedbuku = await Buku.updateOne(
+        {buku_id: 4},
+        {
+          $set: {
+            total_saldo: kas_saldo - req.body.total_expense_amount,
+            total_kredit: kas_kredit + req.body.total_expense_amount,
+            updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+          },
+        }
+      );
+    }
+
     res.json(savedPost);
   } catch (err) {
     res.json({message: err});

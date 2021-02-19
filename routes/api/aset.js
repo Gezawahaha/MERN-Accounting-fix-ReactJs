@@ -178,19 +178,64 @@ router.delete("/:postId", async (req, res) => {
       aset_id: req.params.postId,
     });
     const aset_coa = aset.coa_account_number;
+    const aset_main = aset.main_account_number;
+    const aset_sub = aset.sub_account_number;
     const aset_totalprice = aset.total_price;
 
+    //UPDATE COA
     const specific_coa_account = await COA.findOne({
       coa_account_number: aset_coa,
     });
     let coa_debit = specific_coa_account.total_debit;
-    const coa_updatedpost = await COA.updateOne(
+    let coa_updatedpost = await COA.updateOne(
       {
         coa_account_number: aset_coa,
       },
       {
         $set: {
           total_debit: coa_debit - aset_totalprice,
+          updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+        },
+      }
+    );
+
+    //UPDATE MAIN ACC
+    const specific_main_account = await Main.findOne({
+      main_account_number: aset_main,
+      coa_account_number: aset_coa,
+    });
+
+    let main_debit = specific_main_account.total_debit;
+    let updatedmain = await Main.updateOne(
+      {
+        main_account_number: aset_main,
+        coa_account_number: aset_coa,
+      },
+      {
+        $set: {
+          total_debit: main_debit - aset_totalprice,
+          updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+        },
+      }
+    );
+
+    //UPDATE SUB ACC
+    const specific_sub_account = await Sub.findOne({
+      sub_account_number: aset_sub,
+      main_account_number: aset_main,
+      coa_account_number: aset_coa,
+    });
+
+    let sub_debit = specific_sub_account.total_debit;
+    let updatedsub = await Sub.updateOne(
+      {
+        sub_account_number: aset_sub,
+        main_account_number: aset_main,
+        coa_account_number: aset_coa,
+      },
+      {
+        $set: {
+          total_debit: sub_debit - aset_totalprice,
           updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         },
       }
