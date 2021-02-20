@@ -86,12 +86,12 @@ class AssetsAddModal extends React.Component {
     onAsetAdd = e => {
         e.preventDefault();
         const newAset = {
-            aset_id: this.state.aset_id,
+           
             coa_account_number: this.state.coa_account_number,
             main_account_number: this.state.main_account_number,
             sub_account_number: this.state.sub_account_number,
             nama_barang: this.state.nama_barang,
-            jumlah_barang: this.state.jumlah_barang,
+            jumlah_barang: parseInt(this.state.jumlah_barang),
             price: this.state.price,
             total_price: this.state.total_price,
             tanggal_beli: this.state.tanggal_beli,

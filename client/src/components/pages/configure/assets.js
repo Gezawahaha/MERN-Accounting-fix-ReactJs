@@ -11,7 +11,8 @@ import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import { toast, ToastContainer} from "react-toastify";
 import CurrencyFormat from 'react-currency-format';
 
-import AssetsAddModal from '../../partials/AssetsAddModal'
+import AssetsAddModal from '../../partials/AssetsAddModal';
+import moment from 'moment';
 
 import {Link, NavLink} from "react-router-dom";
 import { Button } from "@material-ui/core";
@@ -44,6 +45,8 @@ class assets extends Component {
                 width: 170,
                 align: "center",
                 sortable: true,
+                cell: record => moment( record ).format("YYYY-MM-DD")
+
             },
             {
                 key: "jumlah_barang",
@@ -181,7 +184,7 @@ class assets extends Component {
     deleteRecord(record) {
         console.log("Masok Delete");
         axios
-            .delete(`/coa/main/sub/delete/${record._id}`, {_id: record._id})
+            .delete(`/aset/delete/${record.aset_id}`, {_id: record.aset_id})
             .then(res => {
                 if (res.status === 200) {
                    toast("Data Deleted!", {

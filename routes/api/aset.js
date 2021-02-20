@@ -172,7 +172,7 @@ router.patch("/:postId", async (req, res) => {
 });
 
 //DELETE POST
-router.delete("/:postId", async (req, res) => {
+router.delete("/delete/:postId", async (req, res) => {
   try {
     const aset = await Aset.findOne({
       aset_id: req.params.postId,
