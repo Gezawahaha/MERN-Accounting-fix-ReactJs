@@ -33,9 +33,9 @@ router.post("/purchase-add", async (req, res) => {
     amount_dibayar: 0,
     status: 0,
     keterangan: req.body.keterangan,
-    // coa_account_number: req.body.coa_account_number,
-    // main_account_number: req.body.main_account_number,
-    // sub_account_number: req.body.sub_account_number,
+    coa_account_number: req.body.coa_account_number,
+    main_account_number: req.body.main_account_number,
+    sub_account_number: req.body.sub_account_number,
     created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
     updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
   });
@@ -46,8 +46,10 @@ router.post("/purchase-add", async (req, res) => {
 
     Object.keys(req.body.purchase_detail).map(async (item) => {
       const post = new PurchaseDetail({
-        HSD: req.body.purchase_detail[item].HSD,
-        pajak: req.body.purchase_detail[item].pajak,
+        item_desc: req.body.purchase_detail[item].item_desc,
+        qty: req.body.purchase_detail[item].qty,
+        price: req.body.purchase_detail[item].price,
+        total_price: req.body.purchase_detail[item].total_price,
         coa_account_number: req.body.purchase_detail[item].coa_account_number,
         main_account_number: req.body.purchase_detail[item].main_account_number,
         sub_account_number: req.body.purchase_detail[item].sub_account_number,
@@ -78,8 +80,7 @@ router.post("/purchase-add", async (req, res) => {
               $set: {
                 total_debit:
                   biaya_sub.total_debit +
-                  req.body.purchase_detail[item].HSD +
-                  req.body.purchase_detail[item].pajak,
+                  req.body.purchase_detail[item].total_price,
                 updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
               },
             }
@@ -105,9 +106,7 @@ router.post("/purchase-add", async (req, res) => {
               {
                 $set: {
                   total_debit:
-                    debit +
-                    req.body.purchase_detail[item].HSD +
-                    req.body.purchase_detail[item].pajak,
+                    debit + req.body.purchase_detail[item].total_price,
                   updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
                 },
               }
@@ -129,9 +128,7 @@ router.post("/purchase-add", async (req, res) => {
               {
                 $set: {
                   total_debit:
-                    coa_debit +
-                    req.body.purchase_detail[item].HSD +
-                    req.body.purchase_detail[item].pajak,
+                    coa_debit + req.body.purchase_detail[item].total_price,
                   updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
                 },
               }
@@ -151,6 +148,26 @@ router.post("/purchase-add", async (req, res) => {
     });
 
     //UPDATE HUTANG DAGANG
+    let sub_hutang = await Post.findOne({
+      coa_account_number: req.body.coa_account_number,
+      main_account_number: req.body.main_account_number,
+      sub_account_number: req.body.sub_account_number,
+    });
+
+    let updatedsub_hutang = await Post.updateOne(
+      {
+        coa_account_number: req.body.coa_account_number,
+        main_account_number: req.body.main_account_number,
+        sub_account_number: req.body.sub_account_number,
+      },
+      {
+        $set: {
+          total_debit: sub_hutang.total_debit + req.body.total_amount_purchase,
+          updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+        },
+      }
+    );
+
     let post_hutang = await Main.findOne({
       main_account_number: 1,
       coa_account_number: 2,
@@ -158,8 +175,8 @@ router.post("/purchase-add", async (req, res) => {
 
     let updatedpost_hutang = await Main.updateOne(
       {
-        main_account_number: 1,
-        coa_account_number: 2,
+        coa_account_number: req.body.coa_account_number,
+        main_account_number: req.body.main_account_number,
       },
       {
         $set: {
@@ -170,11 +187,28 @@ router.post("/purchase-add", async (req, res) => {
       }
     );
 
+    let post_coa_hutang = await Coa.findOne({
+      mcoa_account_number: req.body.coa_account_number,
+    });
+
+    let updatedpost_hutang = await Coa.updateOne(
+      {
+        coa_account_number: req.body.coa_account_number,
+      },
+      {
+        $set: {
+          total_kredit:
+            post_coa_hutang.total_kredit + req.body.total_amount_purchase,
+          updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+        },
+      }
+    );
+
     //POST BUKU HUTANG
     let posthutang = new DetailBuku({
-      coa_account_number: 2,
-      main_account_number: 1,
-      sub_account_number: 1,
+      coa_account_number: req.body.coa_account_number,
+      main_account_number: req.body.main_account_number,
+      sub_account_number: req.body.sub_account_number,
       created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
       updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
       description: req.body.keterangan,

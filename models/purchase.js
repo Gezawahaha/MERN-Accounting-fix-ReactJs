@@ -36,18 +36,18 @@ const PurchaseSchema = mongoose.Schema({
   keterangan: {
     type: String,
   },
-  // coa_account_number: {
-  //   type: Number,
-  //   required: true,
-  // },
-  // main_account_number: {
-  //   type: Number,
-  //   required: true,
-  // },
-  // sub_account_number: {
-  //   type: Number,
-  //   required: true,
-  // },
+  coa_account_number: {
+    type: Number,
+    required: true,
+  },
+  main_account_number: {
+    type: Number,
+    required: true,
+  },
+  sub_account_number: {
+    type: Number,
+    required: true,
+  },
 });
 
 PurchaseSchema.plugin(AutoIncrement, {inc_field: "purchaseID"});

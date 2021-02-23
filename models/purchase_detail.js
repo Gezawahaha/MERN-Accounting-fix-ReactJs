@@ -2,10 +2,19 @@ const mongoose = require("mongoose");
 // const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const PurchaseDetailSchema = mongoose.Schema({
-  HSD: {
-    type: Number,
+  item_desc: {
+    type: String,
+    required: true,
   },
-  pajak: {
+  qty: {
+    type: Number,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  total_price: {
     type: Number,
   },
   updated_at: {
