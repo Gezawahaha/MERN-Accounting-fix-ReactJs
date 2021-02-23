@@ -19,6 +19,7 @@ import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
 
 import moment from 'moment';
 import ReactMomentCountDown from "react-moment-countdown";
+import PembelianAddModal from "../partials/PurchaseAdd/PembelianAddModal";
 
 class pembelian extends Component {
 
@@ -215,7 +216,7 @@ class pembelian extends Component {
     }
 
     getData() {
-        axios.get('/coa/main/sub/Sub-data')
+        axios.get('/purchase/purchase-data')
             .then(res => {
                 this.setState({ records: res.data})
                 //console.log("DK", this.state.records);
@@ -254,8 +255,7 @@ class pembelian extends Component {
                 <Navbar />
                 <div className="d-flex" id="wrapper">
                     <Sidebar/>
-                    <SubAkunAddModal />
-                    <SubAkunUpdateModal record={this.state.currentRecord}/>
+                    <PembelianAddModal/>
                     <div id="page-content-wrapper">
                         <div className="container-fluid">
                             <button className="btn btn-link mt-3" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>

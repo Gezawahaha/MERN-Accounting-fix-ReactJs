@@ -13,7 +13,7 @@ const Invoice = require("../../models/invoice");
 const moment = require("moment");
 
 //GET ALL THE POST
-router.get("/", async (req, res) => {
+router.get("/purchase-data", async (req, res) => {
   try {
     const posts = await Purchase.find();
     res.json(posts);
@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
 });
 
 //SUBMIT A POST
-router.post("/", async (req, res) => {
+router.post("/purchase-add", async (req, res) => {
   const purchase = new Purchase({
     supplierID: req.body.supplierID,
     no_purchase: req.body.no_purchase,

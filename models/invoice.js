@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const BukuDetailSchema = mongoose.Schema({
+const InvoiceSchema = mongoose.Schema({
   nama_buku: {
     type: String,
     required: true,
@@ -37,4 +37,4 @@ const BukuDetailSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("BukuDetail", BukuDetailSchema);
+module.exports = mongoose.model("Invoice", InvoiceSchema);
