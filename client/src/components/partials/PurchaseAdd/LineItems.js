@@ -59,45 +59,11 @@ class LineItems extends Component {
                 <LineItem
                   style={{color: 'red'}}
                   key={i + item.id} index={i} name={item.name}
-                  description={item.description} quantity={item.quantity} expenses_amount={item.expenses_amount}
+                  item_desc={item.item_desc} qty={item.qty} price={item.price} total_price={item.total_price}
                   {...functions}
                 />
               ))}
             </div>
-{/*             
-            <DragDropContext onDragEnd={this.handleDragEnd}>
-              <Droppable droppableId="droppable">
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    className={snapshot.isDraggingOver ? styles.listDraggingOver : ''}
-                  >
-                    {this.props.items.map((item, i) => (
-                      <Draggable key={item.id} draggableId={item.id} index={i}>
-                        {(provided, snapshot) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            style={provided.draggableProps.style}
-                            className={snapshot.isDragging ? styles.listItemDragging : ''}
-                          >
-                            <LineItem
-                              style={{color: 'red'}}
-                              key={i + item.id} index={i} name={item.name}
-                              description={item.description} quantity={item.quantity} price={item.price}
-                              {...functions}
-                            />
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-            </Droppable>
-          </DragDropContext> */}
-
           </div>
 
           <div className={styles.addItem}>

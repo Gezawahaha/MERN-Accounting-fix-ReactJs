@@ -97,12 +97,13 @@ class PembelianAddModal extends React.Component {
               {
                 id: '',      // react-beautiful-dnd unique key
                 name: '',
-                expenses_account: '',
+                coa_account_number: '',
                 main_account_number: '',
                 sub_account_number: '',
-                description: '',
-                quantity: 1,
-                expenses_amount: 0.00,
+                item_desc: '',
+                qty: 1,
+                price: 0.00,
+                total_price: 0.00
               },
             ]
         }
@@ -124,7 +125,7 @@ class PembelianAddModal extends React.Component {
         //console.log(this.state.lineItems);
         e.preventDefault();
         const newPurchase = {
-            supplierID: this.state.supplierID,
+            supplierID: parseInt(this.state.supplierID),
             total_amount_purchase: this.calcGrandTotal(),
             no_purchase: this.state.no_purchase,
             purchaseDate: this.state.purchaseDate,
@@ -193,35 +194,13 @@ class PembelianAddModal extends React.Component {
           } catch (err) {}
     }
 
-    onChangePayMethod= e => {
-        this.setState({
-            payment_method: e.name
-        })
-    };
-
-    
-
-    onChangeDeskripsi = e => {  
-        this.setState({
-            description: e.target.value,
-        })
-        //console.log("Desc",this.state.description);
-    };
-
-    onChangeAkunBiaya = e => {
-        this.setState({
-            expenses_account: e.sub_account_number,
-            main_account_number: e.main_account_number,
-            coa_account_number: e.coa_account_number
-        })
-    };
-
     
   handleInvoiceChange = (event) => {
     this.setState({[event.target.name]: event.target.value})
   }
 
-  handleLineItemChange = (elementIndex) => (event) => {
+  handleLineItemChange = (elementIndex ) => (event) => {
+    
     let lineItems = this.state.lineItems.map((item, i) => {
       if (elementIndex !== i) return item
       return {...item, [event.target.name]: event.target.value}
@@ -233,25 +212,35 @@ class PembelianAddModal extends React.Component {
 
     let lineItems = this.state.lineItems.map((item, i) => {
       if (elementIndex !== i) return item
-      return {...item, expenses_account: event.sub_account_number, main_account_number: event.main_account_number, coa_account_number: event.coa_account_number, name: event.name, tax: 0}
+      return {...item, sub_account_number: event.sub_account_number, main_account_number: event.main_account_number, coa_account_number: event.coa_account_number, name: event.name, tax: 0}
     })
     this.setState({lineItems})
     //console.log(this.state.lineItems);
+  }
+
+  handleLineItemPrice = (elementIndex, qtyORprice ) => (event) => {
+    
+    let lineItems = this.state.lineItems.map((item, i) => {
+      if (elementIndex !== i) return item
+      return {...item, [event.target.name]: event.target.value * 1 , total_price: qtyORprice * event.target.value}
+    })
+    this.setState({lineItems})
+    //console.log(lineItems)
   }
 
   handleAddLineItem = (event) => {
     this.setState({
       // use optimistic uuid for drag drop; in a production app this could be a database id
       lineItems: this.state.lineItems.concat(
-        [{ id: '', 
+        [{  id: '', 
             name: '', 
-            description: '', 
-            quantity: 1, 
-            expenses_amount: 0.00 ,
-            expenses_account: '',
+            item_desc: '', 
+            qty: 1, 
+            sub_account_number: '',
             main_account_number: '', 
             coa_account_number: '',
-            //tax: 0,
+            price: 0.00,
+            total_price: 0.00
         }]
       )
     })
@@ -290,7 +279,7 @@ class PembelianAddModal extends React.Component {
   }
 
   calcLineItemsTotal = () => {
-    return this.state.lineItems.reduce((prev, cur) => (prev + (cur.quantity * cur.expenses_amount)), 0)
+    return this.state.lineItems.reduce((prev, cur) => (prev + (cur.qty * cur.price)), 0)
   }
 
   calcTaxTotal = () => {
@@ -396,116 +385,12 @@ class PembelianAddModal extends React.Component {
                                                     addHandler={this.handleAddLineItem}
                                                     changeHandler={this.handleLineItemChange}
                                                     changeHandlerAkun={this.handleLineItemAkun}
+                                                    changeHandlerPrice={this.handleLineItemPrice}
                                                     focusHandler={this.handleFocusSelect}
                                                     deleteHandler={this.handleRemoveLineItem}
                                                     reorderHandler={this.handleReorderLineItems}
 
                                                 />
-                                                {/* <Table responsive="sm">
-                                                    <thead>
-                                                        <tr>
-                                                            <th width={200} >Items</th>
-                                                            <th>Deskripsi</th>
-                                                            <th width={100} >Qty</th>
-                                                            <th>Jumlah</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>
-                                                                <ReactSelect
-                                                                    onChange= {this.onChangeAkunBiaya}
-                                                                    getOptionValue={option => option.name}
-                                                                    getOptionLabel={option => option.name}
-                                                                    options={this.state.AkunBiaya}
-                                                                />
-                                                            </td>
-                                                            <td><Form.Control type="text" onChange={this.onChangeDeskripsi} /></td>
-                                                            <td>
-                                                            <input
-                                                                className="form-control"
-                                                                input="text"
-                                                                
-                                                                    
-                                                                />
-                                                            </td>
-                                                            <td>
-                                                                <InputGroup className="mb-3">
-                                                                    <InputGroup.Prepend>
-                                                                        <InputGroup.Text>Rp. </InputGroup.Text>
-                                                                    </InputGroup.Prepend>
-                                                                    
-                                                                        <CurrencyFormat 
-                                                                            className="form-control" 
-                                                                            //onChange={this.onChangeJumlah}
-                                                                            thousandSeparator={ true }
-                                                                            isNumericString={true}
-                                                                            onValueChange={(values) => {
-                                                                                    const {formattedValue, value} = values;
-                                                                                    this.setState({
-                                                                                        expenses:  value * 1,
-                                                                                        AmountTax: value * this.state.TaxRate,
-                                                                                        //expenses_amount: this.state.expenses + this.state.AmountTax
-                                                                                    })
-                                                                                    this.calcGrandTotal();  
-                                                                                }
-                                                                            }                                                            
-
-                                                                        />
-
-                                                                    <InputGroup.Append>
-                                                                        <InputGroup.Text>.00</InputGroup.Text>
-                                                                    </InputGroup.Append>
-                                                                </InputGroup>
-                                                            </td>
-                                                            
-                                                        </tr>
-                                                    </tbody>
-                        
-                                                </Table>
-                                                                            
-                                                <Form.Group as={Col} xs={9}>
-                                                    <Form.Label><b>Tax</b></Form.Label>
-                                                    <Form.Row>
-                                                    <Form.Group as={Col}  >
-                                                        <Form.Label><small>Name</small></Form.Label>
-                                                        <ReactSelect />
-                                                    </Form.Group>
-                                                    <Form.Group as={Col} >
-                                                        <Form.Label><small>Jumlah</small></Form.Label>
-                                                        <InputGroup className="mb-3">
-                                                            <InputGroup.Prepend>
-                                                                <InputGroup.Text>Rp. </InputGroup.Text>
-                                                            </InputGroup.Prepend>
-                                                            
-                                                                <CurrencyFormat 
-                                                                    className="form-control" 
-                                                                    //onChange={this.onChangeJumlah}
-                                                                    thousandSeparator={ true }
-                                                                    isNumericString={true}
-                                                                    onValueChange={(values) => {
-                                                                            const {formattedValue, value} = values;
-                                                                            this.setState({
-                                                                                expenses:  value * 1,
-                                                                                AmountTax: value * this.state.TaxRate,
-                                                                                //expenses_amount: this.state.expenses + this.state.AmountTax
-                                                                            })
-                                                                            this.calcGrandTotal();  
-                                                                        }
-                                                                    }                                                            
-
-                                                                />
-
-                                                            <InputGroup.Append>
-                                                                <InputGroup.Text>.00</InputGroup.Text>
-                                                            </InputGroup.Append>
-                                                        </InputGroup>
-                                                    </Form.Group>
-                                                    
-                                                </Form.Row>
-                                                    <br/>
-                                                    
-                                                </Form.Group> */}
 
                                                 <Form.Group as={Col} xs={5}>
                                                     <Form.Label>Keterangan</Form.Label>

@@ -177,7 +177,8 @@ class pembelian extends Component {
 
         this.state = {
             records: [],
-            supData: []
+            supData: [],
+            invActive: 0
         };
 
         this.state = {
@@ -202,25 +203,7 @@ class pembelian extends Component {
         return (<CurrencyFormat value={number} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} />);
     }
     
-    nameSup(record) {
-        //console.log(record)
-        let name = record;
-        // axios.get('/supplier/Sup-data')
-        //     .then(res => {
-        //         for (let index = 0; index < res.data.length; index++) {
-        //             if (res.data[index].SupplierID == record.supplierID) {
-        //                 return (<bold>{res.data[index].CompanyName}</bold>);
-        //                 record = res.data[index].CompanyName;
-        //             }
-                    
-        //         }
-        //         //console.log("DK", this.state.records);
-        //     })
-        //     .catch()
-            return (<a>{name}</a>);
-
-            
-    }
+    
 
     componentDidMount() {
         this.getData();
@@ -236,8 +219,10 @@ class pembelian extends Component {
     }
 
     getDataSup() {
+        
         axios.get('/supplier/Sup-data')
             .then(res => {
+                
                 this.setState({ supData: res.data})
                 //console.log("DK", this.state.records);
             })
@@ -246,9 +231,17 @@ class pembelian extends Component {
     }
 
     getData() {
+        var InvBelumLunas = 0;
         axios.get('/purchase/purchase-data')
             .then(res => {
-                this.setState({ records: res.data})
+                for (let index = 0; index < res.data.length; index++) {
+                    if (res.data[index].status == 0) {
+                        InvBelumLunas += 1;
+                        //console.log("masuk If", InvBelumLunas);
+                    }
+                    
+                }
+                this.setState({ records: res.data, invActive: InvBelumLunas})
                 //console.log("DK", this.state.records);
             })
             .catch()
@@ -299,7 +292,7 @@ class pembelian extends Component {
                                         <div className="card-body">
                                             <h5 className="card-title">Invoice Belum Selesai</h5>
                                             <small>TAGIHAN</small>
-                                            <h2 className="card-text"><CurrencyFormat value={ 0 } displayType={'text'} thousandSeparator={true} suffix={''} /></h2>
+                                            <h2 className="card-text"><CurrencyFormat value={ this.state.invActive } displayType={'text'} thousandSeparator={true} suffix={''} /></h2>
                                         </div>
                                     </div>
                                 </div>
