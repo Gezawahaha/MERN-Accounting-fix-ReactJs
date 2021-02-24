@@ -152,11 +152,11 @@ router.post("/purchase-add", async (req, res) => {
 
     //UPDATE HUTANG DAGANG
     let post_hutang = await Main.findOne({
-      coa_account_number: req.body.coa_account_number,
-      main_account_number: req.body.main_account_number,
+      main_account_number: 1,
+      coa_account_number: 2,
     });
 
-    let updatedmain_hutang = await Main.updateOne(
+    let updatedpost_hutang = await Main.updateOne(
       {
         main_account_number: 1,
         coa_account_number: 2,
@@ -170,26 +170,6 @@ router.post("/purchase-add", async (req, res) => {
       }
     );
 
-<<<<<<< HEAD
-=======
-    let post_coa_hutang = await Coa.findOne({
-      coa_account_number: req.body.coa_account_number,
-    });
-
-    let updatedcoa_hutang = await Coa.updateOne(
-      {
-        coa_account_number: req.body.coa_account_number,
-      },
-      {
-        $set: {
-          total_kredit:
-            post_coa_hutang.total_kredit + req.body.total_amount_purchase,
-          updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-        },
-      }
-    );
-
->>>>>>> 4eb42d96572c9d8201b664130fee75adaec923df
     //POST BUKU HUTANG
     let posthutang = new DetailBuku({
       coa_account_number: 2,

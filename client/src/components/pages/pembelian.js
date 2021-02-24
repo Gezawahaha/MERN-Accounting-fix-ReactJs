@@ -43,30 +43,25 @@ class pembelian extends Component {
                 sortable: false,
             },
             {
-                key: "keterangan",
-                text: "Note",
+                key: "supplierID",
+                text: "Name",
                 className: "name",
                 align: "left",
                 sortable: true,
-                // cell: async record  => //<Fragment>{this.nameSup(record.supplierID)}</Fragment>
+                cell: record  => 
                 
-                //         {
-                //             try {
-                            
-                //                 // name = record.supplierID;
-                //                 let res = await axios.get('/supplier/Sup-data');
-                                    
-                //                     for (let index = 0; index < res.data.length; index++) {
-                //                         if (res.data[index].SupplierID == record.supplierID) {
-                //                             //console.log(res.data[index].CompanyName);
-                //                             return res.data[index].CompanyName;
-                                            
-                                            
-                //                         }
-            
-                //                     }
-                //             } catch(err){}
-                //         }
+                {axios.get('/supplier/Sup-data').then(res => {
+                    var name = '';
+                    for (let index = 0; index < res.data.length; index++) {
+                         if (res.data[index].SupplierID == record.supplierID) {
+                            //console.log(res.data[index].CompanyName);
+                            name = res.data[index].CompanyName; 
+                        }
+                        return res.data[index].CompanyName
+                    }
+                })
+                .catch()}
+                
             },
             {
                 key: "dueDate",
@@ -204,22 +199,21 @@ class pembelian extends Component {
     
     nameSup(record) {
         //console.log(record)
-        let name = record;
-        // axios.get('/supplier/Sup-data')
-        //     .then(res => {
-        //         for (let index = 0; index < res.data.length; index++) {
-        //             if (res.data[index].SupplierID == record.supplierID) {
-        //                 return (<bold>{res.data[index].CompanyName}</bold>);
-        //                 record = res.data[index].CompanyName;
-        //             }
+        var name = '';
+        axios.get('/supplier/Sup-data')
+            .then(res => {
+                for (let index = 0; index < res.data.length; index++) {
+                    if (res.data[index].SupplierID == record.supplierID) {
+                        console.log(res.data[index].CompanyName);
+                        name = res.data[index].CompanyName;
+                    }
                     
-        //         }
-        //         //console.log("DK", this.state.records);
-        //     })
-        //     .catch()
-            return (<a>{name}</a>);
+                }
+                //console.log("DK", this.state.records);
+            })
+            .catch()
 
-            
+            return name;
     }
 
     componentDidMount() {
