@@ -46,7 +46,7 @@ class LineItems extends Component {
 
             <div className={`${styles.row} ${styles.header}`}>
               <div>#</div>
-              <div>Akun Biaya</div>
+              <div>Item</div>
               <div>Description</div>
               <div>Qty</div>
               <div>Price</div>

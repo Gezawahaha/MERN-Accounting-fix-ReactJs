@@ -153,5 +153,21 @@ export const addAsset = (userData, history) => dispatch => {
         );
 };
 
+export const addPurchase = (userData, history) => dispatch => {
+    axios
+        .post("/purchase/purchase-add", userData)
+        .then(res =>
+            dispatch({
+                type: USER_LOADING,
+                payload: res,
+            })
+        ).catch(err =>
+        dispatch({
+        })
+        );
+};
+
+
+
 
 

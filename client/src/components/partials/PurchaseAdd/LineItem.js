@@ -11,28 +11,55 @@ class LineItem extends Component {
 
   state = {
     BayarDari: [],
-    AkunBiaya:[],
+    Item:[],
+    Pajak:[],
+    Produk:[],
     items: [],
     Penerima: [],
     BiayaData:[],
   }
 
   componentDidMount(){
-    this.getDataAkunBiaya();
+    this.getDataProduk();
+    
+    //this.mixDataItem();
+
+  }
+
+  // mixDataItem() {
+  //    this.state.Pajak.concat();
+  //   this.setState({
+  //     Item: mix
+  //   })
+  //   console.log(mix);
+  // }
+
+  getDataPajak() {
+    axios.get('/coa/main/sub/1/9')
+    .then(res => {
+      var mix = this.state.Produk.concat(res.data)
+      this.setState({ 
+        Item: mix,
+        
+      })
+      console.log(mix);
+    })
+    .catch()
+
   }
   
-  getDataAkunBiaya() {
-    axios.get('/coa/main/sub/6')
+  getDataProduk() {
+    axios.get('/coa/main/sub/1/6')
         .then(res => {
             this.setState({ 
-                AkunBiaya: res.data,
+                Produk: res.data,
                 
             })
-            //console.log("Akun Biaya", this.state.AkunBiaya);
+            //console.log("Akun Biaya", res.data); 
         })
         .catch()
-        this.getDataAkunBiaya = this.getDataAkunBiaya.bind(this);
-}
+      this.getDataPajak();
+  }
 
 
   render = () => {
@@ -45,15 +72,15 @@ class LineItem extends Component {
         <div>
           {/* <input name="name" type="text" value={name} onChange={this.props.changeHandler(index)} /> */}
           <ReactSelect className="col-md-12 size-select"
-            
+            label="search here"
             onChange={this.props.changeHandlerAkun(index)}
             getOptionValue={option => option.name}
             getOptionLabel={option => option.name}
-            options={this.state.AkunBiaya}
+            options={this.state.Item}
           />
         </div>
         <div><input name="description" type="text" value={description} onChange={this.props.changeHandler(index)} /></div>
-        <div><label name="quantity" type="number" step="1" value={quantity} onChange={this.props.changeHandler(index)} onFocus={this.props.focusHandler} >1</label></div>
+        <div><input name="quantity" type="number" step="1" value={quantity} onChange={this.props.changeHandler(index)} onFocus={this.props.focusHandler} ></input></div>
         <div className={styles.currency}><input name="expenses_amount" type="number" step="0.01" min="0.00" max="9999999.99" value={expenses_amount} onChange={this.props.changeHandler(index)} onFocus={this.props.focusHandler} /></div>
         <div className={styles.currency}>{this.props.currencyFormatter( quantity * expenses_amount )}</div>
         

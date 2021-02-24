@@ -35,51 +35,44 @@ class pembelian extends Component {
             //     sortable: true,
             // },
             {
-                key: "sub_account_number",
+                key: "no_purchase",
                 text: "NO Invoice",
                 className: "name",
                 align: "center",
                 width: 150,
                 sortable: false,
-                cell: record => <Fragment>{record.coa_account_number}
-                
-                    {record.main_account_number < 10 && (
-                        `-0${record.main_account_number}`
-                    )}
-                    
-                    {record.main_account_number >= 10 && (
-                        `-${record.main_account_number}`
-                    )}
-
-                    {record.sub_account_number < 10 && (
-                        `-0${record.sub_account_number}`
-                    )}
-                    
-                    {record.sub_account_number >= 10 && (
-                        `-${record.sub_account_number}`
-                    )}
-                  
-                                        
-                
-                </Fragment>
             },
             {
-                key: "name",
+                key: "supplierID",
                 text: "Name",
                 className: "name",
                 align: "left",
                 sortable: true,
+                cell: record  => 
+                
+                {axios.get('/supplier/Sup-data').then(res => {
+                    var name = '';
+                    for (let index = 0; index < res.data.length; index++) {
+                         if (res.data[index].SupplierID == record.supplierID) {
+                            //console.log(res.data[index].CompanyName);
+                            name = res.data[index].CompanyName; 
+                        }
+                        return res.data[index].CompanyName
+                    }
+                })
+                .catch()}
+                
             },
             {
-                key: "updated_at",
+                key: "dueDate",
                 text: "Due Date",
-                width: 100,
+                width: 110,
                 className: "date",
                 align: "center",
                 sortable: true,
                 cell: record => <Fragment>  
-                    {record.updated_at <= moment().format("YYYY-MM-DD HH:mm:ss") && (`Due`) }
-                    {record.updated_at >= moment().format("YYYY-MM-DD HH:mm:ss") && (<ReactMomentCountDown toDate={record.updated_at} targetFormatMask='DD:HH:mm:ss'/>)}
+                    {record.dueDate <= moment().format("YYYY-MM-DD HH:mm:ss") && (`Due`) }
+                    {record.dueDate >= moment().format("YYYY-MM-DD HH:mm:ss") && (<ReactMomentCountDown toDate={record.dueDate} targetFormatMask='DD:HH:mm:ss'/>)}
                 
                 </Fragment>
             },
@@ -99,18 +92,18 @@ class pembelian extends Component {
             {
                 key: "total_amount_purchase",
                 text: "Total Invoice",
-                className: "currency",
                 align: "left",
+                width: 250,
                 sortable: true,
-                cell: record => <Fragment>{this.toCurrency(record.total_debit)}</Fragment>
+                cell: record => <Fragment>{this.toCurrency(record.total_amount_purchase)}</Fragment>
             },
             {
                 key: "amount_dibayar",
                 text: "Sudah di Bayar",
-                className: "email",
                 align: "left",
+                width: 250,
                 sortable: true,
-                cell: record => <Fragment>{this.toCurrency(record.total_kredit)}</Fragment>
+                cell: record => <Fragment>{this.toCurrency(record.amount_dibayar)}</Fragment>
             },
             // {
             //     key: "created_at",
@@ -178,13 +171,14 @@ class pembelian extends Component {
         };
 
         this.state = {
-            records: []
+            records: [],
+            supData: []
         };
 
         this.state = {
             currentRecord: {
                 SupplierID: '',
-                No_purchase: '',
+                no_purchase: '',
                 purchaseDate: '',
                 dueDate: '',
                 Purchase_detail: [],
@@ -201,7 +195,26 @@ class pembelian extends Component {
         //console.log("number" ,numberString);
         let number = parseFloat(numberString);
         return (<CurrencyFormat value={number} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} />);
-    }   
+    }
+    
+    nameSup(record) {
+        //console.log(record)
+        var name = '';
+        axios.get('/supplier/Sup-data')
+            .then(res => {
+                for (let index = 0; index < res.data.length; index++) {
+                    if (res.data[index].SupplierID == record.supplierID) {
+                        console.log(res.data[index].CompanyName);
+                        name = res.data[index].CompanyName;
+                    }
+                    
+                }
+                //console.log("DK", this.state.records);
+            })
+            .catch()
+
+            return name;
+    }
 
     componentDidMount() {
         this.getData();
@@ -211,8 +224,19 @@ class pembelian extends Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        this.getData()
+        this.getData();
+        this.getDataSup();
         
+    }
+
+    getDataSup() {
+        axios.get('/supplier/Sup-data')
+            .then(res => {
+                this.setState({ supData: res.data})
+                //console.log("DK", this.state.records);
+            })
+            .catch()
+
     }
 
     getData() {
@@ -233,7 +257,7 @@ class pembelian extends Component {
     deleteRecord(record) {
         console.log("Masok Delete");
         axios
-            .delete(`/coa/main/sub/delete/${record._id}`, {_id: record._id})
+            .delete(`/purchase/purchase-delete/${record._id}`, {_id: record._id})
             .then(res => {
                 if (res.status === 200) {
                    toast("Data Deleted!", {

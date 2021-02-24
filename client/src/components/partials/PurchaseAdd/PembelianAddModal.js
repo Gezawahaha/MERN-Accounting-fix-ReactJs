@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import classnames from "classnames";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { addBiaya } from "../../../actions/userActions";
+import { addPurchase } from "../../../actions/userActions";
 import { withRouter } from "react-router-dom";
 import { toast } from 'react-toastify';
 import $ from 'jquery';
@@ -30,16 +30,7 @@ import CurrencyFormat from 'react-currency-format';
 import LineItems from './LineItems';
 import uuidv4 from 'uuid/v4';
 
-const carabayar=[
-    {  name: "Transfer"},
-    {  name: "Cash"}
-  ]
 
-  const TaxOpt=[
-    {  b: 0, name: "no tax...",  rate: 0  },
-    {  b: 1, name: "PPN",  rate: 10/100 },
-    {  b: 1, name: "PPH 21",  rate: 5/100  }
-  ]
 
 class PembelianAddModal extends React.Component {
     locale = 'en-US'
@@ -77,8 +68,21 @@ class PembelianAddModal extends React.Component {
             items: [],
             BiayaData:[],
             errors: {},
+            
+            //Purchase
+            supplierID:'',
+            coa_account_number:'',
+            sub_account_number:'',
+            main_account_number:'',
+            no_purchase:'',
+            purchaseDate:'',
+            dueDate: '',
+            total_amount_purchase:'',
+            status: 0,
+            keterangan:'',
 
             Supplier:[],
+
 
             TaxName: '',
             TaxRate: 0.00,
@@ -116,68 +120,57 @@ class PembelianAddModal extends React.Component {
    
 
     //SUBMITPOSTT HERE
-    onBiayaAdd = e => {
+    onPurchaseAdd = e => {
         //console.log(this.state.lineItems);
         e.preventDefault();
-        const newBiaya = {
-            total_expense_amount: this.calcGrandTotal(),
-            expense_no: this.state.expense_no,
-            transaction_date: this.state.transaction_date,
-            tags: `Biaya Pada Tanggal ${this.state.transaction_date}`,
-
-            pay_from_account_number: this.state.pay_from_account_number,//Udh pasti dari kas kecil 
-            beneficiary: this.state.beneficiary,                        // ga penting
-            payment_method: this.state.payment_method,                  // ga penting
-            billing_address: this.state.billing_address,                // ga penting
-            expense_detail: this.state.lineItems
-            // [{
-            //     expenses_account: this.state.expenses_account,
-            //     description: this.state.description,
-            //     tax: this.state.AmountTax,
-            //     expenses_amount: this.calcGrandTotal(),
-            //     main_account_number: this.state.main_account_number,
-            //     coa_account_number: this.state.coa_account_number
-            //     }
-            // ]
+        const newPurchase = {
+            supplierID: this.state.supplierID,
+            total_amount_purchase: this.calcGrandTotal(),
+            no_purchase: this.state.no_purchase,
+            purchaseDate: this.state.purchaseDate,
+            dueDate: this.state.dueDate,
+            keterangan: this.state.keterangan,
+            coa_account_number: this.state.coa_account_number,
+            main_account_number: this.state.main_account_number,
+            sub_account_number: this.state.sub_account_number,
+           
+            purchase_detail: this.state.lineItems
+            
             
         }
-        console.log(newBiaya);
-        this.props.addBiaya(newBiaya, this.props.history);
+        console.log(newPurchase);
+        this.props.addPurchase(newPurchase, this.props.history);
         $('#add-biaya-modal').modal('hide');
             toast("Waiting For Load Data", {
                 position: toast.POSITION.TOP_CENTER
             });
     };
   
-    onChangeBayarDari = e => {  
-        //this.setState({ [e.target.id]: e.target.value });
-        console.log("C",e);
-        if ( e.main_account_number < 10 && e.sub_account_number < 10 ){
-            this.setState({
-                pay_from_account_number: `${e.coa_account_number}-0${e.main_account_number}-0${e.sub_account_number}`
-            })
-        }else if ( e.main_account_number < 10 && e.sub_account_number >= 10){
-            this.setState({
-                pay_from_account_number: `${e.coa_account_number}-0${e.main_account_number}-${e.sub_account_number}`
-            })
-        }else if ( e.main_account_number >= 10 && e.sub_account_number < 10){
-            this.setState({
-                pay_from_account_number: `${e.coa_account_number}-${e.main_account_number}-0${e.sub_account_number}`
-            })
-        }else if ( e.main_account_number >= 10 && e.sub_account_number >= 10){
-            this.setState({
-                pay_from_account_number: `${e.coa_account_number}-${e.main_account_number}-${e.sub_account_number}`
-            })
-        }
-        
-    };
-
+    
     onChangeDate = e => {  
         this.setState({
-            transaction_date: moment( e.target.value ).format("YYYY-MM-DD HH:mm:ss"),
+            purchaseDate: moment( e.target.value ).format("YYYY-MM-DD HH:mm:ss"),
         })
         //console.log("Date",this.state.transaction_date);
     };
+    onChangeDueDate = e => {  
+        this.setState({
+            dueDate: moment( e.target.value ).format("YYYY-MM-DD HH:mm:ss"),
+        })
+        //console.log("Date",this.state.transaction_date);
+    };
+
+    onChangeNo = e =>{
+        this.setState({
+            no_purchase: e.target.value
+        })
+    }
+
+    onchangeKet = e =>{
+        this.setState({
+            keterangan: e.target.value
+        })
+    }
 
     onChangeSupplier = async e => {
         //Get Main Acoount Lenght
@@ -186,7 +179,13 @@ class PembelianAddModal extends React.Component {
           
             for (let index = 0; index < response.data.length; index++) {
                 if (response.data[index].name == e.CompanyName) {
-                    console.log(response.data[index].coa_account_number,"-" ,response.data[index].main_account_number,"-" ,response.data[index].sub_account_number);
+                    this.setState({
+                        coa_account_number: response.data[index].coa_account_number,
+                        main_account_number: response.data[index].main_account_number,
+                        sub_account_number: response.data[index].sub_account_number,
+                        supplierID: e.SupplierID
+                    })
+                    //console.log(response.data[index].coa_account_number,"-" ,response.data[index].main_account_number,"-" ,response.data[index].sub_account_number);
                 }
                 //
             }
@@ -244,7 +243,7 @@ class PembelianAddModal extends React.Component {
     this.setState({
       // use optimistic uuid for drag drop; in a production app this could be a database id
       lineItems: this.state.lineItems.concat(
-        [{ id: uuidv4(), 
+        [{ id: '', 
             name: '', 
             description: '', 
             quantity: 1, 
@@ -304,62 +303,20 @@ class PembelianAddModal extends React.Component {
 
 
     componentDidMount() {
-        this.getDataBayardari();
-        //this.getDataAkunBiaya();
         this.getDataSupplier();
-        this.getDataBiaya();
+        //this.getDataBiaya();
         //console.log("test",this.state.records.value);
          
         
     };
 
     getDataBiaya() {
-        axios.get('/expense/Biaya-data')
-        .then(response => {
-            if (response.data.length < 10) {
-                this.setState({
-                    expense_no: `BKK/00${response.data.length + 1}/KAS/${moment().year()}`
-            
-                })
-                //console.log("1");
-              }
-              else if(response.data.length < 100){
-                this.setState({
-                    expense_no: `BKK/0${response.data.length + 1}/KAS/${moment().year()}`
-            
-                })
-                  //console.log("2");
-              }
-            //console.log("length",this.state.expense_no);
-        })
+        
     }
 
-    getDataAkunBiaya() {
-        axios.get('/coa/main/sub/6')
-            .then(res => {
-                this.setState({ 
-                    AkunBiaya: res.data,
-                    
-                })
-                //console.log("Akun Biaya", this.state.AkunBiaya);
-            })
-            .catch()
-            this.getDataAkunBiaya = this.getDataAkunBiaya.bind(this);
-    }
+    
 
-    getDataBayardari() {
-        axios.get('/coa/main/sub/1/1')
-            .then(res => {
-                this.setState({ 
-                    BayarDari: res.data,
-                    
-                })
-                //console.log("Bayar Dari Data", res.data[0].name);
-            })
-            .catch()
-            this.getDataBayardari = this.getDataBayardari.bind(this);
-    }
-
+    
     getDataSupplier() {
         ///supplier/Sup-data
         axios
@@ -384,7 +341,7 @@ class PembelianAddModal extends React.Component {
                                 <button type="button" className="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div className="modal-body">
-                                <form noValidate onSubmit={this.onBiayaAdd} id="add" >
+                                <form noValidate onSubmit={this.onPurchaseAdd} id="add" >
                                     <Card body bg="info" >
                                         <Form.Label><h5 className="font-hebbo">Supplier</h5></Form.Label>
                                         <Form.Group as={Col} >
@@ -401,14 +358,12 @@ class PembelianAddModal extends React.Component {
                                         <div className="flex-container">
                                             <Card body className="card-form">
                                                 <Form.Row>
-                                                    <Form.Group as={Col} >
-                                                        <Form.Label>Penerima</Form.Label>
-                                                        <ReactSelect
-                                                            //onChange={this.onChangePenerima} 
-                                                            getOptionValue={option => option.FirstName}
-                                                            getOptionLabel={option => option.FirstName}
-                                                            options={this.state.Penerima}
-                                                        />
+                                                    <Form.Group as={Col}  >
+                                                        <Form.Label>No Invoice</Form.Label>
+                                                        <Form.Control 
+                                                            type="text" 
+                                                            onChange={this.onChangeNo} 
+                                                            />
                                                     </Form.Group>
                                                     <Form.Group as={Col} >
                                                         <Form.Label>Tgl Transaksi</Form.Label>
@@ -418,18 +373,11 @@ class PembelianAddModal extends React.Component {
                                                             />
                                                     </Form.Group>
                                                     <Form.Group as={Col} >
-                                                        <Form.Label>Cara Bayar</Form.Label>
-                                                        <ReactSelect
-                                                            className="col-md-12 size-select"
-                                                            onChange={ this.onChangePayMethod }
-                                                            getOptionValue={option => option.name}
-                                                            getOptionLabel={option => option.name}
-                                                            options={carabayar}
-                                                        />
-                                                    </Form.Group>
-                                                    <Form.Group as={Col}  >
-                                                        <Form.Label>No Biaya</Form.Label>
-                                                        <Form><h3 className="form-control">{this.state.expense_no}</h3></Form>
+                                                        <Form.Label>Tgl Jatuh Tempo</Form.Label>
+                                                        <Form.Control 
+                                                            type="date" 
+                                                            onChange={this.onChangeDueDate} 
+                                                            />
                                                     </Form.Group>
                                                 </Form.Row>
 
@@ -456,9 +404,9 @@ class PembelianAddModal extends React.Component {
                                                 {/* <Table responsive="sm">
                                                     <thead>
                                                         <tr>
-                                                            <th>Akun Biaya</th>
+                                                            <th width={200} >Items</th>
                                                             <th>Deskripsi</th>
-                                                            <th>Pajak</th>
+                                                            <th width={100} >Qty</th>
                                                             <th>Jumlah</th>
                                                         </tr>
                                                     </thead>
@@ -474,11 +422,11 @@ class PembelianAddModal extends React.Component {
                                                             </td>
                                                             <td><Form.Control type="text" onChange={this.onChangeDeskripsi} /></td>
                                                             <td>
-                                                            <ReactSelect
-                                                                    onChange={this.onChangeTax}
-                                                                    getOptionValue={option => option}
-                                                                    getOptionLabel={option => option.name}
-                                                                    options={TaxOpt}
+                                                            <input
+                                                                className="form-control"
+                                                                input="text"
+                                                                
+                                                                    
                                                                 />
                                                             </td>
                                                             <td>
@@ -514,11 +462,54 @@ class PembelianAddModal extends React.Component {
                                                         </tr>
                                                     </tbody>
                         
-                                                </Table> */}
+                                                </Table>
+                                                                            
+                                                <Form.Group as={Col} xs={9}>
+                                                    <Form.Label><b>Tax</b></Form.Label>
+                                                    <Form.Row>
+                                                    <Form.Group as={Col}  >
+                                                        <Form.Label><small>Name</small></Form.Label>
+                                                        <ReactSelect />
+                                                    </Form.Group>
+                                                    <Form.Group as={Col} >
+                                                        <Form.Label><small>Jumlah</small></Form.Label>
+                                                        <InputGroup className="mb-3">
+                                                            <InputGroup.Prepend>
+                                                                <InputGroup.Text>Rp. </InputGroup.Text>
+                                                            </InputGroup.Prepend>
+                                                            
+                                                                <CurrencyFormat 
+                                                                    className="form-control" 
+                                                                    //onChange={this.onChangeJumlah}
+                                                                    thousandSeparator={ true }
+                                                                    isNumericString={true}
+                                                                    onValueChange={(values) => {
+                                                                            const {formattedValue, value} = values;
+                                                                            this.setState({
+                                                                                expenses:  value * 1,
+                                                                                AmountTax: value * this.state.TaxRate,
+                                                                                //expenses_amount: this.state.expenses + this.state.AmountTax
+                                                                            })
+                                                                            this.calcGrandTotal();  
+                                                                        }
+                                                                    }                                                            
+
+                                                                />
+
+                                                            <InputGroup.Append>
+                                                                <InputGroup.Text>.00</InputGroup.Text>
+                                                            </InputGroup.Append>
+                                                        </InputGroup>
+                                                    </Form.Group>
+                                                    
+                                                </Form.Row>
+                                                    <br/>
+                                                    
+                                                </Form.Group> */}
 
                                                 <Form.Group as={Col} xs={5}>
-                                                    {/* <Form.Label>Memo</Form.Label>
-                                                    <Form.Control as="textarea" /> */}
+                                                    <Form.Label>Keterangan</Form.Label>
+                                                    <Form.Control as="textarea" onChange={this.onchangeKet}/>
                                                     <br/>
                                                     <br/>
                                                 </Form.Group>
@@ -621,7 +612,7 @@ class PembelianAddModal extends React.Component {
 }
 
 PembelianAddModal.propTypes = {
-    addBiaya: PropTypes.func.isRequired,
+    addPurchase: PropTypes.func.isRequired,
     errors: PropTypes.object.isRequired
 };
 
@@ -632,5 +623,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { addBiaya }
+    { addPurchase }
 )(withRouter(PembelianAddModal));
