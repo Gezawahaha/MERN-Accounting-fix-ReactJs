@@ -169,8 +169,8 @@ router.post("/purchase-add", async (req, res) => {
     );
 
     let post_hutang = await Main.findOne({
-      main_account_number: 1,
-      coa_account_number: 2,
+      coa_account_number: req.body.coa_account_number,
+      main_account_number: req.body.main_account_number,
     });
 
     let updatedpost_hutang = await Main.updateOne(
@@ -188,7 +188,7 @@ router.post("/purchase-add", async (req, res) => {
     );
 
     let post_coa_hutang = await Coa.findOne({
-      mcoa_account_number: req.body.coa_account_number,
+      coa_account_number: req.body.coa_account_number,
     });
 
     let updatedpost_hutang = await Coa.updateOne(
