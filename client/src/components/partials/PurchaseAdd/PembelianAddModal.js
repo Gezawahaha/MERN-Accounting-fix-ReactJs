@@ -312,7 +312,7 @@ class PembelianAddModal extends React.Component {
             .get("/supplier/Sup-data")
             .then(res => {
                 this.setState({ Supplier: res.data})
-                console.log("test",res.data);
+               //console.log("test",res.data);
             })
             .catch()
     }
@@ -330,7 +330,7 @@ class PembelianAddModal extends React.Component {
                                 <button type="button" className="close" data-dismiss="modal">&times;</button>
                             </div>
                             <div className="modal-body">
-                                <form noValidate onSubmit={this.onPurchaseAdd} id="add" >
+                                <form noValidate onSubmit={this.onPurchaseAdd} id="add-purchase" >
                                     <Card body bg="secondary" >
                                         <Form.Label><h5 className="font-hebbo">Supplier</h5></Form.Label>
                                         <Form.Group as={Col} >
@@ -482,7 +482,7 @@ class PembelianAddModal extends React.Component {
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <button
-                                    form="add"
+                                    form="add-purchase"
                                     type="submit"
                                     className="btn btn-primary">
                                     Tambah Transaksi

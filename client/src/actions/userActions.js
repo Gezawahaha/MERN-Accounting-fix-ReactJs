@@ -168,6 +168,20 @@ export const addPurchase = (userData, history) => dispatch => {
 };
 
 
+export const addPelunasan = (userData, history) => dispatch => {
+    axios
+        .post("/purchase/pelunasan", userData)
+        .then(res =>
+            dispatch({
+                type: USER_LOADING,
+                payload: res,
+            })
+        ).catch(err =>
+        dispatch({
+        })
+        );
+};
+
 
 
 

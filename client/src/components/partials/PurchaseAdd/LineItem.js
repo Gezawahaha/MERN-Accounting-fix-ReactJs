@@ -42,7 +42,7 @@ class LineItem extends Component {
         Item: mix,
         
       })
-      console.log(mix);
+      //console.log(mix);
     })
     .catch()
 

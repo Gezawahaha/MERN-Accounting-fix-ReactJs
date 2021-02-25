@@ -35,6 +35,8 @@ import BukuDetails from './components/pages/configure/bukudetails';
 import Assets from './components/pages/configure/assets'
 import pembelian from "./components/pages/pembelian";
 
+import Chartakunview from './components/pages/configure/Chartakunview';
+
 //import BiayaForm from './components/pages/BiayaForm';
 
 if (localStorage.jwtToken) {
@@ -78,6 +80,7 @@ class App extends Component {
                                 <PrivateRoute exact path="/buku" component={Buku} />
                                 <PrivateRoute exact path="/buku/bukudetails" component={BukuDetails} />
                                 <PrivateRoute exact path="/assets" component={Assets} />
+                                <PrivateRoute exact path="/viewcoa" component={Chartakunview}/>
                             </Switch>
                             <Route exact path="*" component={NotFound} />
                         </Switch>

@@ -1,0 +1,228 @@
+section.page-content.reports.new-design .content-wrapper .table-container.list-table .table-responsive table.report-table.table tbody tr td.report-subheader-noindent {
+    font-family: "Roboto-Bold", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    text-align: left;
+    border: none !important;
+    background: #f8f8f8;
+}
+section.page-content.reports.new-design .content-wrapper .table-container.list-table .table-responsive table.report-table.table tbody tr td.report-header {
+    font-family: "Roboto-Bold", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    text-align: left;
+    border: none !important;
+}
+.table>thead>tr>th, .table>thead>tr>td, .table>tbody>tr>th, .table>tbody>tr>td, .table>tfoot>tr>th, .table>tfoot>tr>td {
+    padding: 0.4em 1em;
+    border-top-color: #ecf0f1;
+    color: #404040;
+    font-size: 10pt;
+}
+.table>thead>tr>th, .table>thead>tr>td, .table>tbody>tr>th, .table>tbody>tr>td, .table>tfoot>tr>th, .table>tfoot>tr>td {
+    padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+}
+.report-table tbody td, .report-table tbody th {
+    white-space: nowrap;
+}
+.report-subheader-noindent {
+    font-family: "Roboto-Bold", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    text-align: left;
+    font-size: 14px;
+    border: none !important;
+}
+.report-subheader {
+    font-family: "Roboto-Bold", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    text-indent: 1.5em;
+    text-align: left;
+    font-size: 14px;
+    border: none !important;
+    padding-bottom: 0 !important;
+}
+.report-subtotal {
+    text-indent: 2em;
+    font-family: "Roboto-Bold", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1em;
+    border-top: 1px solid #000000 !important;
+}
+.report-header {
+    color: #1e1e1e !important;
+    border: none !important;
+    padding-bottom: 0.75em !important;
+}
+.report-data, .report-subtotal, .grand-total {
+    padding-bottom: 0.3em !important;
+    padding-top: 0.3em !important;
+}
+
+.report-data.data-col-1 {
+    text-indent: 3em;
+}
+.report-table tbody td, .report-table tbody th {
+    white-space: nowrap;
+}
+
+
+element.style {
+}
+section.page-content.reports.new-design .content-wrapper .table-container.list-table .table-responsive table.report-table.table tbody tr td.report-subtotal.no-indent, section.page-content.reports.new-design .content-wrapper .table-container.list-table .table-responsive table.report-table.table tbody tr td.grand-total.no-indent {
+    text-indent: 0px !important;
+}
+section.page-content.reports.new-design .content-wrapper .table-container.list-table .table-responsive table.report-table.table tbody tr td.report-subtotal, section.page-content.reports.new-design .content-wrapper .table-container.list-table .table-responsive table.report-table.table tbody tr td.grand-total {
+    text-indent: 1.5em !important;
+    font-family: "Roboto-Bold", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+}
+section.page-content.reports.new-design .content-wrapper .table-container.list-table .table-responsive table.report-table.table tbody tr td.grand-total {
+    font-family: "Roboto-Bold", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    border-top: 1px solid #000000 !important;
+    border-bottom: 1px solid #ecf0f1 !important;
+}
+.table>thead>tr>th, .table>thead>tr>td, .table>tbody>tr>th, .table>tbody>tr>td, .table>tfoot>tr>th, .table>tfoot>tr>td {
+    padding: 0.4em 1em;
+    border-top-color: #ecf0f1;
+    color: #404040;
+    font-size: 10pt;
+}
+.table>thead>tr>th, .table>thead>tr>td, .table>tbody>tr>th, .table>tbody>tr>td, .table>tfoot>tr>th, .table>tfoot>tr>td {
+    padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+}
+.report-table tbody td, .report-table tbody th {
+    white-space: nowrap;
+}
+.grand-total {
+    font-family: "Roboto-Bold", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #1e1e1e !important;
+    font-size: 1em;
+    border-top: 2px solid #1e1e1e !important;
+    border-bottom: 2px solid #1e1e1e;
+}
+
+.width-100 {
+    width: 100%;
+}
+.text-right {
+    text-align: right;
+}
+.tdkanan {
+    padding-left: 0;
+}
+
+td, th {
+    padding: 0;
+}
+* {
+    box-sizing: border-box;
+}
+* {
+    box-sizing: border-box;
+}
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+user agent stylesheet
+td {
+    display: table-cell;
+    vertical-align: inherit;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+table {
+    border-collapse: collapse;
+}
+user agent stylesheet
+table {
+    border-collapse: separate;
+    text-indent: initial;
+    border-spacing: 2px;
+}
+.dragscroll {
+    overflow: scroll;
+    cursor: grab;
+    cursor: -o-grab;
+    cursor: -webkit-grab;
+}
+section.page-content.reports.new-design {
+    font-family: "Roboto-Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    padding: 25px !important;
+}
+body {
+    line-height: 1.45;
+}
+body {
+    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333333;
+    background-color: #fff;
+}
+body, p, .font-size-default {
+    font-size: 0.875rem;
+    line-height: 20px;
+    letter-spacing: 0.2px;
+}
+body, p, .font-size-default {
+    font-size: 0.875rem;
+    line-height: 20px;
+    letter-spacing: 0.2px;
+}
+body {
+    margin: 0;
+    font-family: "Roboto", "Oxygen", "Ubuntu", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.4285;
+    color: #212121;
+    text-align: left;
+    background-color: #fff;
+}
+body, p, .font-size-default {
+    font-size: 0.875rem;
+    line-height: 20px;
+    letter-spacing: 0.2px;
+}
+html {
+    font-size: 16px;
+}
+html {
+    font-size: 10px;
+    -webkit-tap-highlight-color: transparent;
+}
+html {
+    font-family: sans-serif;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+html {
+    font-family: sans-serif;
+    line-height: 1.15;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
+*:before, *:after {
+    box-sizing: border-box;
+}
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+*:before, *:after {
+    box-sizing: border-box;
+}
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+.page {
+    background: white;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 0.5cm;
+    box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+    width: 21cm;
+  }

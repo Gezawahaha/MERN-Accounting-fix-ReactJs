@@ -255,7 +255,7 @@ class BiayaAddModal extends React.Component {
   handleLineItemChange = (elementIndex) => (event) => {
     let lineItems = this.state.lineItems.map((item, i) => {
       if (elementIndex !== i) return item
-      return {...item, [event.target.name]: event.target.value}
+      return {...item, [event.target.name]: event.target.value , nomor_bukti: this.state.expense_no}
     })
     this.setState({lineItems})
   }
