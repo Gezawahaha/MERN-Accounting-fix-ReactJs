@@ -326,6 +326,60 @@ router.post("/pelunasan", async (req, res) => {
     }
 
     //UPDATE BANK
+    let sub_pelunasan = await Post.findOne({
+      coa_account_number: req.body.coa_account_number,
+      main_account_number: req.body.main_account_number,
+      sub_account_number: req.body.sub_account_number,
+    });
+
+    let updatedsub_pelunasan = await Post.updateOne(
+      {
+        coa_account_number: req.body.coa_account_number,
+        main_account_number: req.body.main_account_number,
+        sub_account_number: req.body.sub_account_number,
+      },
+      {
+        $set: {
+          total_debit: sub_pelunasan.total_debit - req.body.amount,
+          updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+        },
+      }
+    );
+
+    let post_pelunasan = await Main.findOne({
+      coa_account_number: req.body.coa_account_number,
+      main_account_number: req.body.main_account_number,
+    });
+
+    let updatedpost_pelunasan = await Main.updateOne(
+      {
+        coa_account_number: req.body.coa_account_number,
+        main_account_number: req.body.main_account_number,
+      },
+      {
+        $set: {
+          total_debit: post_pelunasan.total_debit - req.body.amount,
+          updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+        },
+      }
+    );
+
+    let post_coa_pelunasan = await Coa.findOne({
+      coa_account_number: req.body.coa_account_number,
+    });
+
+    let updatedcoa_pelunasan = await Coa.updateOne(
+      {
+        coa_account_number: req.body.coa_account_number,
+      },
+      {
+        $set: {
+          total_debit: post_coa_pelunasan.total_debit - req.body.amount,
+          updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+        },
+      }
+    );
+
     let postbukubank = new DetailBuku({
       coa_account_number: req.body.coa_account_number,
       main_account_number: req.body.main_account_number,
@@ -373,7 +427,7 @@ router.post("/pelunasan", async (req, res) => {
       },
       {
         $set: {
-          total_kredit: sub_hutang.total_kredit - req.body.amount,
+          total_kredit: sub_hutang.total_kredit + req.body.amount,
           updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         },
       }
@@ -391,7 +445,7 @@ router.post("/pelunasan", async (req, res) => {
       },
       {
         $set: {
-          total_kredit: post_hutang.total_kredit - req.body.amount,
+          total_kredit: post_hutang.total_kredit + req.body.amount,
           updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         },
       }
