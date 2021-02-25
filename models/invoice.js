@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const InvoiceSchema = mongoose.Schema({
   // nama_buku: {
@@ -6,8 +7,7 @@ const InvoiceSchema = mongoose.Schema({
   //   required: true,
   // },
   InvoiceID: {
-    type: String,
-    required: true,
+    type: Number,
   },
   nomor_bukti: {
     type: String,
@@ -37,4 +37,5 @@ const InvoiceSchema = mongoose.Schema({
   },
 });
 
+InvoiceSchema.plugin(AutoIncrement, {inc_field: "InvoiceID"});
 module.exports = mongoose.model("Invoice", InvoiceSchema);
