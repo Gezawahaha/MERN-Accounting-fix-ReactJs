@@ -331,7 +331,7 @@ class PembelianAddModal extends React.Component {
                             </div>
                             <div className="modal-body">
                                 <form noValidate onSubmit={this.onPurchaseAdd} id="add" >
-                                    <Card body bg="info" >
+                                    <Card body bg="secondary" >
                                         <Form.Label><h5 className="font-hebbo">Supplier</h5></Form.Label>
                                         <Form.Group as={Col} >
                                             <ReactSelect

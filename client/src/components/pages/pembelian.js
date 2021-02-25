@@ -8,8 +8,6 @@ import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import axios from "axios";
 import {faMoneyBill, faPlus} from "@fortawesome/free-solid-svg-icons";
-import SubAkunAddModal from "../partials/SubAkunAddModal";
-import SubAkunUpdateModal from "../partials/SubAkunUpdateModal";
 import { toast, ToastContainer} from "react-toastify";
 import CurrencyFormat from 'react-currency-format';
 
@@ -20,7 +18,7 @@ import { Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import moment from 'moment';
 import ReactMomentCountDown from "react-moment-countdown";
 import PembelianAddModal from "../partials/PurchaseAdd/PembelianAddModal";
-
+import BayarAddModal from "../partials/PurchaseAdd/BayarAddModal";
 class pembelian extends Component {
 
     constructor(props) {
@@ -178,7 +176,8 @@ class pembelian extends Component {
         this.state = {
             records: [],
             supData: [],
-            invActive: 0
+            invActive: 0,
+            hutang: [],
         };
 
         this.state = {
@@ -202,22 +201,32 @@ class pembelian extends Component {
         let number = parseFloat(numberString);
         return (<CurrencyFormat value={number} displayType={'text'} thousandSeparator={true} prefix={'Rp. '} />);
     }
-    
-    
-
     componentDidMount() {
         this.getData();
         //console.log("testad", this.state.records);
-        
+        this.getDataHutang();
         
     };
-
     componentWillReceiveProps(nextProps) {
         this.getData();
         this.getDataSup();
+        this.getDataHutang();
         
     }
-
+    getDataHutang() {
+        axios.get('/coa/main/test/MoA-data')
+            .then(res => {
+                for (let index = 0; index < res.data.length; index++) {
+                    if (res.data[index].name == "Hutang Dagang") {
+                        this.setState({ hutang: res.data[index].total_kredit })
+                    }
+                    
+                }
+                
+                //console.log("DK", this.state.records);
+            })
+            .catch()
+    }
     getDataSup() {
         
         axios.get('/supplier/Sup-data')
@@ -229,7 +238,6 @@ class pembelian extends Component {
             .catch()
 
     }
-
     getData() {
         var InvBelumLunas = 0;
         axios.get('/purchase/purchase-data')
@@ -247,12 +255,10 @@ class pembelian extends Component {
             .catch()
             
     }
-
     editRecord(record) {
         this.setState({ currentRecord: record});
         //console.log(this.state.currentRecord);
     }
-
     deleteRecord(record) {
         console.log("Masok Delete");
         axios
@@ -267,22 +273,22 @@ class pembelian extends Component {
             .catch();
         this.getData();
     }
-
     pageChange(pageData) {
         console.log("OnPageChange", pageData);
     }
-
     render() {
         return (
             <div>
                 <Navbar />
                 <div className="d-flex" id="wrapper">
                     <Sidebar/>
+                    <BayarAddModal />
                     <PembelianAddModal/>
+                    
                     <div id="page-content-wrapper">
                         <div className="container-fluid">
                             <button className="btn btn-link mt-3" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
-                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-pembayaran-modal"><FontAwesomeIcon icon={faMoneyBill}/> Bayar Invoice</button>
+                            <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-bayar-modal"><FontAwesomeIcon icon={faMoneyBill}/> Bayar Invoice</button>
                             <button className="btn btn-outline-primary float-right mt-3 mr-2" data-toggle="modal" data-target="#add-pembelian-modal"><FontAwesomeIcon icon={faPlus}/> Invoice</button>
                             <h1 className="mt-2 text-primary">Pembelian</h1>
                             <div className="row px-2">
@@ -302,7 +308,7 @@ class pembelian extends Component {
                                         <div className="card-body">
                                             <h5 className="card-title">Jumlah Hutang</h5>
                                             <small>TOTAL</small>
-                                            <h2 className="card-text"><CurrencyFormat value={ 0 } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
+                                            <h2 className="card-text"><CurrencyFormat value={ this.state.hutang } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></h2>
                                         </div>
                                     </div>
                                 </div>
