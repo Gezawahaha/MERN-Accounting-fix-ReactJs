@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
 const InvoiceSchema = mongoose.Schema({
-  nama_buku: {
-    type: String,
-    required: true,
-  },
+  // nama_buku: {
+  //   type: String,
+  //   required: true,
+  // },
   InvoiceID: {
     type: String,
     required: true,

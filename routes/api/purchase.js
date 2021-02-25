@@ -275,7 +275,6 @@ router.post("/purchase-add", async (req, res) => {
 //PEMBAYARAN / PELUNASAN
 router.post("/pelunasan", async (req, res) => {
   const invoice = new Invoice({
-    nama_buku: req.body.nama_buku,
     InvoiceID: req.body.InvoiceID,
     nomor_bukti: req.body.nomor_bukti,
     amount: req.body.amount,
