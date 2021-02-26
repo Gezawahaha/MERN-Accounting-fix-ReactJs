@@ -9,6 +9,10 @@ import {faList} from "@fortawesome/free-solid-svg-icons/faList";
 import {Link} from "react-router-dom";
 import {faUserAlt} from "@fortawesome/free-solid-svg-icons/faUserAlt";
 
+import Iframe from 'react-iframe';
+
+import '../style/Dashboard.scss';
+
 class Dashboard extends Component {
 
     onLogoutClick = e => {
@@ -28,6 +32,10 @@ class Dashboard extends Component {
                         <div className="container-fluid">
                             <button className="btn btn-link mt-2" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
                             <h1 className="mt-2 text-primary">Dashboard </h1>
+
+
+
+
                             <div className="row px-2">
                                 <div className="col-sm-3 p-sm-2">
                                     <div className="card bg-primary text-white shadow-lg">
@@ -70,6 +78,18 @@ class Dashboard extends Component {
                                     </div>
                                 </div>
                             </div>
+
+                            <br/>
+
+                            {/* SCSS DI CHARAKUNVIEW */}
+                            <div className="oileprice">
+                            <Iframe url="https://oilprice.com/oil-price-charts/"
+                                id="myId"
+                                className="iframe"
+                                display="initial"
+                                position="relative"/>
+                            </div>
+
                         </div>
                     </div>
                 </div>

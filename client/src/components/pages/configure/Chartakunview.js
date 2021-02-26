@@ -29,6 +29,8 @@ import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table';
 import InputGroup from 'react-bootstrap/InputGroup';
 
+
+
 class Chartakunview extends Component {
 
     constructor(props) {
@@ -70,6 +72,7 @@ class Chartakunview extends Component {
 
     componentDidMount() {
         this.getDataCOA();
+        //this.oilpriceworld();
         //console.log("testad", this.state.records);
         
         
@@ -78,8 +81,18 @@ class Chartakunview extends Component {
 
     componentWillReceiveProps(nextProps) {
         this.getDataCOA();
+        //this.oilpriceworld();
         
     }
+
+    // oilpriceworld() {
+    //     axios.get('https://s3.amazonaws.com/oilprice.com/widgets/oilprices/45/last.json?t=1614321902137')
+    //         .then(res => {
+    //             console.log("oilprice",res.data)
+    //         })
+    //         .catch()
+    // }
+
     combineData(){
         let coa = this.state.dataCOA;
         let main = this.state.dataMAIN;
@@ -119,7 +132,7 @@ class Chartakunview extends Component {
 
                 this.setState({ dataSUB: res.data , LenghtdataSUB: res.data.length , ALLDATA:x})
                 //console.log("DK", this.state.records);
-                console.log(this.state.ALLDATA)
+                //console.log(this.state.ALLDATA)
             })
             .catch()
             //this.printdata(); 
@@ -153,7 +166,7 @@ class Chartakunview extends Component {
     }
 
     pageChange(pageData) {
-        console.log("OnPageChange", pageData);
+        //console.log("OnPageChange", pageData);
     }
 
     render() {
@@ -166,7 +179,7 @@ class Chartakunview extends Component {
         const items = []
 
         for (let indexC = 0; indexC < this.state.LenghtdataCOA; indexC++) {
-            items.push(<br/>)
+            items.push(<tr/>)
             items.push(<tr><td className="report-header report-subheader-noindent" colSpan="4"> <b>{ coadata[indexC].name }</b> </td></tr>)
             let sumM = 0
             for (let indexM = 0; indexM < this.state.LenghtdataMAIN; indexM++) {
@@ -199,7 +212,7 @@ class Chartakunview extends Component {
                     }
                     items.push(
                         <tr>
-                            <td className="report-subtotal" colspan="2">{`Total ${maindata[indexM].name}`}</td>
+                            <td className="report-subtotal" colSpan="2">{`Total ${maindata[indexM].name}`}</td>
                             <td className="report-subtotal text-right" id="assets-type-1-total-data"><CurrencyFormat value={ sumS } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></td>
                             <td className="border-top-thin report-subtotal tdkanan" ></td>
                         </tr>
@@ -210,7 +223,7 @@ class Chartakunview extends Component {
             }
             items.push(
                 <tr>
-                    <td className="grand-total no-indent" colspan="2">{`Total ${coadata[indexC].name}`}</td>
+                    <td className="grand-total no-indent" colSpan="2">{`Total ${coadata[indexC].name}`}</td>
                     <td className="grand-total text-right no-indent" id="assets-type-1-total-data"><CurrencyFormat value={ sumM } displayType={'text'} thousandSeparator={true} prefix={'Rp. '} /></td>
                     <td className="no-indent grand-total tdkanan"></td>
                 </tr>
@@ -231,7 +244,8 @@ class Chartakunview extends Component {
                             <button className="btn btn-link mt-3" id="menu-toggle"><FontAwesomeIcon icon={faList}/></button>
                             
                             <h1 className="mt-2 text-primary">Neraca</h1>
-                            <page className="page">
+                            
+                            <div className="page">
                             <Card>
                                 <Card.Header>print</Card.Header>
                                 <Card.Body>
@@ -239,7 +253,7 @@ class Chartakunview extends Component {
                                         <table className="report-table table">
                                             <thead className="report-header bg-info">
                                                 <tr>
-                                                    <th colspan="2"></th>
+                                                    <th colSpan="2"></th>
                                                     <th className="text-right">25/02/2021</th>
                                                     <th></th>
                                                 </tr>
@@ -255,7 +269,7 @@ class Chartakunview extends Component {
 
                                 </Card.Body>
                             </Card>
-                            </page>
+                            </div>
 
                     
                         </div>

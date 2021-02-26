@@ -87,8 +87,19 @@ class pembelian extends Component {
                 align: "center",
                 sortable: true,
                 cell: record => <Fragment>
-                    {record == 1 && (<span class="badge badge-success">Lunas</span>)}
-                    <span class="badge badge-warning">On-going</span>
+                    {/* {record.status == 1 && (<span class="badge badge-success">Lunas</span>) }
+                    {record.dueDate <= moment().format("YYYY-MM-DD HH:mm:ss") && (<span className="badge badge-warning">On-going</span>) && (<span class="badge badge-danger">Due Date</span>) }
+                    {record.status == 0 && (<span class="badge badge-success">Lunas</span>) && (<span className="badge badge-warning">On-going</span>) } */}
+                    { 
+                       ( record.dueDate <= moment().format("YYYY-MM-DD HH:mm:ss")
+                            && <span class="badge badge-danger">Due Date</span>
+                                || (record.status == 0)
+                        )
+                                
+                        
+
+                    }
+                    
                 
                 </Fragment>
             },
@@ -339,7 +350,7 @@ class pembelian extends Component {
                             
                             
                             <ReactDatatable
-                                
+                                id="tabledata"
                                 config={this.config}
                                 records={this.state.records}
                                 columns={this.columns}

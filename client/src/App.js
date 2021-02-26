@@ -34,6 +34,7 @@ import Buku from './components/pages/configure/buku';
 import BukuDetails from './components/pages/configure/bukudetails';
 import Assets from './components/pages/configure/assets'
 import pembelian from "./components/pages/pembelian";
+import penjualan from "./components/pages/penjualan";
 
 import Chartakunview from './components/pages/configure/Chartakunview';
 
@@ -66,6 +67,7 @@ class App extends Component {
                                 <PrivateRoute exact path="/kasdanbank" component={KasdanBank}/>
 
                                 <PrivateRoute exact path="/pembelian" component={pembelian}/>
+                                <PrivateRoute exact path="/penjualan" component={penjualan}/>
                                 <PrivateRoute exact path="/users" component={User} />
                                 <PrivateRoute exact path="/karyawan" component={Employee} />
                                 <PrivateRoute exact path="/supplier" component={Supplier} />
