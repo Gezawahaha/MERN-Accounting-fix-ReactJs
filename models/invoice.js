@@ -2,10 +2,6 @@ const mongoose = require("mongoose");
 const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const InvoiceSchema = mongoose.Schema({
-  // nama_buku: {
-  //   type: String,
-  //   required: true,
-  // },
   InvoiceID: {
     type: Number,
   },

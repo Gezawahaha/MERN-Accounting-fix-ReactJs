@@ -51,18 +51,6 @@ router.post("/Biaya-add", async (req, res) => {
         link_id: savedPost._id,
       });
 
-      // const sub_post = new Post({
-      //   sub_account_number: req.body.expense_detail[item].expenses_account,
-      //   total_debit: 0,
-      //   total_kredit:
-      //     req.body.expense_detail[item].expenses_amount +
-      //     req.body.expense_detail[item].tax,
-      //   created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-      //   updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-      //   main_account_number: req.body.expense_detail[item].main_account_number,
-      //   coa_account_number: req.body.expense_detail[item].coa_account_number,
-      // });
-
       try {
         // const SubPost = await sub_post.save();
         let biaya_sub = await Post.findOne({
@@ -100,8 +88,6 @@ router.post("/Biaya-add", async (req, res) => {
                 req.body.expense_detail[item].coa_account_number,
             });
 
-            let debit = specific_main_account.total_debit;
-            let kredit = specific_main_account.total_kredit;
             let updatedmain = await Main.updateOne(
               {
                 main_account_number:
@@ -112,10 +98,9 @@ router.post("/Biaya-add", async (req, res) => {
               {
                 $set: {
                   total_debit:
-                    debit +
+                    specific_main_account.total_debit +
                     req.body.expense_detail[item].expenses_amount +
                     req.body.expense_detail[item].tax,
-                  total_kredit: kredit + 0,
                   updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
                 },
               }
@@ -127,8 +112,6 @@ router.post("/Biaya-add", async (req, res) => {
                 req.body.expense_detail[item].coa_account_number,
             });
 
-            let coa_debit = specific_coa_account.total_debit;
-            let coa_kredit = specific_coa_account.total_kredit;
             let updatecoa = await Coa.updateOne(
               {
                 coa_account_number:
@@ -137,10 +120,9 @@ router.post("/Biaya-add", async (req, res) => {
               {
                 $set: {
                   total_debit:
-                    coa_debit +
+                    specific_coa_account.total_debit +
                     req.body.expense_detail[item].expenses_amount +
                     req.body.expense_detail[item].tax,
-                  total_kredit: coa_kredit + 0,
                   updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
                 },
               }
@@ -233,7 +215,7 @@ router.post("/Biaya-add", async (req, res) => {
       total_kredit: req.body.total_expense_amount,
       saldo: req.body.total_expense_amount,
       tgl_transaksi: moment().format("YYYY-MM-DD HH:mm:ss"),
-      nomor_bukti: req.body.nomor_bukti,
+      nomor_bukti: req.body.expense_no,
       link_id: 4,
     });
 

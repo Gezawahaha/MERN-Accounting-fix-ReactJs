@@ -282,11 +282,8 @@ router.post("/pelunasan", async (req, res) => {
     description: req.body.description,
     created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
     updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-    link_id: req.body.link_id, //BUKU BANK
-    purchaseID: req.body.purchaseID, //AMBIL PURCHASE ID DARI PURCHASE
-    // coa_account_number: req.body.coa_account_number,
-    // main_account_number: req.body.main_account_number,
-    // sub_account_number: req.body.sub_account_number,
+    link_id: req.body.link_id,
+    purchaseID: req.body.purchaseID,
   });
 
   try {
