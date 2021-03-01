@@ -10,6 +10,7 @@ const DetailBuku = require("../../models/buku_detail");
 const Purchase = require("../../models/purchase");
 const PurchaseDetail = require("../../models/purchase_detail");
 const Invoice = require("../../models/invoice");
+const Stock = require("../../models/stock");
 const moment = require("moment");
 
 //GET ALL THE POST

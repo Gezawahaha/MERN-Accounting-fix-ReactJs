@@ -7,6 +7,10 @@ const Main = require("../../models/main_account");
 const Coa = require("../../models/chart_of_account");
 const Buku = require("../../models/buku");
 const DetailBuku = require("../../models/buku_detail");
+const Purchase = require("../../models/purchase");
+const PurchaseDetail = require("../../models/purchase_detail");
+const Invoice = require("../../models/invoice");
+const Stock = require("../../models/stock");
 const moment = require("moment");
 
 //GET ALL THE POST
@@ -20,7 +24,7 @@ router.get("/Biaya-data", async (req, res) => {
 });
 
 //SUBMIT A POST
-router.post("/Biaya-add", async (req, res) => {
+router.post("/Sales-add", async (req, res) => {
   const expenses = new Expenses({
     pay_from_account_number: req.body.pay_from_account_number,
     beneficiary: req.body.beneficiary,
@@ -73,7 +77,8 @@ router.post("/Biaya-add", async (req, res) => {
               $set: {
                 total_debit:
                   biaya_sub.total_debit +
-                  req.body.expense_detail[item].expenses_amount,
+                  req.body.expense_detail[item].expenses_amount +
+                  req.body.expense_detail[item].tax,
                 updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
               },
             }
@@ -98,7 +103,8 @@ router.post("/Biaya-add", async (req, res) => {
                 $set: {
                   total_debit:
                     specific_main_account.total_debit +
-                    req.body.expense_detail[item].expenses_amount,
+                    req.body.expense_detail[item].expenses_amount +
+                    req.body.expense_detail[item].tax,
                   updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
                 },
               }
@@ -119,7 +125,8 @@ router.post("/Biaya-add", async (req, res) => {
                 $set: {
                   total_debit:
                     specific_coa_account.total_debit +
-                    req.body.expense_detail[item].expenses_amount,
+                    req.body.expense_detail[item].expenses_amount +
+                    req.body.expense_detail[item].tax,
                   updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
                 },
               }
@@ -142,7 +149,8 @@ router.post("/Biaya-add", async (req, res) => {
                 $set: {
                   total_debit:
                     post_kas.total_debit -
-                    req.body.expense_detail[item].expenses_amount,
+                    req.body.expense_detail[item].expenses_amount -
+                    req.body.expense_detail[item].tax,
                   updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
                 },
               }

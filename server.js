@@ -59,6 +59,7 @@ const BukuRoute = require("./routes/api/buku");
 const BukuDetailRoute = require("./routes/api/buku_detail");
 const AsetRoute = require("./routes/api/aset");
 const PurchaseRoute = require("./routes/api/purchase");
+const StockRoute = require("./routes/api/stock");
 
 app.use("/coa", ChartOfAccountRoute);
 app.use("/coa/main", MainAccountRoute);
@@ -74,6 +75,7 @@ app.use("/buku", BukuRoute);
 app.use("/buku/details", BukuDetailRoute);
 app.use("/aset", AsetRoute);
 app.use("/purchase", PurchaseRoute);
+app.use("/stock", StockRoute);
 
 app.use(express.static(path.join(__dirname, "client/build")));
 
