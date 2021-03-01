@@ -32,6 +32,9 @@ router.post("/Biaya-add", async (req, res) => {
     total_expense_amount: req.body.total_expense_amount,
     created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
     updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+    coa_account_number: req.body.coa_account_number,
+    main_account_number: req.body.main_account_number,
+    sub_account_number: req.body.sub_account_number,
   });
 
   try {
@@ -127,21 +130,59 @@ router.post("/Biaya-add", async (req, res) => {
 
             //UPDATE KAS
             let post_kas = await Post.findOne({
-              sub_account_number: 1,
-              main_account_number: 1,
-              coa_account_number: 1,
+              coa_account_number: req.body.coa_account_number,
+              main_account_number: req.body.main_account_number,
+              sub_account_number: req.body.sub_account_number,
             });
 
             let updatedpost_kas = await Post.updateOne(
               {
-                sub_account_number: 1,
-                main_account_number: 1,
-                coa_account_number: 1,
+                coa_account_number: req.body.coa_account_number,
+                main_account_number: req.body.main_account_number,
+                sub_account_number: req.body.sub_account_number,
               },
               {
                 $set: {
                   total_debit:
                     post_kas.total_debit -
+                    req.body.expense_detail[item].expenses_amount,
+                  updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+                },
+              }
+            );
+
+            let main_kas = await Main.findOne({
+              coa_account_number: req.body.coa_account_number,
+              main_account_number: req.body.main_account_number,
+            });
+
+            let updatedmain_kas = await Main.updateOne(
+              {
+                coa_account_number: req.body.coa_account_number,
+                main_account_number: req.body.main_account_number,
+              },
+              {
+                $set: {
+                  total_debit:
+                    main_kas.total_debit -
+                    req.body.expense_detail[item].expenses_amount,
+                  updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+                },
+              }
+            );
+
+            let coa_kas = await Coa.findOne({
+              coa_account_number: req.body.coa_account_number,
+            });
+
+            let updatedcoa_kas = await Coa.updateOne(
+              {
+                coa_account_number: req.body.coa_account_number,
+              },
+              {
+                $set: {
+                  total_debit:
+                    coa_kas.total_debit -
                     req.body.expense_detail[item].expenses_amount,
                   updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
                 },
