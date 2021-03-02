@@ -45,7 +45,9 @@ router.post("/Biaya-add", async (req, res) => {
     const savedPost = await expenses.save();
     let datasaved = 0;
     Object.keys(req.body.expense_detail).map(async (item) => {
-      let post = new ExpensesDetail({
+      const post = [];
+      const account = [];
+      post[item] = await new ExpensesDetail({
         expenses_account: req.body.expense_detail[item].expenses_account,
         description: req.body.expense_detail[item].description,
         expenses_amount: req.body.expense_detail[item].expenses_amount,
@@ -54,216 +56,156 @@ router.post("/Biaya-add", async (req, res) => {
         link_id: savedPost._id,
       });
 
+      account[item] = await {
+        sub_account_number: req.body.expense_detail[item].expenses_account,
+        main_account_number: req.body.expense_detail[item].main_account_number,
+        coa_account_number: req.body.expense_detail[item].coa_account_number,
+      };
+
+      console.log("item", item);
+      console.log("post", post[item]);
+      console.log("amount", post[item].expenses_amount);
+      console.log("account", account[item]);
+      console.log("account detail", account[item].coa_account_number);
+
       try {
-        let biaya_sub = await Post.findOne({
-          sub_account_number: req.body.expense_detail[item].expenses_account,
-          main_account_number:
-            req.body.expense_detail[item].main_account_number,
-          coa_account_number: req.body.expense_detail[item].coa_account_number,
-        });
-        try {
-          let updatedpost = await Post.updateOne(
-            {
-              sub_account_number:
-                req.body.expense_detail[item].expenses_account,
-              main_account_number:
-                req.body.expense_detail[item].main_account_number,
-              coa_account_number:
-                req.body.expense_detail[item].coa_account_number,
+        await Post.findOneAndUpdate(
+          {
+            sub_account_number: account[item].sub_account_number,
+            main_account_number: account[item].main_account_number,
+            coa_account_number: account[item].coa_account_number,
+          },
+          {
+            $inc: {
+              total_debit: post[item].expenses_amount,
             },
+            $set: {
+              // total_debit: biaya_sub.total_debit + post[item].expenses_amount,
+              updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+            },
+          }
+        );
+
+        await Main.findOneAndUpdate(
+          {
+            main_account_number: account[item].main_account_number,
+            coa_account_number: account[item].coa_account_number,
+          },
+          {
+            $inc: {
+              total_debit: post[item].expenses_amount,
+            },
+            $set: {
+              // total_debit: biaya_sub.total_debit + post[item].expenses_amount,
+              updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+            },
+          }
+        );
+
+        await Coa.findOneAndUpdate(
+          {
+            coa_account_number: account[item].coa_account_number,
+          },
+          {
+            $inc: {
+              total_debit: post[item].expenses_amount,
+            },
+            $set: {
+              // total_debit: biaya_sub.total_debit + post[item].expenses_amount,
+              updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+            },
+          }
+        );
+
+        //UPDATE KAS
+        await Post.findOneAndUpdate(
+          {
+            coa_account_number: coa_account_number_kas,
+            main_account_number: main_account_number_kas,
+            sub_account_number: sub_account_number_kas,
+          },
+          {
+            $inc: {
+              total_debit: -post[item].expenses_amount,
+            },
+            $set: {
+              // total_debit: biaya_sub.total_debit + post[item].expenses_amount,
+              updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+            },
+          }
+        );
+        await Main.findOneAndUpdate(
+          {
+            coa_account_number: coa_account_number_kas,
+            main_account_number: main_account_number_kas,
+          },
+          {
+            $inc: {
+              total_debit: -post[item].expenses_amount,
+            },
+            $set: {
+              // total_debit: biaya_sub.total_debit + post[item].expenses_amount,
+              updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+            },
+          }
+        );
+        await Coa.findOneAndUpdate(
+          {
+            coa_account_number: coa_account_number_kas,
+          },
+          {
+            $inc: {
+              total_debit: -post[item].expenses_amount,
+            },
+            $set: {
+              // total_debit: biaya_sub.total_debit + post[item].expenses_amount,
+              updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+            },
+          }
+        );
+        //POST BUKU BIAYA
+        let postbuku = new DetailBuku({
+          sub_account_number: account[item].expenses_account,
+          main_account_number: account[item].main_account_number,
+          coa_account_number: account[item].coa_account_number,
+          created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+          updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+          description: post[item].description,
+          total_debit: post[item].expenses_amount,
+          total_kredit: 0,
+          saldo: post[item].expenses_amount,
+          tgl_transaksi: moment().format("YYYY-MM-DD HH:mm:ss"),
+          nomor_bukti: req.body.expense_no,
+          link_id: 3,
+        });
+
+        let postbukusaved = await postbuku.save();
+        if (postbukusaved != null) {
+          let buku = await Buku.findOne({buku_id: 3});
+          let saldo = buku.total_saldo;
+          let debit = buku.total_debit;
+          let kredit = buku.total_kredit;
+          let updatedbuku = await Buku.updateOne(
+            {buku_id: 3},
             {
               $set: {
-                total_debit:
-                  biaya_sub.total_debit +
-                  req.body.expense_detail[item].expenses_amount,
+                total_saldo: saldo + post[item].expenses_amount,
+                total_debit: debit + post[item].expenses_amount,
                 updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
               },
             }
           );
-          try {
-            //UPDATE MAIN ACC
-            let specific_main_account = await Main.findOne({
-              main_account_number:
-                req.body.expense_detail[item].main_account_number,
-              coa_account_number:
-                req.body.expense_detail[item].coa_account_number,
-            });
-
-            try {
-              let updatedmain = await Main.updateOne(
-                {
-                  main_account_number:
-                    req.body.expense_detail[item].main_account_number,
-                  coa_account_number:
-                    req.body.expense_detail[item].coa_account_number,
-                },
-                {
-                  $set: {
-                    total_debit:
-                      specific_main_account.total_debit +
-                      req.body.expense_detail[item].expenses_amount,
-                    updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-                  },
-                }
-              );
-              //UPDATE COA
-              let specific_coa_account = await Coa.findOne({
-                coa_account_number:
-                  req.body.expense_detail[item].coa_account_number,
-              });
-              try {
-                let updatecoa = await Coa.updateOne(
-                  {
-                    coa_account_number:
-                      req.body.expense_detail[item].coa_account_number,
-                  },
-                  {
-                    $set: {
-                      total_debit:
-                        specific_coa_account.total_debit +
-                        req.body.expense_detail[item].expenses_amount,
-                      updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-                    },
-                  }
-                );
-                //UPDATE KAS
-                let post_kas = await Post.findOne({
-                  coa_account_number: coa_account_number_kas,
-                  main_account_number: main_account_number_kas,
-                  sub_account_number: sub_account_number_kas,
-                });
-                try {
-                  let updatedpost_kas = await Post.updateOne(
-                    {
-                      coa_account_number: coa_account_number_kas,
-                      main_account_number: main_account_number_kas,
-                      sub_account_number: sub_account_number_kas,
-                    },
-                    {
-                      $set: {
-                        total_debit:
-                          post_kas.total_debit -
-                          req.body.expense_detail[item].expenses_amount,
-                        updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-                      },
-                    }
-                  );
-
-                  let main_kas = await Main.findOne({
-                    coa_account_number: coa_account_number_kas,
-                    main_account_number: main_account_number_kas,
-                  });
-
-                  try {
-                    let updatedmain_kas = await Main.updateOne(
-                      {
-                        coa_account_number: coa_account_number_kas,
-                        main_account_number: main_account_number_kas,
-                      },
-                      {
-                        $set: {
-                          total_debit:
-                            main_kas.total_debit -
-                            req.body.expense_detail[item].expenses_amount,
-                          updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-                        },
-                      }
-                    );
-
-                    let coa_kas = await Coa.findOne({
-                      coa_account_number: coa_account_number_kas,
-                    });
-
-                    try {
-                      let updatedcoa_kas = await Coa.updateOne(
-                        {
-                          coa_account_number: coa_account_number_kas,
-                        },
-                        {
-                          $set: {
-                            total_debit:
-                              coa_kas.total_debit -
-                              req.body.expense_detail[item].expenses_amount,
-                            updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-                          },
-                        }
-                      );
-                      let savedPost = await post.save();
-
-                      //POST BUKU BIAYA
-                      let postbuku = new DetailBuku({
-                        sub_account_number:
-                          req.body.expense_detail[item].expenses_account,
-                        main_account_number:
-                          req.body.expense_detail[item].main_account_number,
-                        coa_account_number:
-                          req.body.expense_detail[item].coa_account_number,
-                        created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-                        updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-                        description: req.body.expense_detail[item].description,
-                        total_debit:
-                          req.body.expense_detail[item].expenses_amount,
-                        total_kredit: 0,
-                        saldo: req.body.expense_detail[item].expenses_amount,
-                        tgl_transaksi: moment().format("YYYY-MM-DD HH:mm:ss"),
-                        nomor_bukti: req.body.expense_detail[item].nomor_bukti,
-                        link_id: 3,
-                      });
-
-                      let postbukusaved = await postbuku.save();
-                      if (postbukusaved != null) {
-                        let buku = await Buku.findOne({buku_id: 3});
-                        let saldo = buku.total_saldo;
-                        let debit = buku.total_debit;
-                        let kredit = buku.total_kredit;
-                        let updatedbuku = await Buku.updateOne(
-                          {buku_id: 3},
-                          {
-                            $set: {
-                              total_saldo:
-                                saldo +
-                                req.body.expense_detail[item].expenses_amount,
-                              total_debit:
-                                debit +
-                                req.body.expense_detail[item].expenses_amount,
-                              updated_at: moment().format(
-                                "YYYY-MM-DD HH:mm:ss"
-                              ),
-                            },
-                          }
-                        );
-                      }
-                    } catch (err) {
-                      res.json({message: err});
-                    }
-                  } catch (err) {
-                    res.json({message: err});
-                  }
-                } catch (err) {
-                  res.json({message: err});
-                }
-              } catch (err) {
-                res.json({message: err});
-              }
-            } catch (err) {
-              res.json({message: err});
-            }
-            // res.json(savedPost);
-          } catch (err) {
-            res.json({message: err});
-          }
-        } catch (err) {
-          res.json({message: err});
         }
       } catch (err) {
+        console.log(err);
         res.json({message: err});
       }
     });
 
     let postbukukas = new DetailBuku({
-      coa_account_number: req.body.coa_account_number,
-      main_account_number: req.body.main_account_number,
-      sub_account_number: req.body.sub_account_number,
+      coa_account_number: coa_account_number_kas,
+      main_account_number: main_account_number_kas,
+      sub_account_number: sub_account_number_kas,
       created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
       updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
       description: req.body.tags,
