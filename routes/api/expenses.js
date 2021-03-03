@@ -62,12 +62,6 @@ router.post("/Biaya-add", async (req, res) => {
         coa_account_number: req.body.expense_detail[item].coa_account_number,
       };
 
-      console.log("item", item);
-      console.log("post", post[item]);
-      console.log("amount", post[item].expenses_amount);
-      console.log("account", account[item]);
-      console.log("account detail", account[item].coa_account_number);
-
       try {
         await Post.findOneAndUpdate(
           {
@@ -163,6 +157,7 @@ router.post("/Biaya-add", async (req, res) => {
             },
           }
         );
+
         //POST BUKU BIAYA
         let postbuku = new DetailBuku({
           sub_account_number: account[item].expenses_account,

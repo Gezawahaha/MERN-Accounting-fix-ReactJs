@@ -46,58 +46,63 @@ router.post("/purchase-add", async (req, res) => {
     let datasaved = 0;
 
     Object.keys(req.body.purchase_detail).map(async (item) => {
-      const post = new PurchaseDetail({
-        item_desc: req.body.purchase_detail[item].item_desc,
-        qty: req.body.purchase_detail[item].qty,
-        price: req.body.purchase_detail[item].price,
-        total_price: req.body.purchase_detail[item].total_price,
-        coa_account_number: req.body.purchase_detail[item].coa_account_number,
-        main_account_number: req.body.purchase_detail[item].main_account_number,
-        sub_account_number: req.body.purchase_detail[item].sub_account_number,
-        created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-        updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
-        link_id: savedPost._id,
-      });
-
       try {
-        // const SubPost = await sub_post.save();
-        let biaya_sub = await Post.findOne({
-          coa_account_number: req.body.purchase_detail[item].coa_account_number,
-          main_account_number:
-            req.body.purchase_detail[item].main_account_number,
-          sub_account_number: req.body.purchase_detail[item].sub_account_number,
+        let cekstock = await Stock.findOne({
+          StockID: req.body.purchase_detail[item].StockID,
         });
-        try {
-          let updatedpost = await Post.updateOne(
+        if (cekstock.qty >= req.body.purchase_detail[item].qty) {
+          await Stock.findOneAndUpdate(
             {
-              coa_account_number:
-                req.body.purchase_detail[item].coa_account_number,
-              main_account_number:
-                req.body.purchase_detail[item].main_account_number,
-              sub_account_number:
-                req.body.purchase_detail[item].sub_account_number,
+              StockID: req.body.purchase_detail[item].StockID,
             },
             {
+              $inc: {
+                qty: -req.body.purchase_detail[item].qty,
+              },
               $set: {
-                total_debit:
-                  biaya_sub.total_debit +
-                  req.body.purchase_detail[item].total_price,
                 updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
               },
             }
           );
-          try {
-            //UPDATE MAIN ACC
-            let specific_main_account = await Main.findOne({
-              coa_account_number:
-                req.body.purchase_detail[item].coa_account_number,
-              main_account_number:
-                req.body.purchase_detail[item].main_account_number,
-            });
+          const post = new PurchaseDetail({
+            item_desc: req.body.purchase_detail[item].item_desc,
+            qty: req.body.purchase_detail[item].qty,
+            price: req.body.purchase_detail[item].price,
+            total_price: req.body.purchase_detail[item].total_price,
+            coa_account_number:
+              req.body.purchase_detail[item].coa_account_number,
+            main_account_number:
+              req.body.purchase_detail[item].main_account_number,
+            sub_account_number:
+              req.body.purchase_detail[item].sub_account_number,
+            created_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+            updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+            link_id: savedPost._id,
+            StockID: req.body.purchase_detail[item].StockID,
+          });
 
-            let debit = specific_main_account.total_debit;
-            let kredit = specific_main_account.total_kredit;
-            let updatedmain = await Main.updateOne(
+          try {
+            await Post.findOneAndUpdate(
+              {
+                coa_account_number:
+                  req.body.purchase_detail[item].coa_account_number,
+                main_account_number:
+                  req.body.purchase_detail[item].main_account_number,
+                sub_account_number:
+                  req.body.purchase_detail[item].sub_account_number,
+              },
+              {
+                $inc: {
+                  total_debit: req.body.purchase_detail[item].total_price,
+                },
+                $set: {
+                  updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
+                },
+              }
+            );
+
+            //UPDATE MAIN ACC
+            await Main.findOneAndUpdate(
               {
                 coa_account_number:
                   req.body.purchase_detail[item].coa_account_number,
@@ -105,43 +110,37 @@ router.post("/purchase-add", async (req, res) => {
                   req.body.purchase_detail[item].main_account_number,
               },
               {
+                $inc: {
+                  total_debit: req.body.purchase_detail[item].total_price,
+                },
                 $set: {
-                  total_debit:
-                    debit + req.body.purchase_detail[item].total_price,
                   updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
                 },
               }
             );
 
             //UPDATE COA
-            let specific_coa_account = await Coa.findOne({
-              coa_account_number:
-                req.body.purchase_detail[item].coa_account_number,
-            });
-
-            let coa_debit = specific_coa_account.total_debit;
-            let coa_kredit = specific_coa_account.total_kredit;
-            let updatecoa = await Coa.updateOne(
+            await Coa.findOneAndUpdate(
               {
                 coa_account_number:
                   req.body.purchase_detail[item].coa_account_number,
               },
               {
+                $inc: {
+                  total_debit: req.body.purchase_detail[item].total_price,
+                },
                 $set: {
-                  total_debit:
-                    coa_debit + req.body.purchase_detail[item].total_price,
                   updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
                 },
               }
             );
 
             let savedPost = await post.save();
-            // res.json(savedPost);
           } catch (err) {
             res.json({message: err});
           }
-        } catch (err) {
-          res.json({message: err});
+        } else {
+          res.json({message: "error, low qty"});
         }
       } catch (err) {
         res.json({message: err});
@@ -149,58 +148,46 @@ router.post("/purchase-add", async (req, res) => {
     });
 
     //UPDATE HUTANG DAGANG
-    let sub_hutang = await Post.findOne({
-      coa_account_number: req.body.coa_account_number,
-      main_account_number: req.body.main_account_number,
-      sub_account_number: req.body.sub_account_number,
-    });
-
-    let updatedsub_hutang = await Post.updateOne(
+    await Post.findOneAndUpdate(
       {
         coa_account_number: req.body.coa_account_number,
         main_account_number: req.body.main_account_number,
         sub_account_number: req.body.sub_account_number,
       },
       {
+        $inc: {
+          total_kredit: req.body.total_amount_purchase,
+        },
         $set: {
-          total_kredit:
-            sub_hutang.total_kredit + req.body.total_amount_purchase,
           updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         },
       }
     );
 
-    let post_hutang = await Main.findOne({
-      coa_account_number: req.body.coa_account_number,
-      main_account_number: req.body.main_account_number,
-    });
-
-    let updatedmain_hutang = await Main.updateOne(
+    await Main.findOneAndUpdate(
       {
         coa_account_number: req.body.coa_account_number,
         main_account_number: req.body.main_account_number,
       },
       {
+        $inc: {
+          total_kredit: req.body.total_amount_purchase,
+        },
         $set: {
-          total_kredit:
-            post_hutang.total_kredit + req.body.total_amount_purchase,
           updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         },
       }
     );
 
-    let post_coa_hutang = await Coa.findOne({
-      coa_account_number: req.body.coa_account_number,
-    });
-
-    let updatedcoa_hutang = await Coa.updateOne(
+    await Coa.findOneAndUpdate(
       {
         coa_account_number: req.body.coa_account_number,
       },
       {
+        $inc: {
+          total_kredit: req.body.total_amount_purchase,
+        },
         $set: {
-          total_kredit:
-            post_coa_hutang.total_kredit + req.body.total_amount_purchase,
           updated_at: moment().format("YYYY-MM-DD HH:mm:ss"),
         },
       }

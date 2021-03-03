@@ -8,6 +8,9 @@ const StockSchema = mongoose.Schema({
   purchaseID: {
     type: Number,
   },
+  item_desc: {
+    type: String,
+  },
   qty: {
     type: Number,
   },
