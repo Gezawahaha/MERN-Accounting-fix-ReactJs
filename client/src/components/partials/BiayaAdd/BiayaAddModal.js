@@ -60,7 +60,7 @@ class BiayaAddModal extends React.Component {
             created_at: '',
             updated_at: '',
 
-            
+            coa_account_number:'',
             expenses_account: '',
             main_account_number: '',
             sub_account_number: '',
@@ -125,6 +125,9 @@ class BiayaAddModal extends React.Component {
             expense_no: this.state.expense_no,
             transaction_date: this.state.transaction_date,
             tags: `Biaya Pada Tanggal ${this.state.transaction_date}`,
+            coa_account_number: this.state.coa_account_number,
+            main_account_number: this.state.main_account_number, 
+            sub_account_number: this.state.main_account_number,
 
             pay_from_account_number: this.state.pay_from_account_number,//Udh pasti dari kas kecil 
             beneficiary: this.state.beneficiary,                        // ga penting
@@ -170,6 +173,9 @@ class BiayaAddModal extends React.Component {
                 pay_from_account_number: `${e.coa_account_number}-${e.main_account_number}-${e.sub_account_number}`
             })
         }
+        this.setState({
+            coa_account_number: e.coa_account_number, main_account_number: e.main_account_number, sub_account_number: e.sub_account_number
+        })
         
     };
 

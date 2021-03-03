@@ -1,16 +1,40 @@
-.oileprice {
-    background-color: #404040;
-      border-radius: 30px;
-      padding: 20px;
-      box-shadow: 0 0 0.3cm rgba(0,0,0,0.5);
-}
+//Import Icon scss
+//
 
-.iframe {
-  border-radius: 20px;
-  position:fixed;
-  height: 500px;
-  width: 100%;
-  z-index:1000;
-  top: 0;
-  color:white;
-}
+  .bg1 {
+    background-color: rgb(241, 241, 241)
+  }
+  .oileprice {
+      background-color: #404040;
+        border-radius: 30px;
+        padding: 20px;
+        box-shadow: 0 0 0.3cm rgba(0,0,0,0.5);
+  }
+
+  .iframe {
+    border-radius: 20px;
+    position:fixed;
+    height: 500px;
+    width: 100%;
+    z-index:1000;
+    top: 0;
+    color:white;
+  }
+
+  .iframe-widget {
+    padding-left: 50px;
+    overflow: hidden;
+    border: transparent;
+    position: fixed;
+    height: 680px;
+    width: 100%;
+    top: 0;
+    color:white;
+  }
+
+  .widget-pos {
+    overflow: hidden;
+    position: relative;
+    width: 700px;
+    height: 699px;
+  }

@@ -16,9 +16,9 @@ import '../node_modules/bootstrap/dist/js/bootstrap';
 import '../node_modules/font-awesome/css/font-awesome.css';
 import '../node_modules/jquery/dist/jquery.min';
 import '../node_modules/popper.js/dist/popper';
+//import "./theme.scss";
 
-
-import Dashboard from "./components/pages/Dashboard";
+import Dashboard from "./components/pages/Dashboard/Index";
 import KasdanBank from './components/pages/KasdanBank'
 import User from "./components/pages/Users";
 import Employee from './components/pages/employee';
